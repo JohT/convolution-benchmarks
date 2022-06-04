@@ -8,8 +8,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang") # Using GNU or Clang c
     # -fPIC is needed for position-indipendent code to overcome the following error while linking:
     # "relocation R_X86_64_32S against symbol `stdout@@GLIBC_2.2.5' can not be used when making a shared object; recompile with -fPIC"
     target_compile_options(compiler_options INTERFACE "-fPIC")
-    # No optimization and debugger data in DEBUG mode
-    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:-g;-O0>")
+    # Debugger data in DEBUG mode
+    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:-g>")
+    # Full optimization also in DEBUG mode for benchmarking
+    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:-O3>")
     # Full (but stable) Optimization in RELEASE mode
     target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Release>:-O3>")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")  # Using Microsoft Visual Studio C++
@@ -39,6 +41,17 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
     list(APPEND SANITIZERS "thread")
 endif()
 
+# Enable CLang vectorization reports
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang") # Using GNU or Clang compiler ("GNU-style" C++ compiler)
+    target_compile_options(compiler_options INTERFACE "-Rpass=loop-vectorize")
+    target_compile_options(compiler_options INTERFACE "-Rpass-missed=loop-vectorize")
+    target_compile_options(compiler_options INTERFACE "-Rpass-analysis=loop-vectorize")
+    target_compile_options(compiler_options INTERFACE "-fsave-optimization-record")
+    target_compile_options(compiler_options INTERFACE "-gline-tables-only")
+    target_compile_options(compiler_options INTERFACE "-gcolumn-info")
+endif()
+
+
 # The Memory Sanatizer is only supported by Clang for Linux. 
 # Since GNU C++ is used for Linux, it will never be used.
 #if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -50,12 +63,6 @@ if((LIST_OF_SANITIZERS) AND (NOT "${LIST_OF_SANITIZERS}" STREQUAL ""))
     set(SANITIZERS_COMPILE_OPTIONS "-fsanitize=${LIST_OF_SANITIZERS};-fno-omit-frame-pointer")
     target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:${SANITIZERS_COMPILE_OPTIONS}>")
     target_link_libraries(compiler_options INTERFACE "$<$<CONFIG:Debug>:${SANITIZERS_COMPILE_OPTIONS}>")
-endif()
-
-# CLang compiler remarks for vectorisation
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
-    set(VECTORIZATION_REMARKS_COMPILE_OPTIONS "-Rpass=loop-vectorize;-Rpass-missed=loop-vectorize;-Rpass-analysis=loop-vectorize;-gline-tables-only;-gcolumn-info")
-    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:${VECTORIZATION_REMARKS_COMPILE_OPTIONS}>")
 endif()
 
 # Displays the chosen target's compile options:
