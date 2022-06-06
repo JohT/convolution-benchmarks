@@ -20,11 +20,15 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")  # Using Microsoft Visual Studio 
     # /nologo: Suppresses the display of the copyright banner when the compiler starts up and display of informational messages during compiling. [Microsoft Docs]
     # /permissive-: Specify standards conformance mode to the compiler. Use this option to help you identify and fix conformance issues in your code, to make it both more correct and more portable. [Microsoft Docs]
     target_compile_options(compiler_options INTERFACE "/Gy;/nologo;/permissive-;")
-    # MSVC No optimization and debugger data in DEBUG mode
-    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:/Od /Zi,/Ox>")
-    # MSVC Build with Multiple Processes
+    # Debugger data in DEBUG mode (MSVC)
+    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:/Zi>")
+    # Full optimization also in DEBUG mode for benchmarking (MSVC)
+    target_compile_options(compiler_options INTERFACE "/O2")
+    # Replaces some function calls with intrinsic or otherwise special forms of the function that help your application run faster. (MSVC)
+    target_compile_options(compiler_options INTERFACE "/Oi")
+    # Build with Multiple Processes (MSVC)
     target_compile_options(compiler_options INTERFACE "/MP")
-    # MSVC Exception handling with standard C++ stack unwinding (s) and assume that extern "C" never throw a C++ exception (c)
+    # Exception handling with standard C++ stack unwinding (s) and assume that extern "C" never throw a C++ exception (c) (MSVC)
     target_compile_options(compiler_options INTERFACE "/EHsc")
 endif()
 
@@ -49,6 +53,14 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang") # Using GNU or Clang compi
     target_compile_options(compiler_options INTERFACE "-fsave-optimization-record")
     target_compile_options(compiler_options INTERFACE "-gline-tables-only")
     target_compile_options(compiler_options INTERFACE "-gcolumn-info")
+endif()
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC") # Using Microsoft Visual Studio C++
+    # Report successfully and unsuccessfully vectorized loops
+    target_compile_options(compiler_options INTERFACE "/Qvec-report:2")
+    # Specifies the architecture for code generation on x64 [AVX|AVX2|AVX512]
+    # Introduced around 2013 AVX2 should be probably supported by most PCs nowadays
+    target_compile_options(compiler_options INTERFACE "/arch:AVX2")
 endif()
 
 
