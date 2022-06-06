@@ -18,7 +18,6 @@ void convolution_full(const std::vector<SampleType> &in, const std::vector<Sampl
     auto const inSize = in.size();
     auto const kernelSize = kernel.size();
     auto const outSize = inSize + kernelSize - 1;
-    //std::vector<SampleType> out(n, SampleType());
     for (auto i(0); i < outSize; ++i)
     {
         auto const jmn = (i >= kernelSize - 1) ? i - (kernelSize - 1) : 0;
@@ -26,6 +25,26 @@ void convolution_full(const std::vector<SampleType> &in, const std::vector<Sampl
         for (auto j(jmn); j <= jmx; ++j)
         {
             out[i] += (in[j] * kernel[i - j]);
+        }
+    }
+}
+
+template<typename SampleType>
+void convolution_full_InnerLoopVectorization(const std::vector<SampleType> &in, const std::vector<SampleType> &kernel, std::vector<SampleType> out)
+{
+    auto const inSize = in.size();
+    auto const kernelSize = kernel.size();
+    auto const outSize = inSize + kernelSize - 1;
+    for (auto i(0); i < outSize; ++i)
+    {
+        auto const jmn = (i >= kernelSize - 1) ? i - (kernelSize - 1) : 0;
+        auto const jmx = (i < inSize - 1) ? i : inSize - 1;
+        for (auto j(jmn); j <= jmx; j += 4)
+        {
+            out[i] += (in[j] * kernel[i - j]) +
+                      (in[j + 1] * kernel[i - j + 1]) +
+                      (in[j + 2] * kernel[i - j + 2]) +
+                      (in[j + 3] * kernel[i - j + 3]);
         }
     }
 }
@@ -39,7 +58,6 @@ void convolution_valid(const std::vector<SampleType> &in, const std::vector<Samp
     std::vector<SampleType> const &min_v = (inSize < kernelSize) ? in : kernel;
     std::vector<SampleType> const &max_v = (inSize < kernelSize) ? kernel : in;
     int const outSize = std::max(inSize, kernelSize) - std::min(inSize, kernelSize) + 1;
-    //std::vector<SampleType> out(n, T());
     for (auto i(0); i < outSize; ++i)
     {
         for (int j(min_v.size() - 1), k(i); j >= 0; --j)
@@ -78,6 +96,17 @@ TEST_CASE("Convolution with/without SIMD Benchmarks", "[performance]")
         meter.measure([input, kernel, out]
                       {
                           convolution_full(input, kernel, out);
+                          return out; });
+    };
+
+    BENCHMARK_ADVANCED("convolution_full_InnerLoopVectorization")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        auto const outSize = input.size() + kernel.size() - 1;
+        std::vector<float> out(outSize);
+        meter.measure([input, kernel, out]
+                      {
+                          convolution_full_InnerLoopVectorization(input, kernel, out);
                           return out; });
     };
 
