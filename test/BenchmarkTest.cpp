@@ -1,15 +1,21 @@
 #include "../source/FIRFilter.h"
+#include "../source/RandomVectorGenerator.h"
 #include "catch2/generators/catch_generators.hpp"
 #include "catch2/generators/catch_generators_range.hpp"
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
 
+#include <cstdio>
+#include <ios>
 #include <iostream>
 #include <iterator>
 #include <memory>
+#include <ostream>
+#include <fstream>
 #include <random>
 #include <string>
 #include <sys/stat.h>
+#include <limits>
 
 // Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
 template<typename SampleType>
@@ -68,25 +74,19 @@ void convolution_valid(const std::vector<SampleType> &in, const std::vector<Samp
     }
 }
 
-// generate a random vector of size n with values in [-1, 1] with std::random
-template<typename T>
-std::vector<T> generateVectorWithRealNumbers(int n, T min, T max)
+TEST_CASE("Print Testdata", "[.][print]")
 {
-    std::vector<T> vectorWithRandomNumbers(n, T());
-    std::random_device randomDevice;
-    std::mt19937 gen(randomDevice());
-    std::uniform_real_distribution<> distribution(min, max);
-    for (T &value : vectorWithRandomNumbers)
+    SECTION("Print random numbers with exponential notation into RandomNumbers.txt")
     {
-        value = distribution(gen);
+        auto input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
+        std::ofstream outputFile("RandomNumbers.txt", std::ios::trunc);
+        random_vector_generator::printNumbers(input, "F,", outputFile);
     }
-    return vectorWithRandomNumbers;
 }
-
 TEST_CASE("Convolution with/without SIMD Benchmarks", "[performance]")
 {
-    auto input = generateVectorWithRealNumbers(16384, -1.0F, 1.0F);
-    auto kernel = generateVectorWithRealNumbers(16, 0.0F, 1.0F);
+    auto input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
+    auto kernel = random_vector_generator::randomNumbers(16, 0.0F, 1.0F);
 
     BENCHMARK_ADVANCED("convolution_full")
     (Catch::Benchmark::Chronometer meter)
@@ -121,8 +121,7 @@ TEST_CASE("Convolution with/without SIMD Benchmarks", "[performance]")
         meter.measure([input, kernel, out]
                       {
                           convolution_valid(input, kernel, out);
-                          return out;
-                      });
+                          return out; });
     };
 
     BENCHMARK_ADVANCED("applyFirFilterSingle")
