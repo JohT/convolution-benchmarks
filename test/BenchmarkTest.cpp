@@ -1,4 +1,5 @@
 #include "../source/FIRFilter.h"
+#include "../source/Din0sConvolution.h"
 #include "../source/RandomVectorGenerator.h"
 #include "catch2/generators/catch_generators.hpp"
 #include "catch2/generators/catch_generators_range.hpp"
@@ -74,7 +75,10 @@ void convolution_valid(const std::vector<SampleType> &in, const std::vector<Samp
     }
 }
 
-TEST_CASE("Print Testdata", "[.][print]")
+/**
+ * @brief The following test case will only run on demand and will print out test data.
+ */
+TEST_CASE("Print test data", "[.][print]")
 {
     SECTION("Print random numbers with exponential notation into RandomNumbers.txt")
     {
@@ -83,6 +87,7 @@ TEST_CASE("Print Testdata", "[.][print]")
         random_vector_generator::printNumbers(input, "F,", outputFile);
     }
 }
+
 TEST_CASE("Convolution with/without SIMD Benchmarks", "[performance]")
 {
     auto input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
@@ -121,6 +126,21 @@ TEST_CASE("Convolution with/without SIMD Benchmarks", "[performance]")
         meter.measure([input, kernel, out]
                       {
                           convolution_valid(input, kernel, out);
+                          return out; });
+    };
+
+    BENCHMARK_ADVANCED("din0s::convolve")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        const auto inSize = input.size();
+        const auto kernelSize = kernel.size();
+        const auto outSize = std::max(inSize, kernelSize) - std::min(inSize, kernelSize) + 1;
+        std::vector<float> out(outSize);
+        auto outIterator = out.begin();
+        float* outPointer = &(*outIterator); 
+        meter.measure([input, kernel, out, outPointer]
+                      {
+                          din0s::convolve(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
                           return out; });
     };
 
