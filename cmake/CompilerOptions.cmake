@@ -45,7 +45,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
     list(APPEND SANITIZERS "thread")
 endif()
 
-# Enable CLang vectorization reports
+# Enable CLang Vectorization reports
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang") # Using GNU or Clang compiler ("GNU-style" C++ compiler)
     target_compile_options(compiler_options INTERFACE "-Rpass=loop-vectorize")
     target_compile_options(compiler_options INTERFACE "-Rpass-missed=loop-vectorize")
@@ -55,6 +55,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang") # Using GNU or Clang compi
     target_compile_options(compiler_options INTERFACE "-gcolumn-info")
 endif()
 
+# Enable MSVC Vectorization reports
 if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC") # Using Microsoft Visual Studio C++
     # Report successfully and unsuccessfully vectorized loops
     target_compile_options(compiler_options INTERFACE "/Qvec-report:2")
