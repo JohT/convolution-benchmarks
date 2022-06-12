@@ -1,3 +1,4 @@
+#pragma once
 //Reference: https://github.com/din0s/1D-convolution
 #include <algorithm>
 #include <cassert>

@@ -1,5 +1,6 @@
 #include "../source/Din0sConvolution.h"
 #include "../source/FIRFilter.h"
+#include "../source/Din0sConvolution.h"
 #include "../source/RandomVectorGenerator.h"
 #include "TestVectors.h"
 
