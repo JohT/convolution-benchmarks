@@ -54,7 +54,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang") # Using GNU or Clang compi
     target_compile_options(compiler_options INTERFACE "-Rpass-missed=loop-vectorize")
     target_compile_options(compiler_options INTERFACE "-Rpass-analysis=loop-vectorize")
     target_compile_options(compiler_options INTERFACE "-fsave-optimization-record")
-    target_compile_options(compiler_options INTERFACE "-gline-tables-only")
+    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Release>:-gline-tables-only>")
     target_compile_options(compiler_options INTERFACE "-gcolumn-info")
 endif()
 
