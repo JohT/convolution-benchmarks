@@ -1,6 +1,5 @@
 #include "../source/Din0sConvolution.h"
 #include "../source/FIRFilter.h"
-#include "../source/Din0sConvolution.h"
 #include "../source/RandomVectorGenerator.h"
 #include "TestVectors.h"
 
@@ -19,8 +18,32 @@
 #include <memory>
 #include <ostream>
 #include <random>
+#include <span>
 #include <string>
 #include <sys/stat.h>
+
+/**
+ * @brief Own approach of a convolution implementation that multiplies the kernel vector first and uses spans.
+ * The output needs to have a length of inputSize + kernelSize - 1.
+ * All output values need to be zero.
+ *
+ * @tparam ValueType 
+ * @param input span of input values
+ * @param kernel span of kernel values (e.g. filter coefficients)
+ * @param output output span
+ */
+template<typename ValueType>
+void convolutionKernelFirst(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
+{
+    // Multiply every input sample with the whole kernel vector and add it to the output.
+    for (auto inputIndex = 0; inputIndex < input.size(); ++inputIndex)
+    {
+        for (auto kernelIndex = 0; kernelIndex < kernel.size(); ++kernelIndex)
+        {
+            output[inputIndex + kernelIndex] += input[inputIndex] * kernel[kernelIndex];
+        }
+    }
+}
 
 // Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
 template<typename SampleType>
@@ -116,9 +139,15 @@ SCENARIO("Convolution Algorithms")
         {
             const auto &kernel = waveletFilterCoefficientsDaubechies16;
             const auto convolutionLength = input.size() + kernel.size() - 1;
-            auto output = std::vector<float>(convolutionLength);
-            auto reference = std::vector<float>(convolutionLength);
+            auto output = std::vector<float>(convolutionLength, 0.0F);
+            auto reference = std::vector<float>(convolutionLength, 0.0F);
 
+            THEN("Algorithm 'convolutionKernelFirst' outputs the same result as `convolution_full`")
+            {
+                convolution_full(input, kernel, reference);
+                convolutionKernelFirst(std::span(input), std::span(kernel), std::span(output));
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
             // "convolution_valid" is not comparable to "convolution_full".
             // Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
             // THEN("Algorithm 'convolution_valid' outputs the same result as `convolution_full`")
@@ -142,14 +171,14 @@ SCENARIO("Convolution Algorithms")
                 convolution_full(input, kernel, reference);
                 auto *outPointer = std::addressof(output[0]);
                 din0s::convolve(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
-                REQUIRE_THAT(output, Catch::Matchers::Equals(reference));
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'din0s::convolveInputLargerThanKernel' outputs the same result as `convolution_full`")
             {
                 convolution_full(input, kernel, reference);
                 auto *outPointer = std::to_address(output.begin().base());
                 din0s::convolveInputLargerThanKernel(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
-                REQUIRE_THAT(output, Catch::Matchers::Equals(reference));
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'applyFirFilterInnerLoopVectorization' outputs the same result as `applyFirFilterSingle`")
             {
@@ -157,18 +186,18 @@ SCENARIO("Convolution Algorithms")
                 fir::FilterInput<float> referenceInputAligned(input, kernel);
                 auto outputFir = fir::applyFirFilterInnerLoopVectorization(inputAligned);
                 auto referenceFir = fir::applyFirFilterSingle(referenceInputAligned);
-                
+
                 //TODO needs quite a bit large margin -> is there something wrong with the implementation?
                 REQUIRE_THAT(outputFir, Catch::Matchers::Approx(referenceFir).margin(0.0005F));
             }
             THEN("Algorithm 'applyFirFilterSingle' outputs the same result as `convolution_full`")
             {
                 convolution_full(input, kernel, reference);
-                
+
                 fir::FilterInput<float> inputAligned(input, kernel);
                 convolution_full_InnerLoopVectorization(input, kernel, output);
                 auto outputFir = fir::applyFirFilterSingle(inputAligned);
-                
+
                 //TODO needs quite a bit large margin -> is there something wrong with the implementation?
                 REQUIRE_THAT(outputFir, Catch::Matchers::Approx(reference).margin(0.0005F));
             }
@@ -179,6 +208,20 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
 {
     auto input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
     auto kernel = random_vector_generator::randomNumbers(16, 0.0F, 1.0F);
+
+    BENCHMARK_ADVANCED("convolutionKernelFirst")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        auto const outSize = input.size() + kernel.size() - 1;
+        std::vector<float> out(outSize);
+        std::span<const float> inputSpan = std::span(input);
+        std::span<const float> kernelSpan = std::span(kernel);
+        std::span<float> outputSpan = std::span(out);
+        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &out]
+                      {
+                          convolutionKernelFirst(inputSpan, kernelSpan, outputSpan);
+                          return out; });
+    };
 
     BENCHMARK_ADVANCED("convolution_full")
     (Catch::Benchmark::Chronometer meter)
