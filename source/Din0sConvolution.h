@@ -1,8 +1,11 @@
 #pragma once
-//Reference: https://github.com/din0s/1D-convolution
 #include <algorithm>
 #include <cassert>
 
+/**
+ * @brief 1-dimensional convolution implementation
+ * Reference: "1-dimensional convolution implementation using C++" https://github.com/din0s/1D-convolution
+ */
 namespace din0s
 {
     /**
@@ -30,34 +33,6 @@ namespace din0s
                 }
             }
             output[n] = prod;
-        }
-    }
-    /**
-     * This method convolutes the two given float arrays.
-     * The result is saved in the third array.
-     * This method assumes, that the input is larger than the kernel (filter coefficients) and fails otherwise.
-     */
-    inline void convolveInputLargerThanKernel(const float *input, const float *kernel, float *output, int inputLength, int kernelLength)
-    {
-        assert(inputLength > kernelLength);
-        // Calculate the length of the result
-        int convolutionLength = inputLength + kernelLength - 1;
-        for (int outputIndex = 0; outputIndex < convolutionLength; ++outputIndex)
-        {
-            float prod = 0.0F;
-
-            // Find the minimum amount of iterations needed
-            int kernelMax = std::min(inputLength, outputIndex);
-            for (int kernelIndex = 0; kernelIndex <= kernelMax; ++kernelIndex)
-            {
-                // Make sure we're in bounds for both arrays,
-                // otherwise there's no overlap between the two.
-                if (kernelIndex < inputLength && outputIndex - kernelIndex < kernelLength)
-                {
-                    prod += input[kernelIndex] * kernel[outputIndex - kernelIndex];
-                }
-            }
-            output[outputIndex] = prod;
         }
     }
 }// namespace din0s
