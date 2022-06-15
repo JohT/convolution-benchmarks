@@ -1,5 +1,6 @@
 #include "../source/Din0sConvolution.h"
 #include "../source/FIRFilter.h"
+#include "../source/MatlabLikeConvolution.h"
 #include "../source/RandomVectorGenerator.h"
 #include "TestVectors.h"
 
@@ -45,77 +46,6 @@ void convolutionKernelFirst(const std::span<const ValueType> &input, const std::
     }
 }
 
-// Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
-template<typename SampleType>
-void convolution_full(const std::vector<SampleType> &in, const std::vector<SampleType> &kernel, std::vector<SampleType> &out)
-{
-    auto const inSize = in.size();
-    auto const kernelSize = kernel.size();
-    auto const outSize = inSize + kernelSize - 1;
-    for (auto i(0); i < outSize; ++i)
-    {
-        auto const jmn = (i >= kernelSize - 1) ? i - (kernelSize - 1) : 0;
-        auto const jmx = (i < inSize - 1) ? i : inSize - 1;
-        for (auto j(jmn); j <= jmx; ++j)
-        {
-            out[i] += (in[j] * kernel[i - j]);
-        }
-    }
-}
-
-//TODO This implementation is not correct.
-template<typename SampleType>
-void convolution_full_InnerLoopVectorization(const std::vector<SampleType> &in, const std::vector<SampleType> &kernel, std::vector<SampleType> &out)
-{
-    auto const inSize = in.size();
-    auto const kernelSize = kernel.size();
-    auto const outSize = inSize + kernelSize - 1;
-    for (auto i(0); i < outSize; ++i)
-    {
-        auto const jmn = (i >= kernelSize - 1) ? i - (kernelSize - 1) : 0;
-        auto const jmx = (i < inSize - 1) ? i : inSize - 1;
-        if (((jmx - jmn) >= 4) && ((jmx - jmn) % 4) == 0)
-        {
-            for (auto j(jmn); j < jmx; j += 4)
-            {
-                out[i] += (in[j] * kernel[i - j]) +
-                          (in[j + 1] * kernel[i - j - 1]) +
-                          (in[j + 2] * kernel[i - j - 2]) +
-                          (in[j + 3] * kernel[i - j - 3]);
-            }
-        }
-        else
-        {
-            for (auto j(jmn); j <= jmx; ++j)
-            {
-                out[i] += (in[j] * kernel[i - j]);
-            }
-        }
-    }
-}
-
-// Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
-template<typename SampleType>
-std::vector<SampleType> convolution_valid(std::vector<SampleType> const &input, std::vector<SampleType> const &kernel, std::vector<SampleType> &out)
-{
-    const auto inputSize = input.size();
-    const auto kernelSize = kernel.size();
-    const auto &smallerVector = (inputSize < kernelSize) ? input : kernel;
-    const auto &largerVector = (inputSize < kernelSize) ? kernel : input;
-    const auto outputSize = std::max(inputSize, kernelSize) - std::min(inputSize, kernelSize) + 1;
-    const auto smallerVectorSize = static_cast<int>(smallerVector.size()) - 1;
-
-    for (auto i(0); i < outputSize; ++i)
-    {
-        for (auto j(smallerVectorSize), k(i); j >= 0; --j)
-        {
-            out[i] += smallerVector[j] * largerVector[k];
-            ++k;
-        }
-    }
-    return out;
-}
-
 /**
  * @brief The following test case will only run on demand and will print out test data.
  */
@@ -133,7 +63,7 @@ SCENARIO("Convolution Algorithms")
 {
     GIVEN("Input random number vector of size 32")
     {
-        const auto &input = randomSize32;
+        auto &input = randomSize32;
 
         WHEN("Kernel of size 16 with Daubechies Wavelet filter coefficients)")
         {
@@ -144,38 +74,34 @@ SCENARIO("Convolution Algorithms")
 
             THEN("Algorithm 'convolutionKernelFirst' outputs the same result as `convolution_full`")
             {
-                convolution_full(input, kernel, reference);
+                matlab_like::convolution_full(input, kernel, reference);
                 convolutionKernelFirst(std::span(input), std::span(kernel), std::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
-            // "convolution_valid" is not comparable to "convolution_full".
-            // Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
-            // THEN("Algorithm 'convolution_valid' outputs the same result as `convolution_full`")
-            // {
-            //     const auto outSize = std::max(input.size(), kernel.size()) - std::min(input.size(), kernel.size()) + 1;
-            //     output = std::vector<float>(outSize);
+            //Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
+            THEN("Algorithm 'convolution_valid' outputs the same result as `convolution_full`")
+            {
+                // "valid" means that the input needs to be padded with (kernel size - 1) zeroes
+                // at the beginning and end of the data input vector before the convolution.
+                auto paddedInput = std::vector<float>(input);
+                auto padding = std::vector<float>(kernel.size() - 1, 0.0);
+                paddedInput.insert(paddedInput.begin(), padding.begin(), padding.end());
+                paddedInput.insert(paddedInput.end(), padding.begin(), padding.end());
 
-            //     convolution_full(input, kernel, reference);
-            //     convolution_valid(input, kernel, output);
-            //     REQUIRE_THAT(output, Catch::Matchers::Equals(reference));
-            //}
-            //TODO needs to be fixed
-            // THEN("Algorithm 'convolution_full_InnerLoopVectorization' outputs the same result as `convolution_full`")
-            // {
-            //     convolution_full(input, kernel, reference);
-            //     convolution_full_InnerLoopVectorization(input, kernel, output);
-            //     REQUIRE_THAT(output, Catch::Matchers::Approx(reference).margin(0.001F));
-            // }
+                matlab_like::convolution_full(input, kernel, reference);
+                matlab_like::convolution_valid(paddedInput, kernel, output);
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
             THEN("Algorithm 'din0s::convolve' outputs the same result as `convolution_full`")
             {
-                convolution_full(input, kernel, reference);
+                matlab_like::convolution_full(input, kernel, reference);
                 auto *outPointer = std::addressof(output[0]);
                 din0s::convolve(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'din0s::convolveInputLargerThanKernel' outputs the same result as `convolution_full`")
             {
-                convolution_full(input, kernel, reference);
+                matlab_like::convolution_full(input, kernel, reference);
                 auto *outPointer = std::to_address(output.begin().base());
                 din0s::convolveInputLargerThanKernel(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
@@ -192,10 +118,9 @@ SCENARIO("Convolution Algorithms")
             }
             THEN("Algorithm 'applyFirFilterSingle' outputs the same result as `convolution_full`")
             {
-                convolution_full(input, kernel, reference);
+                matlab_like::convolution_full(input, kernel, reference);
 
                 fir::FilterInput<float> inputAligned(input, kernel);
-                convolution_full_InnerLoopVectorization(input, kernel, output);
                 auto outputFir = fir::applyFirFilterSingle(inputAligned);
 
                 //TODO needs quite a bit large margin -> is there something wrong with the implementation?
@@ -230,33 +155,28 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
         std::vector<float> out(outSize);
         meter.measure([input, kernel, &out]
                       {
-                          convolution_full(input, kernel, out);
-                          return out; });
-    };
-
-    BENCHMARK_ADVANCED("convolution_full_InnerLoopVectorization")
-    (Catch::Benchmark::Chronometer meter)
-    {
-        auto const outSize = input.size() + kernel.size() - 1;
-        std::vector<float> out(outSize);
-        meter.measure([input, kernel, &out]
-                      {
-                          convolution_full_InnerLoopVectorization(input, kernel, out);
+                          matlab_like::convolution_full(input, kernel, out);
                           return out; });
     };
 
     BENCHMARK_ADVANCED("convolution_valid")
     (Catch::Benchmark::Chronometer meter)
     {
-        const auto inSize = input.size();
-        const auto kernelSize = kernel.size();
-        const auto outSize = std::max(inSize, kernelSize) - std::min(inSize, kernelSize) + 1;
+        // "valid" means that the input needs to be padded with (kernel size - 1) zeroes
+        // at the beginning and end of the data input vector before the convolution.
+        auto paddedInput = std::vector<float>(input);
+        auto padding = std::vector<float>(kernel.size() - 1, 0.0);
+        paddedInput.insert(paddedInput.begin(), padding.begin(), padding.end());
+        paddedInput.insert(paddedInput.end(), padding.begin(), padding.end());
+
+        auto const outSize = input.size() + kernel.size() - 1;
         std::vector<float> out(outSize);
 
-        meter.measure([input, kernel, &out]
+        meter.measure([paddedInput, kernel, &out]
                       {
-                          convolution_valid(input, kernel, out);
-                          return out; });
+                          matlab_like::convolution_valid(paddedInput, kernel, out);
+                          return out;
+                      });
     };
 
     BENCHMARK_ADVANCED("din0s::convolve")
