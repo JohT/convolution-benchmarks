@@ -13,8 +13,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang") # Using GNU or Clang c
     target_compile_options(compiler_options INTERFACE "-ffast-math")
     # Debugger data in DEBUG mode
     target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:-g>")
-    # Full optimization also in DEBUG mode for benchmarking
-    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:-O3>")
+    # No optimization in DEBUG mode. Not meant for benchmarking.
+    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:-O0>")
     # Full (but stable) Optimization in RELEASE mode
     target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Release>:-O3>")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")  # Using Microsoft Visual Studio C++
@@ -25,8 +25,8 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")  # Using Microsoft Visual Studio 
     target_compile_options(compiler_options INTERFACE "/Gy;/nologo;/permissive-;")
     # Debugger data in DEBUG mode (MSVC)
     target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:/Zi>")
-    # Full optimization also in DEBUG mode for benchmarking (MSVC)
-    target_compile_options(compiler_options INTERFACE "/O2")
+    # No optimization in DEBUG mode. Not meant for benchmarking. (MSVC)
+    target_compile_options(compiler_options INTERFACE "/O0")
     # Replaces some function calls with intrinsic or otherwise special forms of the function that help your application run faster. (MSVC)
     target_compile_options(compiler_options INTERFACE "/Oi")
     # Build with Multiple Processes (MSVC)
