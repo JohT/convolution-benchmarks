@@ -1,6 +1,7 @@
 #include "../source/Din0sConvolution.h"
 #include "../source/WilczekConvolution.h"
 #include "../source/MatlabLikeConvolution.h"
+#include "../source/JohTConvolution.h"
 #include "RandomVectorGenerator.h"
 #include "TestVectors.h"
 
@@ -22,29 +23,6 @@
 #include <span>
 #include <string>
 #include <sys/stat.h>
-
-/**
- * @brief Own approach of a convolution implementation that multiplies the kernel vector first and uses spans.
- * The output needs to have a length of inputSize + kernelSize - 1.
- * All output values need to be zero.
- *
- * @tparam ValueType 
- * @param input span of input values
- * @param kernel span of kernel values (e.g. filter coefficients)
- * @param output output span
- */
-template<typename ValueType>
-void convolutionKernelFirst(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
-{
-    // Multiply every input sample with the whole kernel vector and add it to the output.
-    for (auto inputIndex = 0; inputIndex < input.size(); ++inputIndex)
-    {
-        for (auto kernelIndex = 0; kernelIndex < kernel.size(); ++kernelIndex)
-        {
-            output[inputIndex + kernelIndex] += input[inputIndex] * kernel[kernelIndex];
-        }
-    }
-}
 
 /**
  * @brief The following test case will only run on demand and will print out test data.
@@ -72,10 +50,10 @@ SCENARIO("Convolution Algorithms")
             auto output = std::vector<float>(convolutionLength, 0.0F);
             auto reference = std::vector<float>(convolutionLength, 0.0F);
 
-            THEN("Algorithm 'convolutionKernelFirst' outputs the same result as `convolution_full`")
+            THEN("Algorithm 'kernelCentricConvolution' outputs the same result as `convolution_full`")
             {
                 matlab_like::convolution_full(input, kernel, reference);
-                convolutionKernelFirst(std::span(input), std::span(kernel), std::span(output));
+                joht_convolution::kernelCentricConvolution(std::span(input), std::span(kernel), std::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             //Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
@@ -127,7 +105,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
     auto input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
     auto kernel = random_vector_generator::randomNumbers(16, 0.0F, 1.0F);
 
-    BENCHMARK_ADVANCED("(JohT) convolutionKernelFirst")
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolution")
     (Catch::Benchmark::Chronometer meter)
     {
         auto const outSize = input.size() + kernel.size() - 1;
@@ -137,7 +115,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
         std::span<float> outputSpan = std::span(out);
         meter.measure([&inputSpan, &kernelSpan, &outputSpan, &out]
                       {
-                          convolutionKernelFirst(inputSpan, kernelSpan, outputSpan);
+                          joht_convolution::kernelCentricConvolution(inputSpan, kernelSpan, outputSpan);
                           return out; });
     };
 
