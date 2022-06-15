@@ -1,5 +1,5 @@
 #include "../source/Din0sConvolution.h"
-#include "../source/FIRFilter.h"
+#include "../source/WilczekConvolution.h"
 #include "../source/MatlabLikeConvolution.h"
 #include "../source/RandomVectorGenerator.h"
 #include "TestVectors.h"
@@ -99,19 +99,12 @@ SCENARIO("Convolution Algorithms")
                 din0s::convolve(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
-            THEN("Algorithm 'din0s::convolveInputLargerThanKernel' outputs the same result as `convolution_full`")
-            {
-                matlab_like::convolution_full(input, kernel, reference);
-                auto *outPointer = std::to_address(output.begin().base());
-                din0s::convolveInputLargerThanKernel(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
-                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
-            }
             THEN("Algorithm 'applyFirFilterInnerLoopVectorization' outputs the same result as `applyFirFilterSingle`")
             {
-                fir::FilterInput<float> inputAligned(input, kernel);
-                fir::FilterInput<float> referenceInputAligned(input, kernel);
-                auto outputFir = fir::applyFirFilterInnerLoopVectorization(inputAligned);
-                auto referenceFir = fir::applyFirFilterSingle(referenceInputAligned);
+                wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
+                wilczek_convolution::FilterInput<float> referenceInputAligned(input, kernel);
+                auto outputFir = wilczek_convolution::applyFirFilterInnerLoopVectorization(inputAligned);
+                auto referenceFir = wilczek_convolution::applyFirFilterSingle(referenceInputAligned);
 
                 //TODO needs quite a bit large margin -> is there something wrong with the implementation?
                 REQUIRE_THAT(outputFir, Catch::Matchers::Approx(referenceFir).margin(0.0005F));
@@ -120,8 +113,8 @@ SCENARIO("Convolution Algorithms")
             {
                 matlab_like::convolution_full(input, kernel, reference);
 
-                fir::FilterInput<float> inputAligned(input, kernel);
-                auto outputFir = fir::applyFirFilterSingle(inputAligned);
+                wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
+                auto outputFir = wilczek_convolution::applyFirFilterSingle(inputAligned);
 
                 //TODO needs quite a bit large margin -> is there something wrong with the implementation?
                 REQUIRE_THAT(outputFir, Catch::Matchers::Approx(reference).margin(0.0005F));
@@ -182,66 +175,50 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
     BENCHMARK_ADVANCED("din0s::convolve")
     (Catch::Benchmark::Chronometer meter)
     {
-        const auto inSize = input.size();
+        const auto inputSize = input.size();
         const auto kernelSize = kernel.size();
-        const auto outSize = std::max(inSize, kernelSize) - std::min(inSize, kernelSize) + 1;
+        const auto outSize = std::max(inputSize, kernelSize) - std::min(inputSize, kernelSize) + 1;
         std::vector<float> out(outSize);
-        auto outIterator = out.begin();
-        float *outPointer = &(*outIterator);
-        meter.measure([input, kernel, out, outPointer]
+        auto *outPointer = std::to_address(out.begin().base());
+        meter.measure([&input, &kernel, outPointer, inputSize, kernelSize, &out]
                       {
-                          din0s::convolve(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
-                          return out; });
-    };
-
-    BENCHMARK_ADVANCED("din0s::convolveInputLargerThanKernel")
-    (Catch::Benchmark::Chronometer meter)
-    {
-        const auto inSize = input.size();
-        const auto kernelSize = kernel.size();
-        const auto outSize = std::max(inSize, kernelSize) - std::min(inSize, kernelSize) + 1;
-        std::vector<float> out(outSize);
-        auto outIterator = out.begin();
-        float *outPointer = &(*outIterator);
-        meter.measure([input, kernel, out, outPointer]
-                      {
-                          din0s::convolveInputLargerThanKernel(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
+                          din0s::convolve(input.data(), kernel.data(), outPointer, inputSize, kernelSize);
                           return out; });
     };
 
     BENCHMARK_ADVANCED("applyFirFilterSingle")
     (Catch::Benchmark::Chronometer meter)
     {
-        fir::FilterInput<float> inputAligned(input, kernel);
+        wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
 
         meter.measure([&inputAligned]
-                      { return fir::applyFirFilterSingle(inputAligned); });
+                      { return wilczek_convolution::applyFirFilterSingle(inputAligned); });
     };
 
     BENCHMARK_ADVANCED("applyFirFilterInnerLoopVectorization")
     (Catch::Benchmark::Chronometer meter)
     {
-        fir::FilterInput<float> inputAligned(input, kernel);
+        wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
 
         meter.measure([&inputAligned]
-                      { return fir::applyFirFilterInnerLoopVectorization(inputAligned); });
+                      { return wilczek_convolution::applyFirFilterInnerLoopVectorization(inputAligned); });
     };
 
     BENCHMARK_ADVANCED("applyFirFilterOuterLoopVectorization")
     (Catch::Benchmark::Chronometer meter)
     {
-        fir::FilterInput<float> inputAligned(input, kernel);
+        wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
 
         meter.measure([&inputAligned]
-                      { return fir::applyFirFilterOuterLoopVectorization(inputAligned); });
+                      { return wilczek_convolution::applyFirFilterOuterLoopVectorization(inputAligned); });
     };
 
     BENCHMARK_ADVANCED("applyFirFilterOuterInnerLoopVectorization")
     (Catch::Benchmark::Chronometer meter)
     {
-        fir::FilterInput<float> inputAligned(input, kernel);
+        wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
 
         meter.measure([&inputAligned]
-                      { return fir::applyFirFilterOuterInnerLoopVectorization(inputAligned); });
+                      { return wilczek_convolution::applyFirFilterOuterInnerLoopVectorization(inputAligned); });
     };
 }

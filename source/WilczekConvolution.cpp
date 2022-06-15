@@ -12,7 +12,7 @@
 #include <immintrin.h>
 #endif
 
-#include "FIRFilter.h"
+#include "WilczekConvolution.h"
 
 namespace
 {
@@ -22,7 +22,7 @@ namespace
     }
 }// namespace
 
-namespace fir
+namespace wilczek_convolution
 {
     std::vector<float> applyFirFilterSingle(FilterInput<float> &input)
     {

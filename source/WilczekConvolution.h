@@ -5,7 +5,7 @@
 #include <cmath>
 #include <vector>
 
-namespace fir
+namespace wilczek_convolution
 {
     template<typename T>
     T highestPowerOf2NotGreaterThan(T x)
