@@ -1,7 +1,7 @@
 #include "../source/Din0sConvolution.h"
 #include "../source/WilczekConvolution.h"
 #include "../source/MatlabLikeConvolution.h"
-#include "../source/RandomVectorGenerator.h"
+#include "RandomVectorGenerator.h"
 #include "TestVectors.h"
 
 #include "catch2/generators/catch_generators.hpp"
