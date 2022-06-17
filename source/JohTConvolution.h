@@ -1,5 +1,5 @@
 #pragma once
-#include <span>
+#include "tcb/span.hpp"
 
 /**
  * @brief My own (JohT) approach to compiler optimize-able convolution implementations.
@@ -21,7 +21,7 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void kernelCentricConvolution(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
+    void kernelCentricConvolution(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
         // Multiply every input sample with the whole kernel vector and add it to the output.
         for (auto inputIndex = 0; inputIndex < input.size(); ++inputIndex)

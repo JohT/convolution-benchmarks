@@ -21,7 +21,7 @@
 #include <memory>
 #include <ostream>
 #include <random>
-#include <span>
+#include "tcb/span.hpp"
 #include <string>
 #include <sys/stat.h>
 
@@ -54,7 +54,7 @@ SCENARIO("Convolution Algorithms")
             THEN("Algorithm 'kernelCentricConvolution' outputs the same result as `convolution_full`")
             {
                 matlab_like::convolution_full(input, kernel, reference);
-                joht_convolution::kernelCentricConvolution(std::span(input), std::span(kernel), std::span(output));
+                joht_convolution::kernelCentricConvolution(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             //Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
@@ -144,9 +144,9 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
     {
         auto const outputSize = input.size() + kernel.size() - 1;
         std::vector<float> output(outputSize);
-        const std::span<const float> inputSpan = std::span(input);
-        const std::span<const float> kernelSpan = std::span(kernel);
-        const std::span<float> outputSpan = std::span(output);
+        const tcb::span<const float> inputSpan = tcb::span(input);
+        const tcb::span<const float> kernelSpan = tcb::span(kernel);
+        const tcb::span<float> outputSpan = tcb::span(output);
         meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
                       {
                           joht_convolution::kernelCentricConvolution(inputSpan, kernelSpan, outputSpan);
