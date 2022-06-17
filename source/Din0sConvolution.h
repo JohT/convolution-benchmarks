@@ -5,13 +5,14 @@
 /**
  * @brief 1-dimensional convolution implementation
  * Reference: "1-dimensional convolution implementation using C++" https://github.com/din0s/1D-convolution
+ * @author: din0s
  */
 namespace din0s
 {
     /**
-     * This method convolutes the two given float arrays.
-     * The result is saved in the third array.
-    */
+     * @brief This method convolutes the two given float arrays. The result is saved in the third array.
+     * @author din0s
+     */
     inline void convolve(const float *input, const float *kernel, float *output, int inputLen, int kernelLen)
     {
         // Calculate the length of the result

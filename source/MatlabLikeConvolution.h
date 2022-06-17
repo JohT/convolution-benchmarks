@@ -2,11 +2,20 @@
 #include <vector>
 
 /**
- * @brief Contains simple convolution implementations taken from StackTrace.
+ * @brief Contains a simple convolution implementations taken from StackTrace.
+ * @author 101010 (https://stackoverflow.com/users/2352671/101010)
  * Reference: "How to perform 1-dimensional "valid" convolution?" - https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
  */
 namespace matlab_like
 {
+    /**
+     * @brief Returns the result of the discrete convolution aka. Cauchy product (in * kernel) = (kernel * in).
+     * 
+     * @tparam SampleType 
+     * @param in std::vector with the input data
+     * @param kernel std::vector with the kernel (e.g. filter coefficients)
+     * @param out std::vector of size int.size() + kernel.size() - 1
+     */
     template<typename SampleType>
     void convolution_full(const std::vector<SampleType> &in, const std::vector<SampleType> &kernel, std::vector<SampleType> &out)
     {
@@ -24,6 +33,14 @@ namespace matlab_like
         }
     }
 
+    /**
+     * @brief Returns the result of the valid (i.e., without the paddings) discrete convolution aka. Cauchy product (in * kernel) = (kernel * in).
+     * 
+     * @tparam SampleType 
+     * @param in std::vector with the input data
+     * @param kernel std::vector with the kernel (e.g. filter coefficients)
+     * @param out std::vector of std::max(in.size(), kernel.size()) - std::min(in.size(), kernel.size()) + 1
+     */
     template<typename T> 
     std::vector<T> convolution_valid(std::vector<T> const &input, std::vector<T> const &kernel, std::vector<T> &output)
     {

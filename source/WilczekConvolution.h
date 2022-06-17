@@ -5,6 +5,11 @@
 #include <cmath>
 #include <vector>
 
+/**
+ * @brief convolution (FIR filter) algorithms by Jan Wilczek showing different SIMD vectorization optimizations by manually (partly) unrolling loops.
+ * Reference: "Efficient FIR Filter Implementation with SIMD" https://github.com/JanWilczek/fir-simd.git
+ * @author JanWilczek
+ */
 namespace wilczek_convolution
 {
     template<typename T>
