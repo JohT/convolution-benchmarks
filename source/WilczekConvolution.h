@@ -4,6 +4,7 @@
 #include <array>
 #include <cmath>
 #include <vector>
+#include <memory>
 
 /**
  * @brief convolution (FIR filter) algorithms by Jan Wilczek showing different SIMD vectorization optimizations by manually (partly) unrolling loops.
