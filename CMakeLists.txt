@@ -24,7 +24,11 @@ add_library(${PROJECT_NAME} STATIC)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(Environment)
 
-# Sets compile options for the target:
+# Detects vector instruction sets AVX and AVX2 for Microsoft Visual Studio Compiler (MSVC)
+include(find_avx)
+CHECK_FOR_AVX()
+
+# Sets compile options for the target
 include(CompilerOptions)
 
 # Compile Project with C++20 Standard

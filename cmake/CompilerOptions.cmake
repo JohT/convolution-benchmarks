@@ -65,9 +65,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC") # Using Microsoft Visual Studio C++
     # Report successfully and unsuccessfully vectorized loops
     target_compile_options(compiler_options INTERFACE "/Qvec-report:2")
     # Specifies the architecture for code generation on x64 [AVX|AVX2|AVX512]
-    # Introduced around 2013 AVX2 should be probably supported by most PCs nowadays.
-    # Unfortuntatly AVX isn't supported on Mini-PCs like Intel(R) Celeron(R) CPU N3450.
-    # target_compile_options(compiler_options INTERFACE "/arch:AVX2")
+    # Introduced around 2013, AVX2 should probably be supported by most PCs nowadays
+    # except for some mini PC CPUs like the Intel Celeron N3450 (Mid 2016, No AVX). 
+    if (HAVE_AVX2_EXTENSIONS)
+        target_compile_options(compiler_options INTERFACE "/arch:AVX2")
+    endif()
 endif()
 
 # Enable GNU C Vectorization + Reports
