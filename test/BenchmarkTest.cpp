@@ -21,7 +21,6 @@
 #include <memory>
 #include <ostream>
 #include <random>
-#include "tcb/span.hpp"
 #include <string>
 #include <sys/stat.h>
 
@@ -55,6 +54,42 @@ SCENARIO("Convolution Algorithms")
             {
                 matlab_like::convolution_full(input, kernel, reference);
                 joht_convolution::kernelCentricConvolution(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
+            THEN("Algorithm 'kernelCentricConvolutionKernelOuter' outputs the same result as `convolution_full`")
+            {
+                matlab_like::convolution_full(input, kernel, reference);
+                joht_convolution::kernelCentricConvolutionKernelOuter(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
+            THEN("Algorithm 'kernelCentricConvolutionInnerLoopUnrolled' outputs the same result as `convolution_full`")
+            {
+                matlab_like::convolution_full(input, kernel, reference);
+                joht_convolution::kernelCentricConvolutionInnerLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
+            THEN("Algorithm 'kernelCentricConvolutionOuterLoopUnrolled' outputs the same result as `convolution_full`")
+            {
+                matlab_like::convolution_full(input, kernel, reference);
+                joht_convolution::kernelCentricConvolutionOuterLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
+            THEN("Algorithm 'kernelCentricConvolutionInnerAndOuterLoopUnrolled' outputs the same result as `convolution_full`")
+            {
+                matlab_like::convolution_full(input, kernel, reference);
+                joht_convolution::kernelCentricConvolutionInnerAndOuterLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
+            THEN("Algorithm 'kernelCentricConvolutionTempScaledKernel' outputs the same result as `convolution_full`")
+            {
+                matlab_like::convolution_full(input, kernel, reference);
+                joht_convolution::kernelCentricConvolutionTempScaledKernel(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
+            THEN("Algorithm 'kernelCentricConvolutionTempScaledOuterLoopKernel' outputs the same result as `convolution_full`")
+            {
+                matlab_like::convolution_full(input, kernel, reference);
+                joht_convolution::kernelCentricConvolutionTempScaledOuterLoopKernel(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             //Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
@@ -150,6 +185,90 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
         meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
                       {
                           joht_convolution::kernelCentricConvolution(inputSpan, kernelSpan, outputSpan);
+                          return output; });
+    };
+
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionKernelOuter")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        auto const outputSize = input.size() + kernel.size() - 1;
+        std::vector<float> output(outputSize);
+        const tcb::span<const float> inputSpan = tcb::span(input);
+        const tcb::span<const float> kernelSpan = tcb::span(kernel);
+        const tcb::span<float> outputSpan = tcb::span(output);
+        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+                      {
+                          joht_convolution::kernelCentricConvolutionKernelOuter(inputSpan, kernelSpan, outputSpan);
+                          return output; });
+    };
+
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionInnerLoopUnrolled")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        auto const outputSize = input.size() + kernel.size() - 1;
+        std::vector<float> output(outputSize);
+        const tcb::span<const float> inputSpan = tcb::span(input);
+        const tcb::span<const float> kernelSpan = tcb::span(kernel);
+        const tcb::span<float> outputSpan = tcb::span(output);
+        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+                      {
+                          joht_convolution::kernelCentricConvolutionInnerLoopUnrolled(inputSpan, kernelSpan, outputSpan);
+                          return output; });
+    };
+
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionOuterLoopUnrolled")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        auto const outputSize = input.size() + kernel.size() - 1;
+        std::vector<float> output(outputSize);
+        const tcb::span<const float> inputSpan = tcb::span(input);
+        const tcb::span<const float> kernelSpan = tcb::span(kernel);
+        const tcb::span<float> outputSpan = tcb::span(output);
+        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+                      {
+                          joht_convolution::kernelCentricConvolutionOuterLoopUnrolled(inputSpan, kernelSpan, outputSpan);
+                          return output; });
+    };
+
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionInnerAndOuterLoopUnrolled")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        auto const outputSize = input.size() + kernel.size() - 1;
+        std::vector<float> output(outputSize);
+        const tcb::span<const float> inputSpan = tcb::span(input);
+        const tcb::span<const float> kernelSpan = tcb::span(kernel);
+        const tcb::span<float> outputSpan = tcb::span(output);
+        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+                      {
+                          joht_convolution::kernelCentricConvolutionInnerAndOuterLoopUnrolled(inputSpan, kernelSpan, outputSpan);
+                          return output; });
+    };
+
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionTempScaledKernel")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        auto const outputSize = input.size() + kernel.size() - 1;
+        std::vector<float> output(outputSize);
+        const tcb::span<const float> inputSpan = tcb::span(input);
+        const tcb::span<const float> kernelSpan = tcb::span(kernel);
+        const tcb::span<float> outputSpan = tcb::span(output);
+        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+                      {
+                          joht_convolution::kernelCentricConvolutionTempScaledKernel(inputSpan, kernelSpan, outputSpan);
+                          return output; });
+    };
+
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionTempScaledOuterLoopKernel")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        auto const outputSize = input.size() + kernel.size() - 1;
+        std::vector<float> output(outputSize);
+        const tcb::span<const float> inputSpan = tcb::span(input);
+        const tcb::span<const float> kernelSpan = tcb::span(kernel);
+        const tcb::span<float> outputSpan = tcb::span(output);
+        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+                      {
+                          joht_convolution::kernelCentricConvolutionTempScaledOuterLoopKernel(inputSpan, kernelSpan, outputSpan);
                           return output; });
     };
 
