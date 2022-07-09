@@ -1,0 +1,71 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "A bar chart that shows the benchmark results.",
+    "height": {
+        "step": 19
+    },
+    "data": {
+        "url": "../build/benchmark/benchmark-report.json",
+        "format": {
+            "type": "json",
+            "property": "Catch2TestRun.TestCase[0].BenchmarkResults"
+        }
+    },
+    "transform": [
+        {
+            "calculate": "toString(datum.$.name)",
+            "as": "Algorithm"
+        },
+        {
+            "calculate": "toNumber(datum.mean[0].$.value)",
+            "as": "MeanExecutionTime"
+        },
+        {
+            "filter": {
+                "field": "MeanExecutionTime",
+                "lt": 1000000
+            }
+        }
+    ],
+    "encoding": {
+        "y": {
+            "field": "Algorithm",
+            "title": "algorithm",
+            "type": "nominal",
+            "sort": "x"
+        },
+        "x": {
+            "field": "MeanExecutionTime",
+            "title": "mean execution time in ns",
+            "type": "quantitative",
+            "stack": null
+        }
+    },
+    "layer": [
+        {
+            "mark": {
+                "type": "bar",
+                "cornerRadiusEnd": 4,
+                "height": {
+                    "band": 0.90
+                }
+            }
+        },
+        {
+            "mark": {
+                "type": "text",
+                "style": "label",
+                "align": "left",
+                "baseline": "middle",
+                "dx": 4,
+                "size": 9
+            },
+            "encoding": {
+                "text": {
+                    "field": "MeanExecutionTime",
+                    "type": "quantitative"
+                }
+            }
+        }
+    ]
+}
