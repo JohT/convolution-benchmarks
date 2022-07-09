@@ -35,60 +35,63 @@ TEST_CASE("Print test data", "[.][print]")
         std::ofstream outputFile("RandomNumbers.txt", std::ios::trunc);
         random_vector_generator::printNumbers(input, "F,", outputFile);
     }
+    SECTION("Print convolution result values for reference into ConvolutionResultsReference.txt")
+    {
+        auto &input = randomSize32;
+        const auto &kernel = waveletFilterCoefficientsDaubechies16;
+        const auto convolutionLength = input.size() + kernel.size() - 1;
+        auto reference = std::vector<float>(convolutionLength, 0.0F);
+        matlab_like::convolution_full(input, kernel, reference);
+        std::ofstream outputFile("ConvolutionResultsReference.txt", std::ios::trunc);
+        random_vector_generator::printNumbers(reference, "F,", outputFile);
+    }
 }
 
 SCENARIO("Convolution Algorithms")
 {
     GIVEN("Input random number vector of size 32")
     {
-        auto &input = randomSize32;
+        const auto &input = randomSize32;
 
         WHEN("Kernel of size 16 with Daubechies Wavelet filter coefficients)")
         {
             const auto &kernel = waveletFilterCoefficientsDaubechies16;
             const auto convolutionLength = input.size() + kernel.size() - 1;
             auto output = std::vector<float>(convolutionLength, 0.0F);
-            auto reference = std::vector<float>(convolutionLength, 0.0F);
+            const auto &reference = convolutionReferenceResultOfRandomSize32WithDaubechies16;
 
             THEN("Algorithm 'kernelCentricConvolution' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
                 joht_convolution::kernelCentricConvolution(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'kernelCentricConvolutionKernelOuter' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
                 joht_convolution::kernelCentricConvolutionKernelOuter(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'kernelCentricConvolutionInnerLoopUnrolled' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
                 joht_convolution::kernelCentricConvolutionInnerLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'kernelCentricConvolutionOuterLoopUnrolled' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
                 joht_convolution::kernelCentricConvolutionOuterLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'kernelCentricConvolutionInnerAndOuterLoopUnrolled' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
                 joht_convolution::kernelCentricConvolutionInnerAndOuterLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'kernelCentricConvolutionTempScaledKernel' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
                 joht_convolution::kernelCentricConvolutionTempScaledKernel(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'kernelCentricConvolutionTempScaledOuterLoopKernel' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
                 joht_convolution::kernelCentricConvolutionTempScaledOuterLoopKernel(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
@@ -102,21 +105,17 @@ SCENARIO("Convolution Algorithms")
                 paddedInput.insert(paddedInput.begin(), padding.begin(), padding.end());
                 paddedInput.insert(paddedInput.end(), padding.begin(), padding.end());
 
-                matlab_like::convolution_full(input, kernel, reference);
                 matlab_like::convolution_valid(paddedInput, kernel, output);
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'din0s::convolve' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
                 auto *outPointer = std::addressof(output[0]);
                 din0s::convolve(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'applyFirFilterSingle' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
-
                 wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
                 auto outputFir = wilczek_convolution::applyFirFilterSingle(inputAligned);
 
@@ -125,8 +124,6 @@ SCENARIO("Convolution Algorithms")
             }
             THEN("Algorithm 'applyFirFilterInnerLoopVectorization' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
-
                 wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
                 auto outputFir = wilczek_convolution::applyFirFilterInnerLoopVectorization(inputAligned);
 
@@ -134,8 +131,6 @@ SCENARIO("Convolution Algorithms")
             }
             THEN("Algorithm 'applyFirFilterOuterLoopVectorization' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
-
                 wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
                 auto outputFir = wilczek_convolution::applyFirFilterOuterLoopVectorization(inputAligned);
 
@@ -143,8 +138,6 @@ SCENARIO("Convolution Algorithms")
             }
             THEN("Algorithm 'applyFirFilterOuterInnerLoopVectorization' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
-
                 wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
                 auto outputFir = wilczek_convolution::applyFirFilterOuterInnerLoopVectorization(inputAligned);
 
@@ -152,8 +145,6 @@ SCENARIO("Convolution Algorithms")
             }
             THEN("Algorithm 'convolve1D' outputs the same result as `convolution_full`")
             {
-                matlab_like::convolution_full(input, kernel, reference);
-
                 // "convolve1D" needs the input to be zero padded at the end.
                 // To be able to multiply the last sample of "input" with the kernel vector,
                 // the input needs further kernel-length - 1 zeroes at the end.
@@ -171,8 +162,8 @@ SCENARIO("Convolution Algorithms")
 }
 TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
 {
-    auto input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
-    auto kernel = random_vector_generator::randomNumbers(16, 0.0F, 1.0F);
+    const auto input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
+    const auto kernel = random_vector_generator::randomNumbers(16, 0.0F, 1.0F);
 
     BENCHMARK_ADVANCED("(JohT) kernelCentricConvolution")
     (Catch::Benchmark::Chronometer meter)
