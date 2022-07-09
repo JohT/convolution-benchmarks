@@ -22,10 +22,14 @@ namespace joht_convolution
     template<typename ValueType>
     void kernelCentricConvolution(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
+        // Make it obvious for the compiler (MSVC) that the size of the arrays are constant.
+        const auto inputLength = input.size();
+        const auto kernelLength = kernel.size();
+
         // Multiply every input sample with the whole kernel vector and add it to the output.
-        for (auto inputIndex = 0; inputIndex < input.size(); ++inputIndex)
+        for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
         {
-            for (auto kernelIndex = 0; kernelIndex < kernel.size(); ++kernelIndex)
+            for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
             {
                 output[inputIndex + kernelIndex] += input[inputIndex] * kernel[kernelIndex];
             }
