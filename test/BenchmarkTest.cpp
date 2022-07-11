@@ -1,4 +1,3 @@
-#include "../source/Din0sConvolution.h"
 #include "../source/JohTConvolution.h"
 #include "../source/MatlabLikeConvolution.h"
 #include "../source/SongHoAhnConvolution.h"
@@ -108,13 +107,7 @@ SCENARIO("Convolution Algorithms")
                 matlab_like::convolution_valid(paddedInput, kernel, output);
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
-            THEN("Algorithm 'din0s::convolve' outputs the same result as `convolution_full`")
-            {
-                auto *outPointer = std::addressof(output[0]);
-                din0s::convolve(input.data(), kernel.data(), outPointer, input.size(), kernel.size());
-                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
-            }
-            THEN("Algorithm 'applyFirFilterSingle' outputs the same result as `convolution_full`")
+           THEN("Algorithm 'applyFirFilterSingle' outputs the same result as `convolution_full`")
             {
                 wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
                 auto outputFir = wilczek_convolution::applyFirFilterSingle(inputAligned);
@@ -290,25 +283,6 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
         meter.measure([&paddedInput, &kernel, &output]
                       {
                           matlab_like::convolution_valid(paddedInput, kernel, output);
-                          return output; });
-    };
-
-    BENCHMARK_ADVANCED("(din0s) convolve")
-    (Catch::Benchmark::Chronometer meter)
-    {
-        const auto inputSize = static_cast<int>(input.size());
-        const auto inputPointer = input.data();
-
-        const auto kernelSize = static_cast<int>(kernel.size());
-        const auto kernelPointer = kernel.data();
-
-        const auto outSize = std::max(inputSize, kernelSize) - std::min(inputSize, kernelSize) + 1;
-        std::vector<float> output(outSize);
-        auto *outputPointer = std::to_address(output.begin().base());
-
-        meter.measure([inputPointer, kernelPointer, outputPointer, inputSize, kernelSize, &output]
-                      {
-                          din0s::convolve(inputPointer, kernelPointer, outputPointer, inputSize, kernelSize);
                           return output; });
     };
 
