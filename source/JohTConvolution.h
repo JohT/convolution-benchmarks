@@ -22,11 +22,10 @@ namespace joht_convolution
     template<typename ValueType>
     void kernelCentricConvolution(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
-        // Make it obvious for the compiler (MSVC) that the size of the arrays are constant.
-        const auto inputLength = input.size();
-        const auto kernelLength = kernel.size();
+        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
+        const int inputLength = input.size();
+        const int kernelLength = kernel.size();
 
-        // Multiply every input sample with the whole kernel vector and add it to the output.
         for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
         {
             for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
@@ -54,10 +53,13 @@ namespace joht_convolution
     template<typename ValueType>
     void kernelCentricConvolutionKernelOuter(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
-        // Multiply every input sample with the whole kernel vector and add it to the output.
-        for (auto kernelIndex = 0; kernelIndex < kernel.size(); ++kernelIndex)
+        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
+        const int inputLength = input.size();
+        const int kernelLength = kernel.size();
+
+        for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
         {
-            for (auto inputIndex = 0; inputIndex < input.size(); ++inputIndex)
+            for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
             {
                 output[inputIndex + kernelIndex] += input[inputIndex] * kernel[kernelIndex];
             }
@@ -80,11 +82,14 @@ namespace joht_convolution
     template<typename ValueType>
     void kernelCentricConvolutionInnerLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
-        // Multiply every input sample with the whole kernel vector and add it to the output.
-        for (auto inputIndex = 0; inputIndex < input.size(); ++inputIndex)
+        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
+        const int inputLength = input.size();
+        const int kernelLength = kernel.size();
+
+        for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
         {
             auto inputValue = input[inputIndex];
-            for (auto kernelIndex = 0; kernelIndex < kernel.size(); kernelIndex += 4)
+            for (auto kernelIndex = 0; kernelIndex < kernelLength; kernelIndex += 4)
             {
                 auto outputIndex = inputIndex + kernelIndex;
 
@@ -112,10 +117,13 @@ namespace joht_convolution
     template<typename ValueType>
     void kernelCentricConvolutionOuterLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
-        // Multiply every input sample with the whole kernel vector and add it to the output.
-        for (auto inputIndex = 0; inputIndex < input.size(); inputIndex += 4)
+        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
+        const int inputLength = input.size();
+        const int kernelLength = kernel.size();
+
+        for (auto inputIndex = 0; inputIndex < inputLength; inputIndex += 4)
         {
-            for (auto kernelIndex = 0; kernelIndex < kernel.size(); ++kernelIndex)
+            for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
             {
                 const auto kernelValue = kernel[kernelIndex];
                 const auto outputIndex = inputIndex + kernelIndex;
@@ -145,10 +153,13 @@ namespace joht_convolution
     template<typename ValueType>
     void kernelCentricConvolutionInnerAndOuterLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
-        // Multiply every input sample with the whole kernel vector and add it to the output.
-        for (auto kernelIndex = 0; kernelIndex < kernel.size(); kernelIndex += 4)
+        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
+        const int inputLength = input.size();
+        const int kernelLength = kernel.size();
+
+        for (auto kernelIndex = 0; kernelIndex < kernelLength; kernelIndex += 4)
         {
-            for (auto inputIndex = 0; inputIndex < input.size(); inputIndex += 4)
+            for (auto inputIndex = 0; inputIndex < inputLength; inputIndex += 4)
             {
                 const auto outputIndex = inputIndex + kernelIndex;
 
@@ -195,10 +206,13 @@ namespace joht_convolution
     template<typename ValueType>
     void kernelCentricConvolutionLoopFissioned(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
-        // Multiply every input sample with the whole kernel vector and add it to the output.
-        for (auto inputIndex = 0; inputIndex < input.size(); ++inputIndex)
+        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
+        const int inputLength = input.size();
+        const int kernelLength = kernel.size();
+
+        for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
         {
-            for (auto kernelIndex = 0; kernelIndex < kernel.size(); ++kernelIndex)
+            for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
             {
                 output[inputIndex + kernelIndex] += input[inputIndex] * kernel[kernelIndex];
             }
@@ -221,16 +235,19 @@ namespace joht_convolution
     template<typename ValueType>
     void kernelCentricConvolutionTempScaledKernel(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
+        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
+        const int inputLength = input.size();
+        const int kernelLength = kernel.size();
+
         auto scaledKernel = std::array<ValueType, 16>();
 
-        // Multiply every input sample with the whole kernel vector and add it to the output.
-        for (auto inputIndex = 0; inputIndex < input.size(); ++inputIndex)
+        for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
         {
-            for (auto kernelIndex = 0; kernelIndex < kernel.size(); ++kernelIndex)
+            for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
             {
                 scaledKernel[kernelIndex] = input[inputIndex] * kernel[kernelIndex];
             }
-            for (auto kernelIndex = 0; kernelIndex < kernel.size(); ++kernelIndex)
+            for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
             {
                 output[inputIndex + kernelIndex] += scaledKernel[kernelIndex];
             }
@@ -253,16 +270,20 @@ namespace joht_convolution
     template<typename ValueType>
     void kernelCentricConvolutionTempScaledOuterLoopKernel(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
+        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
+        const int inputLength = input.size();
+        const int kernelLength = kernel.size();
+        const int outputLength = output.size();
+
         auto scaledKernel = std::vector<ValueType>(output.size());
 
-        // Multiply every input sample with the whole kernel vector and add it to the output.
-        for (auto kernelIndex = 0; kernelIndex < kernel.size(); ++kernelIndex)
+        for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
         {
-            for (auto inputIndex = 0; inputIndex < input.size(); ++inputIndex)
+            for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
             {
                 scaledKernel[inputIndex] = input[inputIndex] * kernel[kernelIndex];
             }
-            for (auto inputIndex = 0; inputIndex < output.size(); ++inputIndex)
+            for (auto inputIndex = 0; inputIndex < outputLength; ++inputIndex)
             {
                 output[inputIndex + kernelIndex] += scaledKernel[inputIndex];
             }
