@@ -19,7 +19,8 @@ namespace chaowang15_convolution
      * @param stride stride
      * @author chaowang15
      */
-    bool convolve1D(const float *in, float *out, int dataSize, const float *kernel, int kernelSize)
+    template<typename SampleType>
+    bool convolve1D(const SampleType *in, SampleType *out, int dataSize, const SampleType *kernel, int kernelSize)
     {
         int i, j, k;
 
