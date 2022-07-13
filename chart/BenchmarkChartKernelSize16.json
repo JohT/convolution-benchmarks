@@ -20,7 +20,7 @@
             "as": "Algorithm"
         },
         {
-            "calculate": "toNumber(datum.mean[0].$.value)",
+            "calculate": "round(toNumber(datum.mean[0].$.value) / 1000)",
             "as": "MeanExecutionTime"
         }
     ],
@@ -40,7 +40,7 @@
         },
         "x": {
             "field": "MeanExecutionTime",
-            "title": "mean execution time in ns",
+            "title": "mean execution time in µs",
             "type": "quantitative",
             "stack": null
         }
