@@ -1,5 +1,6 @@
 #pragma once
 #include "tcb/span.hpp"
+#include <vector>
 
 /**
  * @brief My own (JohT) approach to compiler optimize-able convolution implementations.
@@ -239,7 +240,7 @@ namespace joht_convolution
         const int inputLength = input.size();
         const int kernelLength = kernel.size();
 
-        auto scaledKernel = std::array<ValueType, 16>();
+        auto scaledKernel = std::vector<ValueType>(kernel.size());
 
         for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
         {
