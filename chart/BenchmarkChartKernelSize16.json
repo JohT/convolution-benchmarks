@@ -1,6 +1,6 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "description": "A bar chart that shows the benchmark results.",
+    "description": "bar chart that shows the benchmark results",
     "height": {
         "step": 19
     },
@@ -13,18 +13,15 @@
     },
     "transform": [
         {
-            "calculate": "toString(datum.$.name)",
+            "filter": "indexof(datum.$.name, ' (kernel 16)') > 0"
+        },
+        {
+            "calculate": "replace(datum.$.name, ' (kernel 16)', '')",
             "as": "Algorithm"
         },
         {
             "calculate": "toNumber(datum.mean[0].$.value)",
             "as": "MeanExecutionTime"
-        },
-        {
-            "filter": {
-                "field": "MeanExecutionTime",
-                "lt": 1000000
-            }
         }
     ],
     "encoding": {
@@ -32,7 +29,14 @@
             "field": "Algorithm",
             "title": "algorithm",
             "type": "nominal",
-            "sort": "x"
+            "sort": "x",
+            "axis": {
+                "labelFontSize": 10,
+                "labelLimit": 300,
+                "labelOverlap": false,
+                "title": "algorithm with kernel size 16",
+                "titlePadding": 100
+            }
         },
         "x": {
             "field": "MeanExecutionTime",

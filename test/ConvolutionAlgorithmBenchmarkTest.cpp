@@ -7,6 +7,7 @@
 
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 
 #include <cstdio>
 #include <memory>
@@ -14,10 +15,12 @@
 
 TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
 {
+    const auto kernelLength = GENERATE(16, 1024);
     const auto input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
-    const auto kernel = random_vector_generator::randomNumbers(16, 0.0F, 1.0F);
+    const auto kernel = random_vector_generator::randomNumbers(kernelLength, 0.0F, 1.0F);
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolution")
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolution (kernel " + std::to_string(kernelLength) + ")")
+
     (Catch::Benchmark::Chronometer meter)
     {
         auto const outputSize = input.size() + kernel.size() - 1;
@@ -31,7 +34,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionKernelOuter")
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionKernelOuter (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         auto const outputSize = input.size() + kernel.size() - 1;
@@ -45,7 +48,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionInnerLoopUnrolled")
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionInnerLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         auto const outputSize = input.size() + kernel.size() - 1;
@@ -59,7 +62,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionOuterLoopUnrolled")
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionOuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         auto const outputSize = input.size() + kernel.size() - 1;
@@ -73,7 +76,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionInnerAndOuterLoopUnrolled")
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionInnerAndOuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         auto const outputSize = input.size() + kernel.size() - 1;
@@ -87,7 +90,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionTempScaledKernel")
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionTempScaledKernel (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         auto const outputSize = input.size() + kernel.size() - 1;
@@ -101,7 +104,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionTempScaledOuterLoopKernel")
+    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionTempScaledOuterLoopKernel (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         auto const outputSize = input.size() + kernel.size() - 1;
@@ -115,7 +118,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(matlab-like) convolution_full")
+    BENCHMARK_ADVANCED("(matlab-like) convolution_full (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         const auto outputSize = input.size() + kernel.size() - 1;
@@ -126,7 +129,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(matlab-like) convolution_valid")
+    BENCHMARK_ADVANCED("(matlab-like) convolution_valid (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         // "valid" means that the input needs to be padded with (kernel size - 1) zeroes
@@ -145,7 +148,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) Single")
+    BENCHMARK_ADVANCED("(wilczek) Single (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
@@ -154,7 +157,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                       { return wilczek_convolution::applyFirFilterSingle(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) Inner-Loop Vectorization")
+    BENCHMARK_ADVANCED("(wilczek) Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
@@ -163,7 +166,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                       { return wilczek_convolution::applyFirFilterInnerLoopVectorization(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) Outer-Loop Vectorization")
+    BENCHMARK_ADVANCED("(wilczek) Outer-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
@@ -172,7 +175,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                       { return wilczek_convolution::applyFirFilterOuterLoopVectorization(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) Outer- and Inner-Loop Vectorization")
+    BENCHMARK_ADVANCED("(wilczek) Outer- and Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
@@ -181,7 +184,7 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
                       { return wilczek_convolution::applyFirFilterOuterInnerLoopVectorization(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(chaowang15) convolve1D")
+    BENCHMARK_ADVANCED("(chaowang15) convolve1D (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         const auto kernelSize = kernel.size();

@@ -11,10 +11,12 @@
     "create-benchmark-directory": "mkdirp ../build/benchmark",
     "run-benchmarks": "../build/test/GettingStartedWithSIMDTests [performance] --reporter XML::out=../build/benchmark/benchmark-report.xml --reporter console::out=-::colour-mode=ansi",
     "convert-xml-to-json": "convert-xml-to-json ../build/benchmark/benchmark-report.xml ../build/benchmark/benchmark-report.json",
-    "generate-png-chart": "vl2png BenchmarkChart.json ../build/benchmark/BenchmarkChart.png",
-    "generate-svg-chart": "vl2svg BenchmarkChart.json ../build/benchmark/BenchmarkChart.svg",
-    "copy-charts": "copyfiles --verbose --flat ../build/benchmark/BenchmarkChart.png ../build/benchmark/BenchmarkChart.svg .",
-    "create-benchmark-charts": "npm run create-benchmark-directory && npm run run-benchmarks && npm run convert-xml-to-json && npm run generate-png-chart && npm run generate-svg-chart && npm run copy-charts"
+    "generate-png-chart-kernel-size-16": "vl2png BenchmarkChartKernelSize16.json ../build/benchmark/BenchmarkChartKernelSize16.png",
+    "generate-svg-chart-kernel-size-16": "vl2svg BenchmarkChartKernelSize16.json ../build/benchmark/BenchmarkChartKernelSize16.svg",
+    "generate-png-chart-kernel-size-1024": "vl2png BenchmarkChartKernelSize1024.json ../build/benchmark/BenchmarkChartKernelSize1024.png",
+    "generate-svg-chart-kernel-size-1024": "vl2svg BenchmarkChartKernelSize1024.json ../build/benchmark/BenchmarkChartKernelSize1024.svg",
+    "copy-charts": "copyfiles --verbose --flat ../build/benchmark/*.png ../build/benchmark/*.svg .",
+    "create-benchmark-charts": "npm run create-benchmark-directory && npm run run-benchmarks && npm run convert-xml-to-json && npm run generate-png-chart-kernel-size-16 && npm run generate-svg-chart-kernel-size-16 && npm run generate-png-chart-kernel-size-1024 && npm run generate-svg-chart-kernel-size-1024 && npm run copy-charts"
   },
   "author": "JohT",
   "license": "BSD-3-Clause",
