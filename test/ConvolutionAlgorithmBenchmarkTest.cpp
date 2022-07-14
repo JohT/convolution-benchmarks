@@ -13,123 +13,102 @@
 #include <memory>
 #include <string>
 
-TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
+TEST_CASE("Convolution Algorithms Benchmarks", "[performance]")
 {
     const auto kernelLength = GENERATE(16, 1024);
-    const auto input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
-    const auto kernel = random_vector_generator::randomNumbers(kernelLength, 0.0F, 1.0F);
+    const auto & input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
+    const auto & kernel = random_vector_generator::randomNumbers(kernelLength, 0.0F, 1.0F);
+    
+	const auto outputSize = input.size() + kernel.size() - 1;
+	std::vector<float> output(outputSize);
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolution (kernel " + std::to_string(kernelLength) + ")")
+    const tcb::span<const float> & inputSpan = tcb::span(input);
+    const tcb::span<const float> & kernelSpan = tcb::span(kernel);
+    const tcb::span<float> & outputSpan = tcb::span(output);
+
+    BENCHMARK_ADVANCED("kernelPerInputValue Transposed (kernel " + std::to_string(kernelLength) + ")")
 
     (Catch::Benchmark::Chronometer meter)
     {
-        auto const outputSize = input.size() + kernel.size() - 1;
-        std::vector<float> output(outputSize);
-        const tcb::span<const float> inputSpan = tcb::span(input);
-        const tcb::span<const float> kernelSpan = tcb::span(kernel);
-        const tcb::span<float> outputSpan = tcb::span(output);
         meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
                       {
-                          joht_convolution::kernelCentricConvolution(inputSpan, kernelSpan, outputSpan);
+                          joht_convolution::kernelPerInputValueTransposed(inputSpan, kernelSpan, outputSpan);
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionKernelOuter (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("inputPerKernelValue Transposed (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        auto const outputSize = input.size() + kernel.size() - 1;
-        std::vector<float> output(outputSize);
-        const tcb::span<const float> inputSpan = tcb::span(input);
-        const tcb::span<const float> kernelSpan = tcb::span(kernel);
-        const tcb::span<float> outputSpan = tcb::span(output);
         meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
                       {
-                          joht_convolution::kernelCentricConvolutionKernelOuter(inputSpan, kernelSpan, outputSpan);
+                          joht_convolution::inputPerKernelValueTransposed(inputSpan, kernelSpan, outputSpan);
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionInnerLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("inputPerKernelValue Transposed InnerLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        auto const outputSize = input.size() + kernel.size() - 1;
-        std::vector<float> output(outputSize);
-        const tcb::span<const float> inputSpan = tcb::span(input);
-        const tcb::span<const float> kernelSpan = tcb::span(kernel);
-        const tcb::span<float> outputSpan = tcb::span(output);
         meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
                       {
-                          joht_convolution::kernelCentricConvolutionInnerLoopUnrolled(inputSpan, kernelSpan, outputSpan);
+                          joht_convolution::inputPerKernelValueTransposedInnerLoopUnrolled(inputSpan, kernelSpan, outputSpan);
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionOuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("inputPerKernelValue Transposed OuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        auto const outputSize = input.size() + kernel.size() - 1;
-        std::vector<float> output(outputSize);
-        const tcb::span<const float> inputSpan = tcb::span(input);
-        const tcb::span<const float> kernelSpan = tcb::span(kernel);
-        const tcb::span<float> outputSpan = tcb::span(output);
         meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
                       {
-                          joht_convolution::kernelCentricConvolutionOuterLoopUnrolled(inputSpan, kernelSpan, outputSpan);
+                          joht_convolution::inputPerKernelValueTransposedOuterLoopUnrolled(inputSpan, kernelSpan, outputSpan);
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionInnerAndOuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("inputPerKernelValue Transposed InnerAndOuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        auto const outputSize = input.size() + kernel.size() - 1;
-        std::vector<float> output(outputSize);
-        const tcb::span<const float> inputSpan = tcb::span(input);
-        const tcb::span<const float> kernelSpan = tcb::span(kernel);
-        const tcb::span<float> outputSpan = tcb::span(output);
         meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
                       {
-                          joht_convolution::kernelCentricConvolutionInnerAndOuterLoopUnrolled(inputSpan, kernelSpan, outputSpan);
+                          joht_convolution::inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(inputSpan, kernelSpan, outputSpan);
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionTempScaledKernel (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("inputPerKernelValue Transposed LoopFission (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        auto const outputSize = input.size() + kernel.size() - 1;
-        std::vector<float> output(outputSize);
-        const tcb::span<const float> inputSpan = tcb::span(input);
-        const tcb::span<const float> kernelSpan = tcb::span(kernel);
-        const tcb::span<float> outputSpan = tcb::span(output);
         meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
                       {
-                          joht_convolution::kernelCentricConvolutionTempScaledKernel(inputSpan, kernelSpan, outputSpan);
+                          joht_convolution::inputPerKernelValueTransposedLoopFission(inputSpan, kernelSpan, outputSpan);
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelCentricConvolutionTempScaledOuterLoopKernel (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("inputPerKernelValue Transposed LoopFissionIndexArithmetic (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        auto const outputSize = input.size() + kernel.size() - 1;
-        std::vector<float> output(outputSize);
-        const tcb::span<const float> inputSpan = tcb::span(input);
-        const tcb::span<const float> kernelSpan = tcb::span(kernel);
-        const tcb::span<float> outputSpan = tcb::span(output);
         meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
                       {
-                          joht_convolution::kernelCentricConvolutionTempScaledOuterLoopKernel(inputSpan, kernelSpan, outputSpan);
+                          joht_convolution::inputPerKernelValueTransposedLoopFissionIndexArithmetic(inputSpan, kernelSpan, outputSpan);
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(matlab-like) convolution_full (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("kernelPerInputValue Transposed LoopFission (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        const auto outputSize = input.size() + kernel.size() - 1;
-        std::vector<float> output(outputSize);
+        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+                      {
+                          joht_convolution::kernelPerInputValueTransposedLoopFission(inputSpan, kernelSpan, outputSpan);
+                          return output; });
+    };
+
+    BENCHMARK_ADVANCED("(matlab-like) conv 'full' shape (kernel " + std::to_string(kernelLength) + ")")
+    (Catch::Benchmark::Chronometer meter)
+    {
         meter.measure([&input, &kernel, &output]
                       {
                           matlab_like::convolution_full(input, kernel, output);
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(matlab-like) convolution_valid (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(matlab-like) conv 'valid' shape pre padded (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         // "valid" means that the input needs to be padded with (kernel size - 1) zeroes
@@ -138,9 +117,6 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
         auto padding = std::vector<float>(kernel.size() - 1, 0.0);
         paddedInput.insert(paddedInput.begin(), padding.begin(), padding.end());
         paddedInput.insert(paddedInput.end(), padding.begin(), padding.end());
-
-        const auto outputSize = input.size() + kernel.size() - 1;
-        std::vector<float> output(outputSize);
 
         meter.measure([&paddedInput, &kernel, &output]
                       {
@@ -199,8 +175,6 @@ TEST_CASE("Benchmark Convolution Algorithms", "[performance]")
 
         const auto *kernelPointer = kernel.data();
 
-        auto const outputSize = input.size() + kernel.size() - 1;
-        std::vector<float> output(outputSize);
         auto *outputPointer = std::addressof(output[0]);
 
         meter.measure([paddedInputPointer, outputSize, kernelPointer, kernelSize, outputPointer, &output]

@@ -20,39 +20,44 @@ SCENARIO("Convolution Algorithms")
             auto output = std::vector<float>(convolutionLength, 0.0F);
             const auto &reference = convolutionReferenceResultOfRandomSize32WithDaubechies16;
 
-            THEN("Algorithm 'kernelCentricConvolution' outputs the same result as `convolution_full`")
+            THEN("Algorithm 'kernelPerInputValueTransposed' outputs the same result as `convolution_full`")
             {
-                joht_convolution::kernelCentricConvolution(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::kernelPerInputValueTransposed(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
-            THEN("Algorithm 'kernelCentricConvolutionKernelOuter' outputs the same result as `convolution_full`")
+            THEN("Algorithm 'inputPerKernelValueTransposed' outputs the same result as `convolution_full`")
             {
-                joht_convolution::kernelCentricConvolutionKernelOuter(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposed(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
-            THEN("Algorithm 'kernelCentricConvolutionInnerLoopUnrolled' outputs the same result as `convolution_full`")
+            THEN("Algorithm 'inputPerKernelValueTransposedInnerLoopUnrolled' outputs the same result as `convolution_full`")
             {
-                joht_convolution::kernelCentricConvolutionInnerLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposedInnerLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
-            THEN("Algorithm 'kernelCentricConvolutionOuterLoopUnrolled' outputs the same result as `convolution_full`")
+            THEN("Algorithm 'inputPerKernelValueTransposedOuterLoopUnrolled' outputs the same result as `convolution_full`")
             {
-                joht_convolution::kernelCentricConvolutionOuterLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposedOuterLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
-            THEN("Algorithm 'kernelCentricConvolutionInnerAndOuterLoopUnrolled' outputs the same result as `convolution_full`")
+            THEN("Algorithm 'inputPerKernelValueTransposedInnerAndOuterLoopUnrolled' outputs the same result as `convolution_full`")
             {
-                joht_convolution::kernelCentricConvolutionInnerAndOuterLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
-            THEN("Algorithm 'kernelCentricConvolutionTempScaledKernel' outputs the same result as `convolution_full`")
+            THEN("Algorithm 'inputPerKernelValueTransposedLoopFission' outputs the same result as `convolution_full`")
             {
-                joht_convolution::kernelCentricConvolutionTempScaledKernel(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposedLoopFission(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
-            THEN("Algorithm 'kernelCentricConvolutionTempScaledOuterLoopKernel' outputs the same result as `convolution_full`")
+            THEN("Algorithm 'kernelPerInputValueTransposedLoopFission' outputs the same result as `convolution_full`")
             {
-                joht_convolution::kernelCentricConvolutionTempScaledOuterLoopKernel(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::kernelPerInputValueTransposedLoopFission(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
+            THEN("Algorithm 'inputPerKernelValueTransposedLoopFissionIndexArithmetic' outputs the same result as `convolution_full`")
+            {
+                joht_convolution::inputPerKernelValueTransposedLoopFissionIndexArithmetic(tcb::span(input), tcb::span(kernel), tcb::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             //Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution

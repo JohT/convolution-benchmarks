@@ -3,16 +3,25 @@
 #include <vector>
 
 /**
- * @brief My own (JohT) approach to compiler optimize-able convolution implementations.
+ * @brief Compiler optimize-able convolution implementation experiments.
  * @author JohT
  */
 namespace joht_convolution
 {
     /**
-     * @brief Own approach of a convolution implementation that multiplies the kernel vector first and uses spans.
+     * @brief Convolution implementation that multiplies every input value with the whole kernel vector 
+     * and sums up the results to the output vector.
      * 
-     * The output needs to have a length of inputSize + kernelSize - 1.
-     * All output values need to be zero.
+     * <b>Notice:</b>
+     *  - The output needs to have a length of inputSize + kernelSize - 1.
+     *  - All output values need to be zero initially for a "clean" run. 
+     *  - The first kernelSize - 1 values might contain the last values 
+     *    of a previous block convolution for a continuos convolution.
+     *  - The input does not need to be zero-padded.
+     *
+     * A drawback of this "FIR Direct Form Transposed" approach is that intermediate results are written to the output 
+     * that need to be read again in the next iteration (to be summed up). This leads to a data dependency
+     * between loop iterations.
      * 
      * @tparam ValueType 
      * @param input span of input values
@@ -21,11 +30,11 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void kernelCentricConvolution(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void kernelPerInputValueTransposed(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const int inputLength = input.size();
-        const int kernelLength = kernel.size();
+        const auto inputLength = static_cast<int>(input.size());
+        const auto kernelLength = static_cast<int>(kernel.size());
 
         for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
         {
@@ -37,13 +46,21 @@ namespace joht_convolution
     }
 
     /**
-     * @brief Own approach of a convolution implementation that multiplies the kernel vector first and uses spans.
+     * @brief Convolution implementation that multiplies every kernel value with the whole input vector 
+     * and sums up the results to the output vector. 
      * 
-     * The output needs to have a length of inputSize + kernelSize - 1.
-     * All output values need to be zero.
-     * The outer loop provides the kernel index. Since the kernel is smaller and the values (=filter coefficients= are typically constant, 
-     * this could be beneficial for caching.
-     * -> With CLang vectorization/optimization, this seems to be the fastest way to do this for now (2022-07-05).
+     * <b>Notice:</b>
+     *  - The output needs to have a length of inputSize + kernelSize - 1.
+     *  - All output values need to be zero initially for a "clean" run. 
+     *  - The first kernelSize - 1 values might contain the last values 
+     *    of a previous block convolution for a continuos convolution.
+     *  - The input does not need to be zero-padded.
+     *
+     * A drawback of this "FIR Direct Form Transposed" approach is that intermediate results are written to the output 
+     * that need to be read again in the next iteration (to be summed up). This leads to a data dependency
+     * between loop iterations.
+     * 
+     * -> This seems to be the fastest approach with CLang compiler vectorization/optimization for small kernels.
      * 
      * @tparam ValueType 
      * @param input span of input values
@@ -52,11 +69,11 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void kernelCentricConvolutionKernelOuter(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposed(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const int inputLength = input.size();
-        const int kernelLength = kernel.size();
+        const auto inputLength = static_cast<int>(input.size());
+        const auto kernelLength = static_cast<int>(kernel.size());
 
         for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
         {
@@ -68,11 +85,20 @@ namespace joht_convolution
     }
 
     /**
-     * @brief Own approach of a convolution implementation that multiplies the kernel vector first and uses spans.
+     * @brief Convolution implementation that multiplies every kernel value with the whole input vector 
+     * and sums up the results to the output vector. The inner loop is manually unrolled (4x interleaved).
      * 
-     * The output needs to have a length of inputSize + kernelSize - 1.
-     * All output values need to be zero.
-     * Variant with inner loop unrolled.
+     * <b>Notice:</b>
+     *  - The output needs to have a length of inputSize + kernelSize - 1.
+     *  - All output values need to be zero initially for a "clean" run. 
+     *  - The first kernelSize - 1 values might contain the last values 
+     *    of a previous block convolution for a continuos convolution.
+     *  - The input does not need to be zero-padded.
+     *  - The kernel length needs to be dividable by 4 (without remainder).
+     *
+     * A drawback of this "FIR Direct Form Transposed" approach is that intermediate results are written to the output 
+     * that need to be read again in the next iteration (to be summed up). This leads to a data dependency
+     * between loop iterations.
      * 
      * @tparam ValueType 
      * @param input span of input values
@@ -81,18 +107,18 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void kernelCentricConvolutionInnerLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposedInnerLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const int inputLength = input.size();
-        const int kernelLength = kernel.size();
+        const auto inputLength = static_cast<int>(input.size());
+        const auto kernelLength = static_cast<int>(kernel.size());
 
-        for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
+        for (auto kernelIndex = 0; kernelIndex < kernelLength; kernelIndex += 4)
         {
-            auto inputValue = input[inputIndex];
-            for (auto kernelIndex = 0; kernelIndex < kernelLength; kernelIndex += 4)
+            for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
             {
-                auto outputIndex = inputIndex + kernelIndex;
+                const auto & inputValue = input[inputIndex];
+                const auto & outputIndex = inputIndex + kernelIndex;
 
                 output[outputIndex] += inputValue * kernel[kernelIndex];
                 output[outputIndex + 1] += inputValue * kernel[kernelIndex + 1];
@@ -103,12 +129,21 @@ namespace joht_convolution
     }
 
     /**
-     * @brief Own approach of a convolution implementation that multiplies the kernel vector first and uses spans.
+     * @brief Convolution implementation that multiplies every kernel value with the whole input vector 
+     * and sums up the results to the output vector. The outer loop is manually unrolled (4x interleaved).
      * 
-     * The output needs to have a length of inputSize + kernelSize - 1.
-     * All output values need to be zero.
-     * Variant with outer loop unrolled.
-
+     * <b>Notice:</b>
+     *  - The output needs to have a length of inputSize + kernelSize - 1.
+     *  - All output values need to be zero initially for a "clean" run. 
+     *  - The first kernelSize - 1 values might contain the last values 
+     *    of a previous block convolution for a continuos convolution.
+     *  - The input does not need to be zero-padded.
+     *  - The input length needs to be dividable by 4 (without remainder).
+     *
+     * A drawback of this "FIR Direct Form Transposed" approach is that intermediate results are written to the output 
+     * that need to be read again in the next iteration (to be summed up). This leads to a data dependency
+     * between loop iterations.
+     * 
      * @tparam ValueType 
      * @param input span of input values
      * @param kernel span of kernel values (e.g. filter coefficients)
@@ -116,15 +151,15 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void kernelCentricConvolutionOuterLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposedOuterLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const int inputLength = input.size();
-        const int kernelLength = kernel.size();
+        const auto inputLength = static_cast<int>(input.size());
+        const auto kernelLength = static_cast<int>(kernel.size());
 
-        for (auto inputIndex = 0; inputIndex < inputLength; inputIndex += 4)
+        for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
         {
-            for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
+            for (auto inputIndex = 0; inputIndex < inputLength; inputIndex += 4)
             {
                 const auto kernelValue = kernel[kernelIndex];
                 const auto outputIndex = inputIndex + kernelIndex;
@@ -138,13 +173,21 @@ namespace joht_convolution
     }
 
     /**
-     * @brief Own approach of a convolution implementation with 4-times unrolled inner- and outer loop.
+     * @brief Convolution implementation that multiplies every kernel value with the whole input vector 
+     * and sums up the results to the output vector. The inner and outer loop are manually unrolled (4x interleaved).
      * 
-     * The output needs to have a length of inputSize + kernelSize - 1.
-     * All output values need to be zero.
-     * Classic form with inner and outer loop unrolled (4 indices at once).
-     * This only works if the input and the kernel have a length that is dividable by 4.
+     * <b>Notice:</b>
+     *  - The output needs to have a length of inputSize + kernelSize - 1.
+     *  - All output values need to be zero initially for a "clean" run. 
+     *  - The first kernelSize - 1 values might contain the last values 
+     *    of a previous block convolution for a continuos convolution.
+     *  - The input does not need to be zero-padded.
+     *  - The input and kernel length need to be dividable by 4 (without remainder).
      *
+     * A drawback of this "FIR Direct Form Transposed" approach is that intermediate results are written to the output 
+     * that need to be read again in the next iteration (to be summed up). This leads to a data dependency
+     * between loop iterations.
+     * 
      * @tparam ValueType 
      * @param input span of input values
      * @param kernel span of kernel values (e.g. filter coefficients)
@@ -152,11 +195,11 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void kernelCentricConvolutionInnerAndOuterLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const int inputLength = input.size();
-        const int kernelLength = kernel.size();
+        const auto inputLength = static_cast<int>(input.size());
+        const auto kernelLength = static_cast<int>(kernel.size());
 
         for (auto kernelIndex = 0; kernelIndex < kernelLength; kernelIndex += 4)
         {
@@ -191,12 +234,19 @@ namespace joht_convolution
     }
 
     /**
-     * @brief Own approach of a convolution implementation that multiplies the kernel vector first and uses spans.
+     * @brief Convolution implementation that multiplies every kernel value with the whole input vector,
+     * stores the results in a temporary buffer and sums up the results to the output vector in a second loop. 
      * 
-     * The output needs to have a length of inputSize + kernelSize - 1.
-     * All output values need to be zero.
-     * Variation with inner and outer loop unrolled (4 indices at once).
-     * This only works if the input and the kernel have a length that is dividable by 4.
+     * <b>Notice:</b>
+     *  - The output needs to have a length of inputSize + kernelSize - 1.
+     *  - All output values need to be zero initially for a "clean" run. 
+     *  - The first kernelSize - 1 values might contain the last values 
+     *    of a previous block convolution for a continuos convolution.
+     *  - The input does not need to be zero-padded.
+     *
+     * A drawback of this "FIR Direct Form Transposed" approach is that intermediate results are written to the output 
+     * that need to be read again in the next iteration (to be summed up). This leads to a data dependency
+     * between loop iterations.
      * 
      * @tparam ValueType 
      * @param input span of input values
@@ -205,27 +255,43 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void kernelCentricConvolutionLoopFissioned(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposedLoopFission(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const int inputLength = input.size();
-        const int kernelLength = kernel.size();
+        const auto inputLength = static_cast<int>(input.size());
+        const auto kernelLength = static_cast<int>(kernel.size());
 
-        for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
+        // TODO The following memory allocation should be done once outside.
+        auto scaledInput = std::vector<ValueType>(input.size());
+
+        for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
         {
-            for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
+            for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
             {
-                output[inputIndex + kernelIndex] += input[inputIndex] * kernel[kernelIndex];
+                scaledInput[inputIndex] = input[inputIndex] * kernel[kernelIndex];
+            }
+            for (auto outputIndex = kernelIndex; outputIndex < inputLength + kernelIndex; ++outputIndex)
+            {
+                output[outputIndex] += scaledInput[outputIndex - kernelIndex];
             }
         }
     }
 
     /**
-     * @brief Own approach of a convolution implementation that multiplies the kernel vector first and uses spans.
+     * @brief Convolution implementation that multiplies every kernel value with the whole input vector,
+     * stores the results in a temporary buffer and sums up the results to the output vector in a second loop,
+     * whereas the index of the output value is calculated (addition). 
      * 
-     * The output needs to have a length of inputSize + kernelSize - 1.
-     * All output values need to be zero.
-     * Variant with temporary scaled kernel vector.
+     * <b>Notice:</b>
+     *  - The output needs to have a length of inputSize + kernelSize - 1.
+     *  - All output values need to be zero initially for a "clean" run. 
+     *  - The first kernelSize - 1 values might contain the last values 
+     *    of a previous block convolution for a continuos convolution.
+     *  - The input does not need to be zero-padded.
+     *
+     * A drawback of this "FIR Direct Form Transposed" approach is that intermediate results are written to the output 
+     * that need to be read again in the next iteration (to be summed up). This leads to a data dependency
+     * between loop iterations.
      * 
      * @tparam ValueType 
      * @param input span of input values
@@ -234,11 +300,56 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void kernelCentricConvolutionTempScaledKernel(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposedLoopFissionIndexArithmetic(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const int inputLength = input.size();
-        const int kernelLength = kernel.size();
+        const auto inputLength = static_cast<int>(input.size());
+        const auto kernelLength = static_cast<int>(kernel.size());
+        const auto outputLength = static_cast<int>(output.size());
+
+        // TODO The following memory allocation should be done once outside.
+        auto scaledKernel = std::vector<ValueType>(output.size());
+
+        for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
+        {
+            for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
+            {
+                scaledKernel[inputIndex] = input[inputIndex] * kernel[kernelIndex];
+            }
+            for (auto inputIndex = 0; inputIndex < outputLength; ++inputIndex)
+            {
+                output[inputIndex + kernelIndex] += scaledKernel[inputIndex];
+            }
+        }
+    }
+
+    /**
+     * @brief Convolution implementation that multiplies every input value with the whole kernel vector,
+     * stores the (scaled kernel) results in a temporary buffer and sums up the results to the output vector in a second loop. 
+     * 
+     * <b>Notice:</b>
+     *  - The output needs to have a length of inputSize + kernelSize - 1.
+     *  - All output values need to be zero initially for a "clean" run. 
+     *  - The first kernelSize - 1 values might contain the last values 
+     *    of a previous block convolution for a continuos convolution.
+     *  - The input does not need to be zero-padded.
+     *
+     * A drawback of this "FIR Direct Form Transposed" approach is that intermediate results are written to the output 
+     * that need to be read again in the next iteration (to be summed up). This leads to a data dependency
+     * between loop iterations.
+     * 
+     * @tparam ValueType 
+     * @param input span of input values
+     * @param kernel span of kernel values (e.g. filter coefficients)
+     * @param output output span
+     * @author JohT
+     */
+    template<typename ValueType>
+    void kernelPerInputValueTransposedLoopFission(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    {
+        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
+        const auto inputLength = static_cast<int>(input.size());
+        const auto kernelLength = static_cast<int>(kernel.size());
 
         auto scaledKernel = std::vector<ValueType>(kernel.size());
 
@@ -255,39 +366,4 @@ namespace joht_convolution
         }
     }
 
-    /**
-     * @brief Own approach of a convolution implementation that multiplies the kernel vector first and uses spans.
-     * 
-     * The output needs to have a length of inputSize + kernelSize - 1.
-     * All output values need to be zero.
-     * Variant with temporary scaled kernel vector.
-     * 
-     * @tparam ValueType 
-     * @param input span of input values
-     * @param kernel span of kernel values (e.g. filter coefficients)
-     * @param output output span
-     * @author JohT
-     */
-    template<typename ValueType>
-    void kernelCentricConvolutionTempScaledOuterLoopKernel(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
-    {
-        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const int inputLength = input.size();
-        const int kernelLength = kernel.size();
-        const int outputLength = output.size();
-
-        auto scaledKernel = std::vector<ValueType>(output.size());
-
-        for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
-        {
-            for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
-            {
-                scaledKernel[inputIndex] = input[inputIndex] * kernel[kernelIndex];
-            }
-            for (auto inputIndex = 0; inputIndex < outputLength; ++inputIndex)
-            {
-                output[inputIndex + kernelIndex] += scaledKernel[inputIndex];
-            }
-        }
-    }
 }// namespace joht_convolution
