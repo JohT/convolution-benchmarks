@@ -35,6 +35,9 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")  # Using Microsoft Visual Studio 
     target_compile_options(compiler_options INTERFACE "/MP")
     # Exception handling with standard C++ stack unwinding (s) and assume that extern "C" never throw a C++ exception (c) (MSVC)
     target_compile_options(compiler_options INTERFACE "/EHsc")
+    # Allows the compiler to reorder, combine, or simplify floating-point operations to optimize floating-point code for speed and space.
+    # https://docs.microsoft.com/en-us/cpp/build/reference/fp-specify-floating-point-behavior?view=msvc-170#fast
+    target_compile_options(compiler_options INTERFACE "/fp:fast")
 endif()
 
 # Sanitizers

@@ -44,7 +44,9 @@ namespace joht_convolution
 
             for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
             {
-                output[inputIndex + kernelIndex] += inputValue * kernel[kernelIndex];
+                // It seems to be beneficial to put the constant factor last 
+                // when MSVC compile option "/fp:fast" is activated.
+                output[inputIndex + kernelIndex] += kernel[kernelIndex] * inputValue;
             }
         }
     }
@@ -87,6 +89,8 @@ namespace joht_convolution
 
             for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
             {
+                // It seems to be beneficial to put the constant factor last 
+                // when MSVC compile option "/fp:fast" is activated.
                 output[inputIndex + kernelIndex] += input[inputIndex] * kernelValue;
             }
         }
