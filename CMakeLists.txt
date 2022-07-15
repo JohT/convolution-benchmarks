@@ -54,13 +54,16 @@ message(VERBOSE "C++ Language Standard set to C++20 for Target ${PROJECT_NAME}")
 #endif()
 
 # Add library "span" which is a "Implementation of C++20's std::span for older compilers".
-CPMAddPackage("gh:tcbrindle/span#836dc6a0efd9849cb194e88e4aa2387436bb079b")
+# Not used any more since std::span (C++ 20) is supported by most of the modern compilers.
+# (GCC 10, CLang 7, MSVC 19.26, Apple CLan 10)
+# Reference: https://en.cppreference.com/w/cpp/compiler_support 
+#CPMAddPackage("gh:tcbrindle/span#836dc6a0efd9849cb194e88e4aa2387436bb079b")
 
 # Import span header to include with #include "tcb/span.hpp"
-if (span_ADDED)
-    include_directories("${PROJECT_NAME}" PRIVATE "${span_SOURCE_DIR}/include")
-    message(VERBOSE "tcb span headers directory included for all targets: ${span_SOURCE_DIR}/include")
-endif()
+#if (span_ADDED)
+#    include_directories("${PROJECT_NAME}" PRIVATE "${span_SOURCE_DIR}/include")
+#    message(VERBOSE "tcb span headers directory included for all targets: ${span_SOURCE_DIR}/include")
+#endif()
 
 # Get all source files in the src directory and store them in the project_sources variable.
 # GLOB_RECURSE is not recommended but used here for simplicity: https://cmake.org/cmake/help/latest/command/file.html?highlight=CONFIGURE_DEPENDS#filesystem

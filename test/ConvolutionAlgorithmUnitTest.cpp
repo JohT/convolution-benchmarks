@@ -22,42 +22,42 @@ SCENARIO("Convolution Algorithms")
 
             THEN("Algorithm 'kernelPerInputValueTransposed' outputs the same result as `convolution_full`")
             {
-                joht_convolution::kernelPerInputValueTransposed(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::kernelPerInputValueTransposed(std::span(input), std::span(kernel), std::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'inputPerKernelValueTransposed' outputs the same result as `convolution_full`")
             {
-                joht_convolution::inputPerKernelValueTransposed(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposed(std::span(input), std::span(kernel), std::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'inputPerKernelValueTransposedInnerLoopUnrolled' outputs the same result as `convolution_full`")
             {
-                joht_convolution::inputPerKernelValueTransposedInnerLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposedInnerLoopUnrolled(std::span(input), std::span(kernel), std::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'inputPerKernelValueTransposedOuterLoopUnrolled' outputs the same result as `convolution_full`")
             {
-                joht_convolution::inputPerKernelValueTransposedOuterLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposedOuterLoopUnrolled(std::span(input), std::span(kernel), std::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'inputPerKernelValueTransposedInnerAndOuterLoopUnrolled' outputs the same result as `convolution_full`")
             {
-                joht_convolution::inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(std::span(input), std::span(kernel), std::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'inputPerKernelValueTransposedLoopFission' outputs the same result as `convolution_full`")
             {
-                joht_convolution::inputPerKernelValueTransposedLoopFission(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposedLoopFission(std::span(input), std::span(kernel), std::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'kernelPerInputValueTransposedLoopFission' outputs the same result as `convolution_full`")
             {
-                joht_convolution::kernelPerInputValueTransposedLoopFission(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::kernelPerInputValueTransposedLoopFission(std::span(input), std::span(kernel), std::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             THEN("Algorithm 'inputPerKernelValueTransposedLoopFissionIndexArithmetic' outputs the same result as `convolution_full`")
             {
-                joht_convolution::inputPerKernelValueTransposedLoopFissionIndexArithmetic(tcb::span(input), tcb::span(kernel), tcb::span(output));
+                joht_convolution::inputPerKernelValueTransposedLoopFissionIndexArithmetic(std::span(input), std::span(kernel), std::span(output));
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
             //Reference: https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution

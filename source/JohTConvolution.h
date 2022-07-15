@@ -1,5 +1,5 @@
 #pragma once
-#include "tcb/span.hpp"
+#include <span>
 #include <vector>
 
 /**
@@ -30,7 +30,7 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void kernelPerInputValueTransposed(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void kernelPerInputValueTransposed(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
         const auto inputLength = static_cast<int>(input.size());
@@ -73,7 +73,7 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposed(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposed(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
         const auto inputLength = static_cast<int>(input.size());
@@ -115,7 +115,7 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposedInnerLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposedInnerLoopUnrolled(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
         const auto inputLength = static_cast<int>(input.size());
@@ -159,7 +159,7 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposedOuterLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposedOuterLoopUnrolled(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
         const auto inputLength = static_cast<int>(input.size());
@@ -203,7 +203,7 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
         const auto inputLength = static_cast<int>(input.size());
@@ -263,7 +263,7 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposedLoopFission(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposedLoopFission(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
         const auto inputLength = static_cast<int>(input.size());
@@ -308,7 +308,7 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposedLoopFissionIndexArithmetic(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void inputPerKernelValueTransposedLoopFissionIndexArithmetic(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
         const auto inputLength = static_cast<int>(input.size());
@@ -353,7 +353,7 @@ namespace joht_convolution
      * @author JohT
      */
     template<typename ValueType>
-    void kernelPerInputValueTransposedLoopFission(const tcb::span<const ValueType> &input, const tcb::span<const ValueType> &kernel, const tcb::span<ValueType> &output)
+    void kernelPerInputValueTransposedLoopFission(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
     {
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
         const auto inputLength = static_cast<int>(input.size());

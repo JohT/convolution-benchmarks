@@ -22,9 +22,9 @@ TEST_CASE("Convolution Algorithms Benchmarks", "[performance]")
 	const auto outputSize = input.size() + kernel.size() - 1;
 	std::vector<float> output(outputSize);
 
-    const tcb::span<const float> & inputSpan = tcb::span(input);
-    const tcb::span<const float> & kernelSpan = tcb::span(kernel);
-    const tcb::span<float> & outputSpan = tcb::span(output);
+    const std::span<const float> & inputSpan = std::span(input);
+    const std::span<const float> & kernelSpan = std::span(kernel);
+    const std::span<float> & outputSpan = std::span(output);
 
     BENCHMARK_ADVANCED("kernelPerInputValue Transposed (kernel " + std::to_string(kernelLength) + ")")
 
