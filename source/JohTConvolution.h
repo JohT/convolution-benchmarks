@@ -38,9 +38,13 @@ namespace joht_convolution
 
         for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
         {
+            // Makes it obvious for the compiler (especially MSVC) that the factor is constant.
+            // Otherwise this message occurs: "1203: Loop body includes on-contiguous accesses into an array".
+            const auto inputValue = input[inputIndex];
+
             for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
             {
-                output[inputIndex + kernelIndex] += input[inputIndex] * kernel[kernelIndex];
+                output[inputIndex + kernelIndex] += inputValue * kernel[kernelIndex];
             }
         }
     }
@@ -77,9 +81,13 @@ namespace joht_convolution
 
         for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
         {
+            // Makes it obvious for the compiler (especially MSVC) that the factor is constant.
+            // Otherwise this message occurs: "1203: Loop body includes on-contiguous accesses into an array".
+            const auto kernelValue = kernel[kernelIndex];
+
             for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
             {
-                output[inputIndex + kernelIndex] += input[inputIndex] * kernel[kernelIndex];
+                output[inputIndex + kernelIndex] += input[inputIndex] * kernelValue;
             }
         }
     }
@@ -117,8 +125,8 @@ namespace joht_convolution
         {
             for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
             {
-                const auto & inputValue = input[inputIndex];
-                const auto & outputIndex = inputIndex + kernelIndex;
+                const auto &inputValue = input[inputIndex];
+                const auto &outputIndex = inputIndex + kernelIndex;
 
                 output[outputIndex] += inputValue * kernel[kernelIndex];
                 output[outputIndex + 1] += inputValue * kernel[kernelIndex + 1];
