@@ -26,7 +26,9 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")  # Using Microsoft Visual Studio 
     # Debugger data in DEBUG mode (MSVC)
     target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:/Zi>")
     # No optimization in DEBUG mode. Not meant for benchmarking. (MSVC)
-    target_compile_options(compiler_options INTERFACE "/O0")
+    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Debug>:/Od>")
+    # Full (but stable) Optimization in RELEASE mode
+    target_compile_options(compiler_options INTERFACE "$<$<CONFIG:Release>:/O2>")
     # Replaces some function calls with intrinsic or otherwise special forms of the function that help your application run faster. (MSVC)
     target_compile_options(compiler_options INTERFACE "/Oi")
     # Build with Multiple Processes (MSVC)
@@ -63,8 +65,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC") # Using Microsoft Visual Studio C++
     # Report successfully and unsuccessfully vectorized loops
     target_compile_options(compiler_options INTERFACE "/Qvec-report:2")
     # Specifies the architecture for code generation on x64 [AVX|AVX2|AVX512]
-    # Introduced around 2013 AVX2 should be probably supported by most PCs nowadays
-    target_compile_options(compiler_options INTERFACE "/arch:AVX2")
+    # Introduced around 2013, AVX2 should probably be supported by most PCs nowadays
+    # except for some mini PC CPUs like the Intel Celeron N3450 (Mid 2016, No AVX). 
+    if (HAVE_AVX2_EXTENSIONS)
+        target_compile_options(compiler_options INTERFACE "/arch:AVX2")
+    endif()
 endif()
 
 # Enable GNU C Vectorization + Reports

@@ -14,7 +14,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Download "cpm", the setup-free CMake dependency management 
 # https://github.com/cpm-cmake/CPM.cmake
-set(CPM_DOWNLOAD_VERSION 0.35.0)
+set(CPM_DOWNLOAD_VERSION 0.35.1)
 set(CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM_${CPM_DOWNLOAD_VERSION}.cmake")
 if(NOT (EXISTS ${CPM_DOWNLOAD_LOCATION}))
     message(STATUS "Downloading CPM.cmake")
@@ -33,7 +33,7 @@ if (UniversalBinary)
 endif()
 
 # Set runtime library for windows when using Microsoft Visual Studio (Build Tools)
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
 message(VERBOSE "CMAKE_SYSTEM_VERSION: ${CMAKE_SYSTEM_VERSION}")
 message(VERBOSE "CMAKE_FIND_LIBRARY_SUFFIXES: ${CMAKE_FIND_LIBRARY_SUFFIXES}")

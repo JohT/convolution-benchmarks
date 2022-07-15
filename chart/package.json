@@ -7,21 +7,40 @@
     "url": "https://github.com/JohT/getting-started-with-simd.git"
   },
   "scripts": {
-    "test": "npm run run-benchmarks",
-    "create-benchmark-directory": "mkdirp ../build/benchmark",
-    "run-benchmarks": "../build/test/GettingStartedWithSIMDTests [performance] --reporter XML::out=../build/benchmark/benchmark-report.xml --reporter console::out=-::colour-mode=ansi",
-    "convert-xml-to-json": "convert-xml-to-json ../build/benchmark/benchmark-report.xml ../build/benchmark/benchmark-report.json",
-    "generate-png-chart": "vl2png BenchmarkChartHorizontal.json ../build/benchmark/BenchmarkChartHorizontal.png",
-    "generate-svg-chart": "vl2svg BenchmarkChartHorizontal.json ../build/benchmark/BenchmarkChartHorizontal.svg",
-    "copy-charts": "copyfiles --verbose --flat ../build/benchmark/*.png ../build/benchmark/*.svg .",
-    "create-benchmark-charts": "npm run create-benchmark-directory && npm run run-benchmarks && npm run convert-xml-to-json && npm run generate-png-chart && npm run generate-svg-chart && npm run copy-charts"
+    "test": "npm run execute-benchmarks",
+    "delete-benchmark-directory": "rimraf ./../build/benchmark",
+    "create-benchmark-directory": "mkdirp ./../build/benchmark",
+    "execute-benchmarks": "run-script-os",
+    "execute-benchmarks:windows": "..\\build\\test\\GettingStartedWithSIMDTests.exe [performance] --reporter XML::out=..\\build\\benchmark\\benchmark-report.xml --reporter console::out=-::colour-mode=win32",
+    "execute-benchmarks:default": "./../build/test/GettingStartedWithSIMDTests [performance] --reporter XML::out=./../build/benchmark/benchmark-report.xml --reporter console::out=-::colour-mode=ansi",
+    "convert-xml-to-json": "run-script-os",
+    "convert-xml-to-json:windows": "convert-xml-to-json ..\\build\\benchmark\\benchmark-report.xml ..\\build\\benchmark\\benchmark-report.json",
+    "convert-xml-to-json:default": "convert-xml-to-json ./../build/benchmark/benchmark-report.xml ./../build/benchmark/benchmark-report.json",
+    "generate-png-chart": "run-script-os",
+    "generate-png-chart:windows": "vl2png BenchmarkChartHorizontal.json ./../build/benchmark/BenchmarkChartWindows.png",
+    "generate-png-chart:macos": "vl2png BenchmarkChartHorizontal.json ./../build/benchmark/BenchmarkChartMacOs.png",
+    "generate-png-chart:linux": "vl2png BenchmarkChartHorizontal.json ./../build/benchmark/BenchmarkChartLinux.png",
+    "generate-png-chart:default": "vl2png BenchmarkChartHorizontal.json ./../build/benchmark/BenchmarkChart.png",
+    "generate-svg-chart": "run-script-os",
+    "generate-svg-chart:windows": "vl2svg BenchmarkChartHorizontal.json ./../build/benchmark/BenchmarkChartWindows.svg",
+    "generate-svg-chart:macos": "vl2svg BenchmarkChartHorizontal.json ./../build/benchmark/BenchmarkChartMacOs.svg",
+    "generate-svg-chart:linux": "vl2svg BenchmarkChartHorizontal.json ./../build/benchmark/BenchmarkChartLinux.svg",
+    "generate-svg-chart:default": "vl2svg BenchmarkChartHorizontal.json ./../build/benchmark/BenchmarkChart.svg",
+    "copy-charts": "copyfiles --verbose --flat ../build/benchmark/*.png ./../build/benchmark/*.svg .",
+    "create-benchmark-charts": "npm-run-all delete-benchmark-directory create-benchmark-directory execute-benchmarks convert-xml-to-json generate-png-chart generate-svg-chart copy-charts"
   },
   "author": "JohT",
   "license": "BSD-3-Clause",
   "devDependencies": {
+    "canvas": "^2.9.3",
     "convert-xml-to-json": "^1.0.0",
     "copyfiles": "^2.4.1",
     "mkdirp": "^1.0.4",
+    "npm-run-all": "^4.1.5",
+    "run-script-os": "^1.1.6",
     "vega-lite": "^5.3.0"
+  },
+  "dependencies": {
+    "rimraf": "^3.0.2"
   }
 }
