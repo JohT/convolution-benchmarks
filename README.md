@@ -27,3 +27,4 @@ This repository is intended to accompany the first steps in C++ with Single Inst
 - [Vectorization part6. Multiversioning by trip counts. (Denis Bakhvalov)](https://easyperf.net/blog/2017/11/09/Multiversioning_by_trip_counts)
 - [Vectorization part7. Tips for writing vectorizable code. (Denis Bakhvalov)](https://easyperf.net/blog/2017/11/10/Tips_for_writing_vectorizable_code)
 - [Microsoft Visual Studio Compiler - Vectorizer and parallelizer messages](https://docs.microsoft.com/en-us/cpp/error-messages/tool-errors/vectorizer-and-parallelizer-messages?view=msvc-170)
+- [FIR Structures](https://www.ni.com/docs/de-DE/bundle/labview-2014-digital-filter-design-toolkit-api-ref/page/lvdfdtconcepts/fir_filter_specs.html)
