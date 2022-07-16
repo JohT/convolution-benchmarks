@@ -1,6 +1,6 @@
 #include "../source/JohTConvolution.h"
 #include "../source/MatlabLikeConvolution.h"
-#include "../source/SongHoAhnConvolution.h"
+#include "../source/Chaowang15Convolution.h"
 #include "../source/WilczekConvolution.h"
 #include "RandomVectorGenerator.h"
 #include "TestVectors.h"
@@ -13,7 +13,7 @@
 #include <memory>
 #include <string>
 
-TEST_CASE("Convolution Algorithms Benchmarks", "[performance]")
+TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
 {
     const auto kernelLength = GENERATE(16, 1024);
     const auto & input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
@@ -160,6 +160,35 @@ TEST_CASE("Convolution Algorithms Benchmarks", "[performance]")
                       { return wilczek_convolution::applyFirFilterOuterInnerLoopVectorization(inputAligned); });
     };
 
+#ifdef __AVX__
+    BENCHMARK_ADVANCED("(wilczek) AVX Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
+
+        meter.measure([&inputAligned]
+                      { return wilczek_convolution::applyFirFilterAVX_innerLoopVectorization(inputAligned); });
+    };
+
+    BENCHMARK_ADVANCED("(wilczek) AVX Outer-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        wilczek_convolution::FilterInput<float, 32> inputAligned(input, kernel);
+
+        meter.measure([&inputAligned]
+                      { return wilczek_convolution::applyFirFilterAVX_outerLoopVectorization(inputAligned); });
+    };
+
+    BENCHMARK_ADVANCED("(wilczek) AVX Outer- and Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    (Catch::Benchmark::Chronometer meter)
+    {
+        wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
+
+        meter.measure([&inputAligned]
+                      { return wilczek_convolution::applyFirFilterAVX_outerInnerLoopVectorization(inputAligned); });
+    };
+#endif
+
     BENCHMARK_ADVANCED("(chaowang15) convolve1D (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
@@ -182,4 +211,5 @@ TEST_CASE("Convolution Algorithms Benchmarks", "[performance]")
                           chaowang15_convolution::convolve1D(paddedInputPointer, outputPointer, outputSize, kernelPointer, kernelSize);
                           return output; });
     };
+    
 }
