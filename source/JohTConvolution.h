@@ -317,7 +317,6 @@ namespace joht_convolution
         // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
         const auto inputLength = static_cast<int>(input.size());
         const auto kernelLength = static_cast<int>(kernel.size());
-        const auto outputLength = static_cast<int>(output.size());
 
         // TODO The following memory allocation should be done once outside.
         auto scaledKernel = std::vector<ValueType>(output.size());
@@ -328,7 +327,7 @@ namespace joht_convolution
             {
                 scaledKernel[inputIndex] = input[inputIndex] * kernel[kernelIndex];
             }
-            for (auto inputIndex = 0; inputIndex < outputLength; ++inputIndex)
+            for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
             {
                 output[inputIndex + kernelIndex] += scaledKernel[inputIndex];
             }
