@@ -1,9 +1,10 @@
+#include "../source/Chaowang15Convolution.h"
 #include "../source/JohTConvolution.h"
 #include "../source/MatlabLikeConvolution.h"
-#include "../source/Chaowang15Convolution.h"
 #include "../source/WilczekConvolution.h"
 #include "RandomVectorGenerator.h"
 #include "TestVectors.h"
+
 
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -16,15 +17,21 @@
 TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
 {
     const auto kernelLength = GENERATE(16, 1024);
-    const auto & input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
-    const auto & kernel = random_vector_generator::randomNumbers(kernelLength, 0.0F, 1.0F);
-    
-	const auto outputSize = input.size() + kernel.size() - 1;
-	std::vector<float> output(outputSize);
+    const auto &input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
+    const auto &kernel = random_vector_generator::randomNumbers(kernelLength, 0.0F, 1.0F);
 
-    const std::span<const float> & inputSpan = std::span(input);
-    const std::span<const float> & kernelSpan = std::span(kernel);
-    const std::span<float> & outputSpan = std::span(output);
+    const auto outputSize = input.size() + kernel.size() - 1;
+    std::vector<float> output(outputSize);
+
+    const std::span<const float> &inputSpan = std::span(input);
+    const std::span<const float> &kernelSpan = std::span(kernel);
+    const std::span<float> &outputSpan = std::span(output);
+
+    // In some cases the input needs to be padded with (here one) zero sample(s) at the end.
+    // This way the output length (= input length + filter length - 1)
+    // becomes dividable by 4 so that the outer loop can be unrolled by 4.
+    const auto dividableBy4PaddingLength = 4 - ((input.size() + kernel.size() - 1) % 4);
+    auto dividableBy4Padding = std::vector<float>(dividableBy4PaddingLength, 0.0F);
 
     BENCHMARK_ADVANCED("kernelPerInputValue Transposed (kernel " + std::to_string(kernelLength) + ")")
 
@@ -145,7 +152,10 @@ TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
     BENCHMARK_ADVANCED("(wilczek) Outer-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
+        auto dividableBy4PaddedInput = std::vector<float>(input);
+        dividableBy4PaddedInput.insert(dividableBy4PaddedInput.end(), dividableBy4Padding.begin(), dividableBy4Padding.end());
+
+        wilczek_convolution::FilterInput<float> inputAligned(dividableBy4PaddedInput, kernel);
 
         meter.measure([&inputAligned]
                       { return wilczek_convolution::applyFirFilterOuterLoopVectorization(inputAligned); });
@@ -154,7 +164,10 @@ TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
     BENCHMARK_ADVANCED("(wilczek) Outer- and Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
+        auto dividableBy4PaddedInput = std::vector<float>(input);
+        dividableBy4PaddedInput.insert(dividableBy4PaddedInput.end(), dividableBy4Padding.begin(), dividableBy4Padding.end());
+
+        wilczek_convolution::FilterInput<float> inputAligned(dividableBy4PaddedInput, kernel);
 
         meter.measure([&inputAligned]
                       { return wilczek_convolution::applyFirFilterOuterInnerLoopVectorization(inputAligned); });
@@ -173,7 +186,10 @@ TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
     BENCHMARK_ADVANCED("(wilczek) AVX Outer-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        wilczek_convolution::FilterInput<float, 32> inputAligned(input, kernel);
+        auto dividableBy4PaddedInput = std::vector<float>(input);
+        dividableBy4PaddedInput.insert(dividableBy4PaddedInput.end(), dividableBy4Padding.begin(), dividableBy4Padding.end());
+
+        wilczek_convolution::FilterInput<float, 32> inputAligned(dividableBy4PaddedInput, kernel);
 
         meter.measure([&inputAligned]
                       { return wilczek_convolution::applyFirFilterAVX_outerLoopVectorization(inputAligned); });
@@ -182,7 +198,10 @@ TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
     BENCHMARK_ADVANCED("(wilczek) AVX Outer- and Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
+        auto dividableBy4PaddedInput = std::vector<float>(input);
+        dividableBy4PaddedInput.insert(dividableBy4PaddedInput.end(), dividableBy4Padding.begin(), dividableBy4Padding.end());
+
+        wilczek_convolution::FilterInput<float> inputAligned(dividableBy4PaddedInput, kernel);
 
         meter.measure([&inputAligned]
                       { return wilczek_convolution::applyFirFilterAVX_outerInnerLoopVectorization(inputAligned); });
@@ -211,5 +230,4 @@ TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
                           chaowang15_convolution::convolve1D(paddedInputPointer, outputPointer, outputSize, kernelPointer, kernelSize);
                           return output; });
     };
-    
 }
