@@ -2,12 +2,12 @@
 #include <cmath>
 #include <vector>
 
-const std::vector<float> waveletFilterCoefficientsHaar = {
+static const std::vector<float> waveletFilterCoefficientsHaar = {
         0.5F * static_cast<float>(M_SQRT2), /* 0.707106781186547, */
         0.5F * static_cast<float>(M_SQRT2), /* 0.707106781186547  */
 };
 
-const std::vector<float> waveletFilterCoefficientsDaubechies16 = {
+static const std::vector<float> waveletFilterCoefficientsDaubechies16 = {
         5.44158422430000010E-02F,
         3.12871590914000020E-01F,
         6.75630736296999990E-01F, /* Maximum absolute value. */
@@ -25,7 +25,7 @@ const std::vector<float> waveletFilterCoefficientsDaubechies16 = {
         6.75449405999999950E-04F,
         -1.17476784000000000E-04F};
 
-const std::vector<float> waveletFilterCoefficientsDaubechies18 = {
+static const std::vector<float> waveletFilterCoefficientsDaubechies18 = {
         3.80779473639999980E-02F,
         2.43834674613000010E-01F,
         6.04823123690000020E-01F,
@@ -48,7 +48,7 @@ const std::vector<float> waveletFilterCoefficientsDaubechies18 = {
 /**
  * @brief Result value of the reference "convolution_full" between "randomSize32" and "waveletFilterCoefficientsDaubechies18".
  */
-const std::vector<float> convolutionReferenceResultOfRandomSize32WithDaubechies16 = {
+static const std::vector<float> convolutionReferenceResultOfRandomSize32WithDaubechies16 = {
         1.856669039e-02F,
         6.762687862e-02F,
         1.509590354e-02F,
@@ -98,7 +98,7 @@ const std::vector<float> convolutionReferenceResultOfRandomSize32WithDaubechies1
         -1.097479617e-04F
 };
 
-const std::vector<float> randomSize32 = {
+static const std::vector<float> randomSize32 = {
         3.412001133e-01F,
         -7.189993262e-01F,
         1.750426292e-01F,
@@ -133,7 +133,7 @@ const std::vector<float> randomSize32 = {
         9.342098236e-01F,
 };
 
-const std::vector<float> randomSize1024 = {
+static const std::vector<float> randomSize1024 = {
         3.412001133e-01F,
         -7.189993262e-01F,
         1.750426292e-01F,
@@ -1161,7 +1161,7 @@ const std::vector<float> randomSize1024 = {
 
 };
 
-const std::vector<float> randomSize16384 = {
+static const std::vector<float> randomSize16384 = {
         5.752154589e-01F,
         7.371876240e-01F,
         9.306645393e-02F,

@@ -39,7 +39,6 @@ if (NOT MAIN_TARGET_INCLUDE_DIRECTORIES STREQUAL "MAIN_TARGET_INCLUDE_DIRECTORIE
 endif()
 
 # Use the same compile options as the main target and disable optimization 
-set(TEST_PROJECT_COMPILE_OPTIONS "-O0")
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
    set(TEST_PROJECT_COMPILE_OPTIONS "/Od;/Zi")
 elseif()

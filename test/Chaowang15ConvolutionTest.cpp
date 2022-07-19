@@ -4,7 +4,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_vector.hpp>
 
-SCENARIO("Chaowang15 Convolution Algorithms Implementations")
+SCENARIO("Chaowang15 Convolution Implementations")
 {
     GIVEN("Input random number vector of size 32")
     {

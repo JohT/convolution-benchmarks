@@ -81,12 +81,10 @@ target_sources("${PROJECT_NAME}" PRIVATE ${project_sources})
 # definitions, pick unique names that are unlikely to collide.
 target_compile_definitions("${PROJECT_NAME}"
     PUBLIC
-        $<$<CONFIG:Debug>:LOG_PERFORMANCE> # Create performancelog.json in Debug build for google chrome tracing 
         _USE_MATH_DEFINES
 )
 
 target_link_libraries("${PROJECT_NAME}"
-#    PRIVATE
     PUBLIC
         ${PROJECT_NAME}::CompilerOptions
 )
