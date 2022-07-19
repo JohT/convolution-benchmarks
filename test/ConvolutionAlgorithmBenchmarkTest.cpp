@@ -174,7 +174,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
     };
 
 #ifdef __AVX__
-    BENCHMARK_ADVANCED("(wilczek) AVX Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(wilczek) AVX NoAlign Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
@@ -183,7 +183,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
                       { return wilczek_convolution::applyFirFilterAVX_innerLoopVectorization(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) AVX Outer-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(wilczek) AVX NoAlign Outer-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         auto dividableBy4PaddedInput = std::vector<float>(input);
@@ -195,7 +195,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
                       { return wilczek_convolution::applyFirFilterAVX_outerLoopVectorization(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) AVX Outer- and Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(wilczek) AVX NoAlign Outer- and Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         auto dividableBy4PaddedInput = std::vector<float>(input);
