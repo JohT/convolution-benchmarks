@@ -53,6 +53,17 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
     list(APPEND SANITIZERS "thread")
 endif()
 
+# Enable MSVC Address Sanitizer
+# if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC") # Using Microsoft Visual Studio C++
+#     Activate Address Sanitizer
+#     https://docs.microsoft.com/en-us/cpp/sanitizers/asan?view=msvc-170
+#     target_compile_options(compiler_options INTERFACE "/fsanitize=address")
+#     To overcome "LNK2038: mismatch detected for 'annotate_vector': value '0' doesn't match value '1'"
+#     "_DISABLE_VECTOR_ANNOTATION" is activated.
+#     https://docs.microsoft.com/en-us/cpp/sanitizers/error-container-overflow?view=msvc-170
+#     target_compile_definitions(compiler_options INTERFACE _DISABLE_VECTOR_ANNOTATION)
+# endif()
+
 # Enable CLang Vectorization reports
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang") # Using GNU or Clang compiler ("GNU-style" C++ compiler)
     target_compile_options(compiler_options INTERFACE "-Rpass=loop-vectorize")
@@ -70,7 +81,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC") # Using Microsoft Visual Studio C++
     # Specifies the architecture for code generation on x64 [AVX|AVX2|AVX512]
     # Introduced around 2013, AVX2 should probably be supported by most PCs nowadays
     # except for some mini PC CPUs like the Intel Celeron N3450 (Mid 2016, No AVX). 
-    if (HAVE_AVX2_EXTENSIONS)
+    if (HAVE_AVX_EXTENSIONS)
+        target_compile_options(compiler_options INTERFACE "/arch:AVX")
+    elseif(HAVE_AVX2_EXTENSIONS)
         target_compile_options(compiler_options INTERFACE "/arch:AVX2")
     endif()
 endif()
