@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.15)
 set(CMAKE_MESSAGE_LOG_LEVEL VERBOSE)
 
 # Set variables with the name and the version of the project. Avoid spaces and special characters.
-set(PROJECT_NAME "GettingStartedWithSIMD")
+set(PROJECT_NAME "ConvolutionBenchmarks")
 set(CURRENT_VERSION "0.1.0")
 
 # The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
