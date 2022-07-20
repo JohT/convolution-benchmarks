@@ -1,12 +1,14 @@
 # Benchmark Convolution Implementations
 
-This repository is intended to accompany the first steps in C++ with Single Instruction Multiple Data (SIMD).
+## History
+This repository was intended to explore Single Instruction Multiple Data (SIMD) with C++. Since convolution is such an essential part of filtering in digital signal processing and the central part of convolutional neuronal networks (CNN), it seemed obvious to focus on that. 
 
 ## Prerequisites
 
 - Installed [Git](https://git-scm.com/downloads)
 - Installed [CMake](https://cmake.org/download/) (e.g. with the [Visual Studio Installer](https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-170))
-- Installed [Ninja](https://ninja-build.org/), a small build system with a focus on speed.
+- Recommended: Installed [Ninja](https://ninja-build.org/) "a small build system with a focus on speed"
+- Uses [cpm](https://github.com/cpm-cmake/CPM.cmake) a "Setup-free CMake dependency management"
 
 ## Commands
 
@@ -128,12 +130,8 @@ BENCHMARK(kernelOuter);
 
 ## References
 
+- [Efficient FIR Filter Implementation with SIMD (Jan Wilczek)](https://thewolfsound.com/fir-filter-with-simd)
 - [Vectorization part1. Intro. (Denis Bakhvalov)](https://easyperf.net/blog/2017/10/24/Vectorization_part1)
-- [Vectorization part2. Warmup. (Denis Bakhvalov)](https://easyperf.net/blog/2017/10/27/Vectorization_warmup)
-- [Vectorization part3. Compiler report. (Denis Bakhvalov)](https://easyperf.net/blog/2017/10/30/Compiler-optimization-report)
-- [Vectorization part4. Vectorization Width. (Denis Bakhvalov)](https://easyperf.net/blog/2017/11/02/Vectorization_width)
-- [Vectorization part5. Multiversioning by data dependency. (Denis Bakhvalov)](https://easyperf.net/blog/2017/11/03/Multiversioning_by_DD)
-- [Vectorization part6. Multiversioning by trip counts. (Denis Bakhvalov)](https://easyperf.net/blog/2017/11/09/Multiversioning_by_trip_counts)
-- [Vectorization part7. Tips for writing vectorizable code. (Denis Bakhvalov)](https://easyperf.net/blog/2017/11/10/Tips_for_writing_vectorizable_code)
-- [Microsoft Visual Studio Compiler - Vectorizer and parallelizer messages](https://docs.microsoft.com/en-us/cpp/error-messages/tool-errors/vectorizer-and-parallelizer-messages?view=msvc-170)
+- [Microsoft® Visual Studio Compiler - Vectorizer and parallelizer messages](https://docs.microsoft.com/en-us/cpp/error-messages/tool-errors/vectorizer-and-parallelizer-messages?view=msvc-170)
+- [Intel® Programming Guidelines for Vectorization](https://www.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/optimization-and-programming/vectorization/automatic-vectorization/programming-guidelines-for-vectorization.html)
 - [FIR Structures](https://www.ni.com/docs/de-DE/bundle/labview-2014-digital-filter-design-toolkit-api-ref/page/lvdfdtconcepts/fir_filter_specs.html)
