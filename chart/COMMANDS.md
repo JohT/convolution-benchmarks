@@ -46,7 +46,7 @@ npm install --save-dev vega-lite
 ### Run benchmark tests with XML report output
 
 ```shell
-./build/test/GettingStartedWithSIMDTests [performance] --reporter XML::out=./build/test/test-xml-report.xml --reporter console::out=-::colour-mode=ansi
+./build/test/ConvolutionBenchmarksTests [performance] --reporter XML::out=./build/test/test-xml-report.xml --reporter console::out=-::colour-mode=ansi
 ```
 
 The resulting XML contains all test results including benchmark values as the following snippet shows:

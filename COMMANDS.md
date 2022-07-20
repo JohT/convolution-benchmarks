@@ -34,5 +34,5 @@ ctest --test-dir build/test
 ### Run Catch2 Unit-Tests directly
 
 ```shell
-./../build/test/GettingStartedWithSIMDTests --break --success --skip-benchmarks
+./../build/test/ConvolutionBenchmarksTests --break --success --skip-benchmarks
 ```

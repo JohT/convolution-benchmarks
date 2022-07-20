@@ -4,15 +4,15 @@
   "description": "Create charts from benchmark data",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JohT/getting-started-with-simd.git"
+    "url": "https://github.com/JohT/convolution-benchmarks.git"
   },
   "scripts": {
     "test": "npm run execute-benchmarks",
     "delete-benchmark-directory": "rimraf ./../build/benchmark",
     "create-benchmark-directory": "mkdirp ./../build/benchmark",
     "execute-benchmarks": "run-script-os",
-    "execute-benchmarks:windows": "..\\build\\test\\GettingStartedWithSIMDTests.exe [performance] --reporter XML::out=..\\build\\benchmark\\benchmark-report.xml --reporter console::out=-::colour-mode=win32",
-    "execute-benchmarks:default": "./../build/test/GettingStartedWithSIMDTests [performance] --reporter XML::out=./../build/benchmark/benchmark-report.xml --reporter console::out=-::colour-mode=ansi",
+    "execute-benchmarks:windows": "..\\build\\test\\ConvolutionBenchmarksTests.exe [performance] --reporter XML::out=..\\build\\benchmark\\benchmark-report.xml --reporter console::out=-::colour-mode=win32",
+    "execute-benchmarks:default": "./../build/test/ConvolutionBenchmarksTests [performance] --reporter XML::out=./../build/benchmark/benchmark-report.xml --reporter console::out=-::colour-mode=ansi",
     "convert-xml-to-json": "run-script-os",
     "convert-xml-to-json:windows": "convert-xml-to-json ..\\build\\benchmark\\benchmark-report.xml ..\\build\\benchmark\\benchmark-report.json",
     "convert-xml-to-json:default": "convert-xml-to-json ./../build/benchmark/benchmark-report.xml ./../build/benchmark/benchmark-report.json",
