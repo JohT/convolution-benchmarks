@@ -6,7 +6,7 @@ set(TEST_PROJECT_NAME "${PROJECT_NAME}Tests")
 
 # Import test dependencies
 # Needs CPM which comes from "Environment.cmake" in the root directory of this repository
-CPMAddPackage("gh:catchorg/Catch2@3.0.1")
+CPMAddPackage("gh:catchorg/Catch2@3.1.0")
 
 # Enable testing with Catch2
 enable_testing()
@@ -39,9 +39,10 @@ if (NOT MAIN_TARGET_INCLUDE_DIRECTORIES STREQUAL "MAIN_TARGET_INCLUDE_DIRECTORIE
 endif()
 
 # Use the same compile options as the main target and disable optimization 
-set(TEST_PROJECT_COMPILE_OPTIONS "-O0")
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-   set(TEST_PROJECT_COMPILE_OPTIONS "/Od")
+   set(TEST_PROJECT_COMPILE_OPTIONS "/Od;/Zi")
+elseif()
+   set(TEST_PROJECT_COMPILE_OPTIONS "-O0;-g")
 endif()
 get_target_property (MAIN_TARGET_COMPILE_OPTIONS ${PROJECT_NAME} COMPILE_OPTIONS)
 if (NOT MAIN_TARGET_COMPILE_OPTIONS STREQUAL "MAIN_TARGET_COMPILE_OPTIONS-NOTFOUND")

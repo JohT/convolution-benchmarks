@@ -11,7 +11,9 @@
             "ms-vscode.cpptools",
             "llvm-vs-code-extensions.vscode-clangd",
             "vadimcn.vscode-lldb",
-            "matepek.vscode-catch2-test-adapter"
+            "matepek.vscode-catch2-test-adapter",
+            "xaver.clang-format",
+            "streetsidesoftware.code-spell-checker"
         ]
     },
     "settings": {
@@ -28,8 +30,8 @@
             "--completion-style=detailed",
             "--background-index",
             "--compile-commands-dir=./build",
-            "--header-insertion=iwyu",
-            "--query-driver=\"/usr/bin/clang++\""
+            "--header-insertion=iwyu"
+            //,"--query-driver=\"/usr/bin/clang++\""
         ],
         "cmake.ctestArgs": [
             "--verbose"
@@ -38,7 +40,8 @@
         ],
         "cmake.preferredGenerators": [
             "Ninja",
-            "Unix Makefiles"
+            "Unix Makefiles",
+            "Visual Studio 17 2022"
         ],
         "cSpell.words": [
             "cppcoreguidelines",
@@ -82,10 +85,13 @@
                 "args": [
                     "--break",
                     "--success",
-                    "--list-tests",
-                    "--list-tags",
-                    "--list-reporters",
-                    "--verbosity high"
+                    // "--list-tests",
+                    //"--list-tags",
+                    //"--list-reporters",
+                    "--reporter XML::out=${workspaceFolder}/build/test/out=test-report.xml", 
+                    "--reporter console::out=-::colour-mode=ansi",
+                    "--verbosity high",
+                    "--skip-benchmarks"
                 ],
                 "cwd": "${workspaceFolder}"
             },
@@ -97,10 +103,13 @@
                 "args": [
                     "--break",
                     "--success",
-                    "--list-tests",
-                    "--list-tags",
-                    "--list-reporters",
-                    "--verbosity high"
+                    // "--list-tests",
+                    //"--list-tags",
+                    //"--list-reporters",
+                    "--reporter XML::out=${workspaceFolder}/build/test/out=test-report.xml", 
+                    "--reporter console::out=-::colour-mode=win32",
+                    "--verbosity high",
+                    "--skip-benchmarks"
                 ],
                 "cwd": "${workspaceFolder}"
             },

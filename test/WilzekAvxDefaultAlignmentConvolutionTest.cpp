@@ -4,7 +4,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_vector.hpp>
 
-SCENARIO("Wilzek Convolution Implementations")
+#ifdef __AVX__
+SCENARIO("Wilzek AVX Convolution Implementations with default alignment (without additional manual alignment)")
 {
     GIVEN("Input random number vector of size 32")
     {
@@ -30,35 +31,28 @@ SCENARIO("Wilzek Convolution Implementations")
             auto paddedReference = std::vector<float>(reference);
             paddedReference.insert(paddedReference.end(), padding.begin(), padding.end());
 
-            THEN("Algorithm 'applyFirFilterSingle' outputs the same result as the reference implementation")
+            THEN("Algorithm 'applyFirFilterAVX_innerLoopVectorization' outputs the same result as the reference implementation")
             {
                 wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
-                auto outputFir = wilczek_convolution::applyFirFilterSingle(inputAligned);
-
-                //TODO needs quite a bit large margin -> is there something wrong with the implementation?
-                REQUIRE_THAT(outputFir, Catch::Matchers::Approx(reference).margin(0.0002F));
-            }
-            THEN("Algorithm 'applyFirFilterInnerLoopVectorization' outputs the same result as the reference implementation")
-            {
-                wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
-                auto outputFir = wilczek_convolution::applyFirFilterInnerLoopVectorization(inputAligned);
+                auto outputFir = wilczek_convolution::applyFirFilterAVX_innerLoopVectorization(inputAligned);
 
                 REQUIRE_THAT(outputFir, Catch::Matchers::Approx(reference));
             }
-            THEN("Algorithm 'applyFirFilterOuterLoopVectorization' outputs the same result as the reference implementation")
+            THEN("Algorithm 'applyFirFilterAVX_outerLoopVectorization' outputs the same result as the reference implementation")
             {
-                wilczek_convolution::FilterInput<float> inputAligned(paddedInput, kernel);
-                auto outputFir = wilczek_convolution::applyFirFilterOuterLoopVectorization(inputAligned);
+                wilczek_convolution::FilterInput<float, 32> inputAligned(paddedInput, kernel);
+                auto outputFir = wilczek_convolution::applyFirFilterAVX_outerLoopVectorization(inputAligned);
 
                 REQUIRE_THAT(outputFir, Catch::Matchers::Approx(paddedReference));
             }
-            THEN("Algorithm 'applyFirFilterOuterInnerLoopVectorization' outputs the same result as the reference implementation")
+            THEN("Algorithm 'applyFirFilterAVX_outerInnerLoopVectorization' outputs the same result as the reference implementation")
             {
                 wilczek_convolution::FilterInput<float> inputAligned(paddedInput, kernel);
-                auto outputFir = wilczek_convolution::applyFirFilterOuterInnerLoopVectorization(inputAligned);
+                auto outputFir = wilczek_convolution::applyFirFilterAVX_outerInnerLoopVectorization(inputAligned);
 
                 REQUIRE_THAT(outputFir, Catch::Matchers::Approx(paddedReference));
             }
         }
     }
 }
+#endif

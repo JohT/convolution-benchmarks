@@ -43,6 +43,9 @@ namespace wilczek_convolution
 
     std::vector<float> applyFirFilterInnerLoopVectorization(FilterInput<float> &input)
     {
+        // The filter length needs to be dividable by 4 since its loop is 4 times unrolled/interleaved.
+        assert(input.filterLength % 4 == 0);
+
         const auto *x = input.x;
         const auto *c = input.c;
         auto *y = input.y;
@@ -61,6 +64,9 @@ namespace wilczek_convolution
 
     std::vector<float> applyFirFilterOuterLoopVectorization(FilterInput<float> &input)
     {
+        // The output length needs to be dividable by 4 since its loop is 4 times unrolled/interleaved.
+        assert(input.outputLength % 4 == 0);
+        
         const auto *x = input.x;
         const auto *c = input.c;
         auto *y = input.y;
@@ -84,6 +90,10 @@ namespace wilczek_convolution
 
     std::vector<float> applyFirFilterOuterInnerLoopVectorization(FilterInput<float> &input)
     {
+        // The output and filter length needs to be dividable by 4 since its loop is 4 times unrolled/interleaved.
+        assert(input.outputLength % 4 == 0);
+        assert(input.filterLength % 4 == 0);
+        
         const auto *x = input.x;
         const auto *c = input.c;
         auto *y = input.y;
@@ -268,4 +278,4 @@ namespace wilczek_convolution
         return applyFirFilterSingle(input);
 #endif
     }
-}// namespace fir
+}// namespace wilczek_convolution

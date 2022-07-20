@@ -1,6 +1,8 @@
 #pragma once
+
 #include <span>
 #include <vector>
+#include <cassert>
 
 /**
  * @brief Compiler optimize-able convolution implementation experiments.
@@ -125,6 +127,9 @@ namespace joht_convolution
         const auto inputLength = static_cast<int>(input.size());
         const auto kernelLength = static_cast<int>(kernel.size());
 
+        // The kernel length needs to be dividable by 4 since its loop is 4 times unrolled/interleaved.
+        assert(kernelLength % 4 == 0);
+        
         for (auto kernelIndex = 0; kernelIndex < kernelLength; kernelIndex += 4)
         {
             for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
@@ -169,6 +174,9 @@ namespace joht_convolution
         const auto inputLength = static_cast<int>(input.size());
         const auto kernelLength = static_cast<int>(kernel.size());
 
+        // The input length needs to be dividable by 4 since its loop is 4 times unrolled/interleaved.
+        assert(inputLength % 4 == 0);
+        
         for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
         {
             for (auto inputIndex = 0; inputIndex < inputLength; inputIndex += 4)
@@ -213,6 +221,10 @@ namespace joht_convolution
         const auto inputLength = static_cast<int>(input.size());
         const auto kernelLength = static_cast<int>(kernel.size());
 
+        // The input and kernel length needs to be dividable by 4 since its loop is 4 times unrolled/interleaved.
+        assert(inputLength % 4 == 0);
+        assert(kernelLength % 4 == 0);
+        
         for (auto kernelIndex = 0; kernelIndex < kernelLength; kernelIndex += 4)
         {
             for (auto inputIndex = 0; inputIndex < inputLength; inputIndex += 4)

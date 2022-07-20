@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
-#include <vector>
 #include <memory>
+#include <vector>
 
 /**
  * @brief convolution (FIR filter) algorithms by Jan Wilczek showing different SIMD vectorization optimizations by manually (partly) unrolling loops.
@@ -26,13 +26,11 @@ namespace wilczek_convolution
         return static_cast<long long>(x / N);
     }
 
-#ifdef __AVX__
     constexpr auto AVX_FLOAT_COUNT = 8u;
 
     struct alignas(AVX_FLOAT_COUNT * alignof(float)) avx_alignment_t
     {
     };
-#endif
 
     template<typename SampleType, size_t alignment = alignof(SampleType)>
     struct FilterInput
@@ -40,25 +38,35 @@ namespace wilczek_convolution
         static constexpr auto VECTOR_SIZE = alignment / alignof(SampleType);
 
         FilterInput(const std::vector<SampleType> &inputSignal,
-                    const std::vector<SampleType> &filter)
+                    const std::vector<SampleType> &filter,
+                    bool enableAvxAlignment = false)
         {
+#ifndef __AVX__
+            enableAvxAlignment = false;
+#endif
+
             const auto minimalPaddedSize = inputSignal.size() + 2 * filter.size() - 2u;
             const auto alignedPaddedSize =
                     VECTOR_SIZE *
                     (highestMultipleOfNIn(minimalPaddedSize - 1u, VECTOR_SIZE) + 1u);
             inputLength = alignedPaddedSize;
 
+            if (enableAvxAlignment)
+            {
 #ifdef __AVX__
-            inputStorage.reset(new avx_alignment_t[inputLength / AVX_FLOAT_COUNT]);
-            std::copy(inputSignal.begin(), inputSignal.end(),
-                      reinterpret_cast<float *>(inputStorage.get()) + filter.size() - 1u);
-            x = reinterpret_cast<float *>(inputStorage.get());
-#else
-            inputStorage.resize(inputLength, 0.f);
-            std::copy(inputSignal.begin(), inputSignal.end(),
-                      inputStorage.begin() + filter.size() - 1u);
-            x = inputStorage.data();
+                alignedInputStorage.reset(new avx_alignment_t[inputLength / AVX_FLOAT_COUNT]);
+                std::copy(inputSignal.begin(), inputSignal.end(),
+                          reinterpret_cast<float *>(alignedInputStorage.get()) + filter.size() - 1u);
+                x = reinterpret_cast<float *>(alignedInputStorage.get());
 #endif
+            }
+            else
+            {
+                inputStorage.resize(inputLength, 0.f);
+                std::copy(inputSignal.begin(), inputSignal.end(),
+                          inputStorage.begin() + filter.size() - 1u);
+                x = inputStorage.data();
+            }
 
             outputLength = inputSignal.size() + filter.size() - 1u;
             outputStorage.resize(outputLength);
@@ -78,28 +86,31 @@ namespace wilczek_convolution
             filterLength = reversedFilterCoefficientsStorage.size();
             y = outputStorage.data();
 
-#ifdef __AVX__
-            alignedStorageSize =
-                    reversedFilterCoefficientsStorage.size() + AVX_FLOAT_COUNT;
-            for (auto k = 0u; k < AVX_FLOAT_COUNT; ++k)
+            if (enableAvxAlignment)
             {
-                alignedReversedFilterCoefficientsStorage[k].reset(new avx_alignment_t[alignedStorageSize / AVX_FLOAT_COUNT]);
-                cAligned[k] = reinterpret_cast<SampleType *>(alignedReversedFilterCoefficientsStorage[k].get());
+#ifdef __AVX__
+                alignedStorageSize =
+                        reversedFilterCoefficientsStorage.size() + AVX_FLOAT_COUNT;
+                for (auto k = 0u; k < AVX_FLOAT_COUNT; ++k)
+                {
+                    alignedReversedFilterCoefficientsStorage[k].reset(new avx_alignment_t[alignedStorageSize / AVX_FLOAT_COUNT]);
+                    cAligned[k] = reinterpret_cast<SampleType *>(alignedReversedFilterCoefficientsStorage[k].get());
 
-                for (auto i = 0u; i < k; ++i)
-                {
-                    cAligned[k][i] = 0.f;
+                    for (auto i = 0u; i < k; ++i)
+                    {
+                        cAligned[k][i] = 0.f;
+                    }
+                    std::copy(reversedFilterCoefficientsStorage.begin(),
+                              reversedFilterCoefficientsStorage.end(),
+                              cAligned[k] + k);
+                    for (auto i = reversedFilterCoefficientsStorage.size() + k;
+                         i < alignedStorageSize; ++i)
+                    {
+                        cAligned[k][i] = 0.f;
+                    }
                 }
-                std::copy(reversedFilterCoefficientsStorage.begin(),
-                          reversedFilterCoefficientsStorage.end(),
-                          cAligned[k] + k);
-                for (auto i = reversedFilterCoefficientsStorage.size() + k;
-                     i < alignedStorageSize; ++i)
-                {
-                    cAligned[k][i] = 0.f;
-                }
-            }
 #endif
+            }
         }
 
         std::vector<SampleType> output()
@@ -115,21 +126,19 @@ namespace wilczek_convolution
         size_t filterLength;
         SampleType *y;// output (filtered) signal
         size_t outputLength;
-#ifdef __AVX__
-        size_t alignedStorageSize;
+ #ifdef __AVX__
+       size_t alignedStorageSize;
         SampleType *cAligned[AVX_FLOAT_COUNT];
 #endif
-
     private:
         std::vector<float> reversedFilterCoefficientsStorage;
         std::vector<float> outputStorage;
 #ifdef __AVX__
         std::array<std::unique_ptr<avx_alignment_t[]>, AVX_FLOAT_COUNT>
                 alignedReversedFilterCoefficientsStorage;
-        std::unique_ptr<avx_alignment_t[]> inputStorage;
-#else
-        std::vector<float> inputStorage;
+        std::unique_ptr<avx_alignment_t[]> alignedInputStorage;
 #endif
+        std::vector<float> inputStorage;
     };
 
     std::vector<float> applyFirFilterSingle(FilterInput<float> &input);
@@ -155,4 +164,4 @@ namespace wilczek_convolution
 #endif
 
     std::vector<float> applyFirFilter(FilterInput<float> &input);
-}// namespace fir
+}// namespace wilczek_convolution
