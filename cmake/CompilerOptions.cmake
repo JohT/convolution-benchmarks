@@ -80,12 +80,12 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC") # Using Microsoft Visual Studio C++
     target_compile_options(compiler_options INTERFACE "/Qvec-report:2")
     # Specifies the architecture for code generation on x64 [AVX|AVX2|AVX512]
     # Introduced around 2013, AVX2 should probably be supported by most PCs nowadays
-    # except for some mini PC CPUs like the Intel Celeron N3450 (Mid 2016, No AVX). 
-    if (HAVE_AVX_EXTENSIONS)
-        target_compile_options(compiler_options INTERFACE "/arch:AVX")
-    elseif(HAVE_AVX2_EXTENSIONS)
-        target_compile_options(compiler_options INTERFACE "/arch:AVX2")
-    endif()
+    # except for some mini PC CPUs like the Intel Celeron N3450 (Mid 2016, No AVX).
+    # 
+    # The AVX architecture (if any) of the current system is detected 
+    # by the "CHECK_FOR_AVX" macro in "find_avx.cmake" included in the main "CMakeLists.txt" file
+    # and provided to the compiler within the AVX_FLAGS.
+    target_compile_options(compiler_options INTERFACE "${AVX_FLAGS}")
 endif()
 
 # Enable GNU C Vectorization + Reports

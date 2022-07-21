@@ -22,6 +22,8 @@ add_library(${PROJECT_NAME} STATIC)
 # Add the directory "cmake" to the CMake search path.
 # It contains additional includes for CMake. 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+# Includes the environment settings from ./cmake/Environment.cmake.
 include(Environment)
 
 # Detects vector instruction sets AVX and AVX2 for Microsoft Visual Studio Compiler (MSVC)
@@ -64,6 +66,9 @@ message(VERBOSE "C++ Language Standard set to C++20 for Target ${PROJECT_NAME}")
 #    include_directories("${PROJECT_NAME}" PRIVATE "${span_SOURCE_DIR}/include")
 #    message(VERBOSE "tcb span headers directory included for all targets: ${span_SOURCE_DIR}/include")
 #endif()
+
+# Includes the host system info environment file writer from "./cmake/HostSystemInfo.cmake".
+include(HostSystemInfo)
 
 # Get all source files in the src directory and store them in the project_sources variable.
 # GLOB_RECURSE is not recommended but used here for simplicity: https://cmake.org/cmake/help/latest/command/file.html?highlight=CONFIGURE_DEPENDS#filesystem
