@@ -2,9 +2,12 @@
 #include <vector>
 
 /**
- * @brief Contains a simple convolution implementations taken from StackTrace.
- * @author 101010 (https://stackoverflow.com/users/2352671/101010)
- * Reference: "How to perform 1-dimensional "valid" convolution?" - https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
+ * @brief How to perform 1-dimensional "valid" convolution?
+ * 
+ * Contains two basic convolution implementations taken from StackTrace that mimic Matlab's convolution functions.
+ * @author 101010 
+ * @see https://stackoverflow.com/users/2352671/101010
+ * @see https://stackoverflow.com/questions/24518989/how-to-perform-1-dimensional-valid-convolution
  */
 namespace matlab_like
 {

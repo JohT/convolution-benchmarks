@@ -1,4 +1,3 @@
-// Reference: https://github.com/JanWilczek/fir-simd.git
 #pragma once
 #include <algorithm>
 #include <array>
@@ -7,9 +6,20 @@
 #include <vector>
 
 /**
- * @brief convolution (FIR filter) algorithms by Jan Wilczek showing different SIMD vectorization optimizations by manually (partly) unrolling loops.
- * Reference: "Efficient FIR Filter Implementation with SIMD" https://github.com/JanWilczek/fir-simd.git
- * @author JanWilczek
+ * @brief Efficient FIR Filter Implementation with SIMD 
+ *
+ * Convolution (FIR filter) algorithms showing different SIMD vectorization optimizations by unrolling loops.
+ * Besides auto-vectorization by the compiler, there are also some manual vectorization optimizations using intrinsics.
+ * 
+ * The following changes were made. Some of them might have impact on the performance:
+ *  - The implementation was renamed (from "FIRFilter.*").
+ *  - Manuel AVX alignment is turned off by default (new 3rd argument of "FilterInput") for cross-platform compatibility.
+ *  - "assert" statements assure, that the length of the data is dividable by 4 for loops that are 4-times unrolled/interleaved.
+ *    Otherwise this would lead to heap corruption. 
+ *    The tests need to pad the input additionally with one zero sample to meet this requirement.
+ * 
+ * @see https://github.com/JanWilczek/fir-simd.git
+ * @author Jan Wilczek (c) 2022
  */
 namespace wilczek_convolution
 {

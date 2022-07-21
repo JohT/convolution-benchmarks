@@ -1,9 +1,11 @@
 #pragma once
 
 /**
- * @brief 1d convolution algorithm by Song Ho Ahn
- * Reference: "Fast Image Convolution in C++" https://github.com/chaowang15/fast-image-convolution-cpp
- * @author chaowang15
+ * @brief Fast Image Convolution in C++ 
+ *
+ * 1d convolution algorithm taken out of the convolution library for images.
+ * Reference: https://github.com/chaowang15/fast-image-convolution-cpp
+ * @author Song Ho Ahn
  */
 namespace chaowang15_convolution
 {
