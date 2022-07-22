@@ -26,10 +26,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 # Includes the environment settings from ./cmake/Environment.cmake.
 include(Environment)
 
-# Detects vector instruction sets AVX and AVX2 for Microsoft Visual Studio Compiler (MSVC)
-include(find_avx)
-CHECK_FOR_AVX()
-
 # Sets compile options for the target
 include(CompilerOptions)
 

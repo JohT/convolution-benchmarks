@@ -56,26 +56,26 @@ if(HOST_HAS_SSE2)
   message(VERBOSE "SSE2 supported")
 endif()
 
-# Load CMake module (./cmake/find_avx.cmake) to detects vector instruction sets AVX and AVX2 for Microsoft Visual Studio Compiler (MSVC)
+# Load CMake module (./cmake/findAVX.cmake) to detects CPU instruction set extensions for vectorization (AVX, AVX2, AVX512)
 # Reference: https://gist.github.com/UnaNancyOwen/263c243ae1e05a2f9d0e
 include(findAVX)
 
 # Detect AVX vector extension of the host system
-if(CXX_AVX_FOUND)
+if (CXX_AVX_FOUND)
   set(HOST_VECTOR_EXTENSION "AVX")
-  message(VERBOSE "AXV supported with ${CXX_AVX_FLAGS}")
+  message(VERBOSE "AXV supported with flags: ${CXX_AVX_FLAGS}")
 endif()
 
 # Detect AVX2 vector extension of the host system
-if(CXX_AVX2_FOUND)
+if (CXX_AVX2_FOUND)
   set(HOST_VECTOR_EXTENSION "AVX2")
-  message(VERBOSE "AXV2 supported with ${CXX_AVX2_FLAGS}")
+  message(VERBOSE "AXV2 supported with flags: ${CXX_AVX2_FLAGS}")
 endif()
 
-# Detect AVX2 vector extension of the host system
+# Detect AVX512 vector extension of the host system
 if(CXX_AVX512_FOUND)
-  set(HOST_VECTOR_EXTENSION "AVX512")
-  message(VERBOSE "AXV512 supported with ${CXX_AVX512_FLAGS}")
+ set(HOST_VECTOR_EXTENSION "AVX512")
+ message(VERBOSE "AXV512 supported with flags: ${CXX_AVX512_FLAGS}")
 endif()
 
 # Write vector extension environment variable to the output file
