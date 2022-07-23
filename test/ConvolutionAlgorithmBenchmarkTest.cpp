@@ -5,7 +5,6 @@
 #include "RandomVectorGenerator.h"
 #include "TestVectors.h"
 
-
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
@@ -23,9 +22,11 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
     const auto outputSize = input.size() + kernel.size() - 1;
     std::vector<float> output(outputSize);
 
-    const std::span<const float> &inputSpan = std::span(input);
-    const std::span<const float> &kernelSpan = std::span(kernel);
-    const std::span<float> &outputSpan = std::span(output);
+    const auto &inputData = input.data();
+    const auto &kernelData = kernel.data();
+    const auto &outputData = output.data();
+
+    const auto inputLength = static_cast<int>(input.size());
 
     // In some cases the input needs to be padded with (here one) zero sample(s) at the end.
     // This way the output length (= input length + filter length - 1)
@@ -37,73 +38,73 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
 
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
                       {
-                          joht_convolution::kernelPerInputValueTransposed(inputSpan, kernelSpan, outputSpan);
-                          return output; });
+                          joht_convolution::kernelPerInputValueTransposed(inputData, inputLength, kernelData, kernelLength, outputData);
+                          return outputData; });
     };
 
     BENCHMARK_ADVANCED("inputPerKernelValue Transposed (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
                       {
-                          joht_convolution::inputPerKernelValueTransposed(inputSpan, kernelSpan, outputSpan);
-                          return output; });
+                          joht_convolution::inputPerKernelValueTransposed(inputData, inputLength, kernelData, kernelLength, outputData);
+                          return outputData; });
     };
 
     BENCHMARK_ADVANCED("inputPerKernelValue Transposed InnerLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
                       {
-                          joht_convolution::inputPerKernelValueTransposedInnerLoopUnrolled(inputSpan, kernelSpan, outputSpan);
-                          return output; });
+                          joht_convolution::inputPerKernelValueTransposedInnerLoopUnrolled(inputData, inputLength, kernelData, kernelLength, outputData);
+                          return outputData; });
     };
 
     BENCHMARK_ADVANCED("inputPerKernelValue Transposed OuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
                       {
-                          joht_convolution::inputPerKernelValueTransposedOuterLoopUnrolled(inputSpan, kernelSpan, outputSpan);
-                          return output; });
+                          joht_convolution::inputPerKernelValueTransposedOuterLoopUnrolled(inputData, inputLength, kernelData, kernelLength, outputData);
+                          return outputData; });
     };
 
     BENCHMARK_ADVANCED("inputPerKernelValue Transposed InnerAndOuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
                       {
-                          joht_convolution::inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(inputSpan, kernelSpan, outputSpan);
-                          return output; });
+                          joht_convolution::inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(inputData, inputLength, kernelData, kernelLength, outputData);
+                          return outputData; });
     };
 
     BENCHMARK_ADVANCED("inputPerKernelValue Transposed LoopFission (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
                       {
-                          joht_convolution::inputPerKernelValueTransposedLoopFission(inputSpan, kernelSpan, outputSpan);
-                          return output; });
+                          joht_convolution::inputPerKernelValueTransposedLoopFission(inputData, inputLength, kernelData, kernelLength, outputData);
+                          return outputData; });
     };
 
     BENCHMARK_ADVANCED("inputPerKernelValue Transposed LoopFissionIndexArithmetic (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
                       {
-                          joht_convolution::inputPerKernelValueTransposedLoopFissionIndexArithmetic(inputSpan, kernelSpan, outputSpan);
-                          return output; });
+                          joht_convolution::inputPerKernelValueTransposedLoopFissionIndexArithmetic(inputData, inputLength, kernelData, kernelLength, outputData);
+                          return outputData; });
     };
 
     BENCHMARK_ADVANCED("kernelPerInputValue Transposed LoopFission (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputSpan, &kernelSpan, &outputSpan, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
                       {
-                          joht_convolution::kernelPerInputValueTransposedLoopFission(inputSpan, kernelSpan, outputSpan);
-                          return output; });
+                          joht_convolution::kernelPerInputValueTransposedLoopFission(inputData, inputLength, kernelData, kernelLength, outputData);
+                          return outputData; });
     };
 
     BENCHMARK_ADVANCED("(matlab-like) conv 'full' shape (kernel " + std::to_string(kernelLength) + ")")
