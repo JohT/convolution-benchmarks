@@ -26,8 +26,8 @@
 
 # All rights reserved.
 
-INCLUDE(CheckCSourceCompiles)
-INCLUDE(CheckCXXSourceCompiles)
+INCLUDE(CheckCSourceRuns)
+INCLUDE(CheckCXXSourceRuns)
 
 SET(AVX_CODE "
   #include <immintrin.h>
@@ -79,9 +79,9 @@ MACRO(CHECK_SSE lang type flags)
     IF(NOT ${lang}_${type}_FOUND)
       SET(CMAKE_REQUIRED_FLAGS ${__FLAG})
       IF(lang STREQUAL "CXX")
-        CHECK_CXX_SOURCE_COMPILES("${${type}_CODE}" ${lang}_HAS_${type}_${__FLAG_I})
+        check_cxx_source_runs("${${type}_CODE}" ${lang}_HAS_${type}_${__FLAG_I})
       ELSE()
-        CHECK_C_SOURCE_COMPILES("${${type}_CODE}" ${lang}_HAS_${type}_${__FLAG_I})
+        check_c_source_runs("${${type}_CODE}" ${lang}_HAS_${type}_${__FLAG_I})
       ENDIF()
       IF(${lang}_HAS_${type}_${__FLAG_I})
         SET(${lang}_${type}_FOUND TRUE CACHE BOOL "${lang} ${type} support")
