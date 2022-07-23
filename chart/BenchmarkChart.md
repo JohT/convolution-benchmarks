@@ -1,16 +1,19 @@
 # Benchmark Charts
 
-## MacOS on Intel compiled with [CLang](https://clang.llvm.org) 
-![bar chart showing the results of the benchmarks for MacOs on Intel](./BenchmarkChartMacOs.svg)
+## MacOS on Intel with SSE (no AVX) compiled with [CLang](https://clang.llvm.org) 
+![bar chart showing the results of the benchmarks for MacOs on Intel](./BenchmarkChart-AppleClang-macOS-AMD64SSE2.svg)
 
 ## MacOS on M1 with Neon compiled with [CLang](https://clang.llvm.org) 
 ![bar chart showing the results of the benchmarks for MacOs on M1](./BenchmarkChart-AppleClang-macOS-arm64.svg)
 
 ## Windows on Intel with SSE (no AVX) compiled with [Microsoft Visual C++ (MSVC)](https://visualstudio.microsoft.com/de/vs/features/cplusplus)
-![bar chart showing the results of the benchmarks for Windows on Intel with SSE](./BenchmarkChartWindowsSSE.svg)
+![bar chart showing the results of the benchmarks for Windows on Intel with SSE](./BenchmarkChart-MSVC-Windows-AMD64SSE2.svg)
+
+## Windows on Intel with AVX compiled with [Microsoft Visual C++ (MSVC)](https://visualstudio.microsoft.com/de/vs/features/cplusplus)
+![bar chart showing the results of the benchmarks for Windows on Intel with AVX](./BenchmarkChart-MSVC-Windows-AMD64AVX.svg)
 
 ## Windows on Intel with AVX2 compiled with [Microsoft Visual C++ (MSVC)](https://visualstudio.microsoft.com/de/vs/features/cplusplus)
-![bar chart showing the results of the benchmarks for Windows on Intel with AVX2](./BenchmarkChartWindowsAVX2.svg)
+![bar chart showing the results of the benchmarks for Windows on Intel with AVX2](./BenchmarkChart-MSVC-Windows-AMD64AVX2.svg)
 
 ## Floating Point compile options
 
