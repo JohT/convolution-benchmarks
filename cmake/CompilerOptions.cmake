@@ -64,8 +64,36 @@ endif()
 #     target_compile_definitions(compiler_options INTERFACE _DISABLE_VECTOR_ANNOTATION)
 # endif()
 
+# Detect CPU instruction set extensions for vectorization (AVX, AVX2, AVX512)
+# Specifies the architecture for code generation on x64 [AVX|AVX2|AVX512]
+# Introduced around 2013, AVX2 should probably be supported by most PCs nowadays
+# except for some mini PC CPUs like the Intel Celeron N3450 (Mid 2016, No AVX).
+include(findAVX)
+
+# Enable CLang Vectorization
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
+    if (CXX_AVX512_FOUND)
+        target_compile_options(compiler_options INTERFACE "-mavx512f;-mavx512dq;-mavx512vl;-mavx512bw;-mfma")
+    elseif (CXX_AVX2_FOUND)
+        target_compile_options(compiler_options INTERFACE "-mavx2;-mfma")
+    elseif (CXX_AVX_FOUND) 
+        target_compile_options(compiler_options INTERFACE "-mavx")
+    endif()
+endif()
+
+# Enable MSVC Vectorization
+if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    if (CXX_AVX512_FOUND)
+        target_compile_options(compiler_options INTERFACE "/arch:AVX512")    
+    elseif (CXX_AVX2_FOUND)
+        target_compile_options(compiler_options INTERFACE "/arch:AVX2")
+    elseif (CXX_AVX_FOUND) 
+        target_compile_options(compiler_options INTERFACE "/arch:AVX")
+    endif()
+endif()
+
 # Enable CLang Vectorization reports
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang") # Using GNU or Clang compiler ("GNU-style" C++ compiler)
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
     target_compile_options(compiler_options INTERFACE "-Rpass=loop-vectorize")
     target_compile_options(compiler_options INTERFACE "-Rpass-missed=loop-vectorize")
     target_compile_options(compiler_options INTERFACE "-Rpass-analysis=loop-vectorize")
@@ -74,18 +102,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang") # Using GNU or Clang compi
     target_compile_options(compiler_options INTERFACE "-gcolumn-info")
 endif()
 
-# Enable MSVC Vectorization + Reports
-if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC") # Using Microsoft Visual Studio C++
+# Enable MSVC Vectorization Reports
+if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     # Report successfully and unsuccessfully vectorized loops
     target_compile_options(compiler_options INTERFACE "/Qvec-report:2")
-    # Specifies the architecture for code generation on x64 [AVX|AVX2|AVX512]
-    # Introduced around 2013, AVX2 should probably be supported by most PCs nowadays
-    # except for some mini PC CPUs like the Intel Celeron N3450 (Mid 2016, No AVX). 
-    if (HAVE_AVX_EXTENSIONS)
-        target_compile_options(compiler_options INTERFACE "/arch:AVX")
-    elseif(HAVE_AVX2_EXTENSIONS)
-        target_compile_options(compiler_options INTERFACE "/arch:AVX2")
-    endif()
 endif()
 
 # Enable GNU C Vectorization + Reports

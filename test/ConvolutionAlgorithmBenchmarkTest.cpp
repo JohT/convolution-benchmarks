@@ -14,7 +14,7 @@
 #include <memory>
 #include <string>
 
-TEST_CASE("Convolution Implementation Benchmarks", "[performance]")
+TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
 {
     const auto kernelLength = GENERATE(16, 1024);
     const auto &input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
