@@ -10,9 +10,10 @@
     {
       "fileMatch": ["^package-lock.cmake$"],
       "matchStrings": [
-        "CPMDeclarePackage\\(\\w+\\s+VERSION\\s+v?(?<currentValue>.*?)\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+"
+        "CPMDeclarePackage\\(\\w+\\s+VERSION\\s+(?<currentValue>.*?)\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+"
       ],
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-releases",
+      "currentValueTemplate": "{{{replace 'v' '' currentValue}}}"
     }
   ]
 }
