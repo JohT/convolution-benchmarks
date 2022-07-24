@@ -36,3 +36,14 @@ ctest --test-dir build/test
 ```shell
 ./../build/test/ConvolutionBenchmarksTests --break --success --skip-benchmarks
 ```
+
+## Dependencies
+
+### Create and update package-lock.cmake
+As described in [CPM Package-lock](https://github.com/cpm-cmake/CPM.cmake/wiki/Package-lock), `package-lock.cmake` can be created or updated using the following commands. The advantage of this is that there is one distinct file that contains all
+dependency versions.
+
+```shell
+cmake -H. -Bbuild
+cmake --build build --target cpm-update-package-lock 
+```
