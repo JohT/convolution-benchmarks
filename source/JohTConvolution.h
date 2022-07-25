@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cassert>
-#include <span>
 #include <vector>
 
 /**
@@ -34,18 +33,14 @@ namespace joht_convolution
      * It can't compete though with hand-optimized code that uses intrinsics.
      * 
      * @tparam ValueType 
-     * @param input span of input values
-     * @param kernel span of kernel values (e.g. filter coefficients)
-     * @param output output span
+     * @param input pointer to input values
+     * @param kernel pointer to kernel values (e.g. filter coefficients)
+     * @param output pointer to output values
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposed(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
+    void inputPerKernelValueTransposed(const ValueType *const input, const int inputLength, const ValueType *const kernel, const int kernelLength, ValueType *const output)
     {
-        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const auto inputLength = static_cast<int>(input.size());
-        const auto kernelLength = static_cast<int>(kernel.size());
-
         for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
         {
             // Makes it obvious for the compiler (especially MSVC) that the factor is constant.
@@ -64,23 +59,19 @@ namespace joht_convolution
      * @brief Convolution implementation that multiplies every input value with the whole kernel vector 
      * and sums up the results to the output vector.
      *
-     * This is slower than "kernelPerInputValueTransposed" most likely because there are much more
+     * This is slower than "inputPerKernelValueTransposed" most likely because there are much more
      * multiplications with the same constant value when the kernel value is used as a constant
      * opposed to the input value.
      * 
      * @tparam ValueType 
-     * @param input span of input values
-     * @param kernel span of kernel values (e.g. filter coefficients)
-     * @param output output span
+     * @param input pointer to input values
+     * @param kernel pointer to kernel values (e.g. filter coefficients)
+     * @param output pointer to output values
      * @author JohT
      */
     template<typename ValueType>
-    void kernelPerInputValueTransposed(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
+    void kernelPerInputValueTransposed(const ValueType *const input, const int inputLength, const ValueType *const kernel, const int kernelLength, ValueType *const output)
     {
-        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const auto inputLength = static_cast<int>(input.size());
-        const auto kernelLength = static_cast<int>(kernel.size());
-
         for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
         {
             // Makes it obvious for the compiler (especially MSVC) that the factor is constant.
@@ -100,18 +91,14 @@ namespace joht_convolution
      * and sums up the results to the output vector. The inner loop is manually unrolled (4x interleaved).
      * 
      * @tparam ValueType 
-     * @param input span of input values
-     * @param kernel span of kernel values (e.g. filter coefficients)
-     * @param output output span
+     * @param input pointer to input values
+     * @param kernel pointer to kernel values (e.g. filter coefficients)
+     * @param output pointer to output values
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposedInnerLoopUnrolled(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
+    void inputPerKernelValueTransposedInnerLoopUnrolled(const ValueType *const input, const int inputLength, const ValueType *const kernel, const int kernelLength, ValueType *const output)
     {
-        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const auto inputLength = static_cast<int>(input.size());
-        const auto kernelLength = static_cast<int>(kernel.size());
-
         // The kernel length needs to be dividable by 4 since its loop is 4 times unrolled/interleaved.
         assert(kernelLength % 4 == 0);
 
@@ -135,18 +122,14 @@ namespace joht_convolution
      * and sums up the results to the output vector. The outer loop is manually unrolled (4x interleaved).
      * 
      * @tparam ValueType 
-     * @param input span of input values
-     * @param kernel span of kernel values (e.g. filter coefficients)
-     * @param output output span
+     * @param input pointer to input values
+     * @param kernel pointer to kernel values (e.g. filter coefficients)
+     * @param output pointer to output values
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposedOuterLoopUnrolled(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
+    void inputPerKernelValueTransposedOuterLoopUnrolled(const ValueType *const input, const int inputLength, const ValueType *const kernel, const int kernelLength, ValueType *const output)
     {
-        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const auto inputLength = static_cast<int>(input.size());
-        const auto kernelLength = static_cast<int>(kernel.size());
-
         // The input length needs to be dividable by 4 since its loop is 4 times unrolled/interleaved.
         assert(inputLength % 4 == 0);
 
@@ -170,18 +153,14 @@ namespace joht_convolution
      * and sums up the results to the output vector. The inner and outer loop are manually unrolled (4x interleaved).
      * 
      * @tparam ValueType 
-     * @param input span of input values
-     * @param kernel span of kernel values (e.g. filter coefficients)
-     * @param output output span
+     * @param input pointer to input values
+     * @param kernel pointer to kernel values (e.g. filter coefficients)
+     * @param output pointer to output values
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
+    void inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(const ValueType *const input, const int inputLength, const ValueType *const kernel, const int kernelLength, ValueType *const output)
     {
-        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const auto inputLength = static_cast<int>(input.size());
-        const auto kernelLength = static_cast<int>(kernel.size());
-
         // The input and kernel length needs to be dividable by 4 since its loop is 4 times unrolled/interleaved.
         assert(inputLength % 4 == 0);
         assert(kernelLength % 4 == 0);
@@ -223,20 +202,16 @@ namespace joht_convolution
      * stores the results in a temporary buffer and sums up the results to the output vector in a second loop. 
      * 
      * @tparam ValueType 
-     * @param input span of input values
-     * @param kernel span of kernel values (e.g. filter coefficients)
-     * @param output output span
+     * @param input pointer to input values
+     * @param kernel pointer to kernel values (e.g. filter coefficients)
+     * @param output pointer to output values
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposedLoopFission(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
+    void inputPerKernelValueTransposedLoopFission(const ValueType *const input, const int inputLength, const ValueType *const kernel, const int kernelLength, ValueType *const output)
     {
-        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const auto inputLength = static_cast<int>(input.size());
-        const auto kernelLength = static_cast<int>(kernel.size());
-
         // TODO The following memory allocation should be done once outside.
-        auto scaledInput = std::vector<ValueType>(input.size());
+        auto scaledInput = std::vector<ValueType>(inputLength);
 
         for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
         {
@@ -257,20 +232,16 @@ namespace joht_convolution
      * whereas the index of the output value is calculated (addition). 
      * 
      * @tparam ValueType 
-     * @param input span of input values
-     * @param kernel span of kernel values (e.g. filter coefficients)
-     * @param output output span
+     * @param input pointer to input values
+     * @param kernel pointer to kernel values (e.g. filter coefficients)
+     * @param output pointer to output values
      * @author JohT
      */
     template<typename ValueType>
-    void inputPerKernelValueTransposedLoopFissionIndexArithmetic(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
+    void inputPerKernelValueTransposedLoopFissionIndexArithmetic(const ValueType *const input, const int inputLength, const ValueType *const kernel, const int kernelLength, ValueType *const output)
     {
-        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const auto inputLength = static_cast<int>(input.size());
-        const auto kernelLength = static_cast<int>(kernel.size());
-
         // TODO The following memory allocation should be done once outside.
-        auto scaledKernel = std::vector<ValueType>(output.size());
+        auto scaledKernel = std::vector<ValueType>(inputLength + kernelLength - 1);
 
         for (auto kernelIndex = 0; kernelIndex < kernelLength; ++kernelIndex)
         {
@@ -290,19 +261,15 @@ namespace joht_convolution
      * stores the (scaled kernel) results in a temporary buffer and sums up the results to the output vector in a second loop. 
      * 
      * @tparam ValueType 
-     * @param input span of input values
-     * @param kernel span of kernel values (e.g. filter coefficients)
-     * @param output output span
+     * @param input pointer to input values
+     * @param kernel pointer to kernel values (e.g. filter coefficients)
+     * @param output pointer to output values
      * @author JohT
      */
     template<typename ValueType>
-    void kernelPerInputValueTransposedLoopFission(const std::span<const ValueType> &input, const std::span<const ValueType> &kernel, const std::span<ValueType> &output)
+    void kernelPerInputValueTransposedLoopFission(const ValueType *const input, const int inputLength, const ValueType *const kernel, const int kernelLength, ValueType *const output)
     {
-        // Make it obvious for the compiler (e.g. MSVC) that the size of the arrays are constant.
-        const auto inputLength = static_cast<int>(input.size());
-        const auto kernelLength = static_cast<int>(kernel.size());
-
-        auto scaledKernel = std::vector<ValueType>(kernel.size());
+        auto scaledKernel = std::vector<ValueType>(kernelLength);
 
         for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
         {

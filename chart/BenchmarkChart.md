@@ -1,7 +1,7 @@
 # Benchmark Charts
 
 ## MacOS on Intel with SSE (no AVX) compiled with [CLang](https://clang.llvm.org) 
-![bar chart showing the results of the benchmarks for MacOs on Intel](./BenchmarkChart-AppleClang-macOS-AMD64SSE2.svg)
+![bar chart showing the results of the benchmarks for MacOs on Intel](./BenchmarkChart-AppleClang-MacOSX-x86_64AVX.svg)
 
 ## MacOS on M1 with Neon compiled with [CLang](https://clang.llvm.org) 
 ![bar chart showing the results of the benchmarks for MacOs on M1](./BenchmarkChart-AppleClang-macOS-arm64.svg)
