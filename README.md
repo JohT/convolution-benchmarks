@@ -13,7 +13,7 @@ This repository takes different C++ implementations of the [convolution](https:/
 - Uses [cpm](https://github.com/cpm-cmake/CPM.cmake) as a "Setup-free CMake dependency management" for C++.
 - Uses [Catch2](https://github.com/catchorg/Catch2) as Unit-Test and Benchmark-Framework for C++.
 - Uses [vega-lite](https://vega.github.io/vega-lite) to visualize the benchmark results as a bar chart.
-- Needs [node-canvas](https://github.com/Automattic/node-canvas) to create PNG and SVG files.
+- Needs [node-canvas](https://github.com/Automattic/node-canvas) to create SVG vector graphics files.
 - Needs [nodejs](https://nodejs.org) to build the JavaScript based charts.
 
 ## Commands
@@ -27,8 +27,9 @@ Nonetheless, here are the essential commands to build the project, run the bench
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Release -S . -B ./build -G Ninja
 cmake --build ./build --config Release
 cd charts
-npm install
-npm run create-benchmark-charts
+npm ci
+npm test
+npm run build
 ```
 
 ## Compiler Options for vectorization reports

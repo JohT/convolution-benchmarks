@@ -7,7 +7,7 @@
     "url": "https://github.com/JohT/convolution-benchmarks.git"
   },
   "scripts": {
-    "test": "npm run execute-benchmarks",
+    "test": "npm-run-all delete-benchmark-directory create-benchmark-directory execute-benchmarks",
     "build": "npm run create-benchmark-charts",
     "delete-benchmark-directory": "rimraf ./../build/benchmark",
     "create-benchmark-directory": "mkdirp ./../build/benchmark",
@@ -31,7 +31,7 @@
     "copy-charts-png": "copyfiles --verbose --flat ./../build/benchmark/*.png ./image/png",
     "copy-charts-svg": "copyfiles --verbose --flat ./../build/benchmark/*.svg ./image/svg",
     "copy-charts-json": "copyfiles --verbose --flat ./../build/benchmark/benchmark-report-*.json ./data",
-    "create-benchmark-charts": "npm-run-all delete-benchmark-directory create-benchmark-directory execute-benchmarks convert-xml-to-json generate-png-chart generate-svg-chart copy-all"
+    "create-benchmark-charts": "npm-run-all convert-xml-to-json generate-png-chart generate-svg-chart copy-all"
   },
   "author": "JohT",
   "license": "BSD-3-Clause",
@@ -44,7 +44,7 @@
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.2",
     "run-script-os": "1.1.6",
-    "vega": "5.22.1",
+    "vega": "^5.22.1",
     "vega-lite": "5.3.0"
   }
 }
