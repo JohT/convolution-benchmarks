@@ -28,7 +28,6 @@ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Releas
 cmake --build ./build --config Release
 cd charts
 npm ci
-npm test
 npm run build
 ```
 
