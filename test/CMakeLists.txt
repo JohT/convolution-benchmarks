@@ -82,4 +82,4 @@ target_link_libraries("${TEST_PROJECT_NAME}" PRIVATE Catch2::Catch2WithMain "${P
 # https://github.com/catchorg/Catch2/blob/devel/docs/cmake-integration.md
 include(CTest)
 include(${Catch2_SOURCE_DIR}/extras/Catch.cmake)
-catch_discover_tests("${TEST_PROJECT_NAME}")
+catch_discover_tests("${TEST_PROJECT_NAME}" REPORTER "JUnit" OUTPUT_DIR "TestResultsJUnitFormat")
