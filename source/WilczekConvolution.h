@@ -19,6 +19,7 @@
  *    The tests need to pad the input additionally with one zero sample to meet this requirement.
  * 
  * @see https://github.com/JanWilczek/fir-simd.git
+ * @see https://github.com/JanWilczek/fir-simd/blob/master/LICENSE
  * @author Jan Wilczek (c) 2022
  */
 namespace wilczek_convolution
