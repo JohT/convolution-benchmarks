@@ -24,10 +24,18 @@ Commands to build and test the project can be found in [COMMANDS.md](./COMMANDS.
 Nonetheless, here are the essential commands to build the project, run the benchmark tests and create the charts:
 
 ```shell
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Release -S . -B ./build -G Ninja
+cmake -DCMAKE_BUILD_TYPE:STRING=Release -S . -B ./
+
+build -G Ninja
+
 cmake --build ./build --config Release
+
+./build/test/ConvolutionBenchmarksTests [performance] --reporter XML::out=./build/benchmark/benchmark-report.xml --reporter console::out=-::colour-mode=ansi
+
 cd charts
+
 npm ci
+
 npm run build
 ```
 
