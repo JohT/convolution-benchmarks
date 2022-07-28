@@ -8,7 +8,7 @@
 # - BUILD_HOST_COMPILER: the name of the compiler currently used on the host system (e.g. "AppleClang")
 # - BUILD_HOST_VECTOR_EXTENSION: the name of the vector extension used on the host system (e.g. "")
 # 
-# - BENCHMARK_CHART_POSTFIX: the postfix of the benchmark chart file name (e.g. "AppleClang-macOS-arm64")
+# - BENCHMARK_CHART_GROUP: the name of the final folder that will contain the chart and its data grouped together (e.g. "AppleClang-macOS-arm64")
 # - BENCHMARK_CHART_DIRECTORY: the working (build) directory of the benchmark data files (e.g. "./build/benchmark")
 # - BENCHMARK_RESULTS_XML_FILE: the benchmark results XML filename without path (e.g. "benchmark-results.xml")
 
@@ -87,10 +87,10 @@ message(STATUS "${BUILD_HOST_ENVIRONMENT_VARIABLE_PREFIX}_VECTOR_EXTENSION=${HOS
 file(APPEND "${BUILD_HOST_OUTPUT_FILE_NAME}" "${BUILD_HOST_ENVIRONMENT_VARIABLE_PREFIX}_VECTOR_EXTENSION=${HOST_VECTOR_EXTENSION}\n")
 # ------------------------------------------------------------------------------------------------
 
-# Write benchmark chart postfix environment variable to the output file
-set(BENCHMARK_CHART_POSTFIX "${HOST_COMPILER}-${HOST_OPERATING_SYSTEM}-${HOST_PROCESSOR_ARCHITECTURE}${HOST_VECTOR_EXTENSION}")
-message(STATUS "BENCHMARK_CHART_POSTFIX=${BENCHMARK_CHART_POSTFIX}")
-file(APPEND "${BUILD_HOST_OUTPUT_FILE_NAME}" "BENCHMARK_CHART_POSTFIX=${BENCHMARK_CHART_POSTFIX}\n")
+# Write benchmark chart directory environment variable to the output file
+set(BENCHMARK_CHART_GROUP "${HOST_COMPILER}-${HOST_OPERATING_SYSTEM}-${HOST_PROCESSOR_ARCHITECTURE}${HOST_VECTOR_EXTENSION}")
+message(STATUS "BENCHMARK_CHART_GROUP=${BENCHMARK_CHART_GROUP}")
+file(APPEND "${BUILD_HOST_OUTPUT_FILE_NAME}" "BENCHMARK_CHART_GROUP=${BENCHMARK_CHART_GROUP}\n")
 
 # Write benchmark chart directory environment variable to the output file
 file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/benchmark" BENCHMARK_CHART_DIRECTORY)
