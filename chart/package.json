@@ -7,18 +7,19 @@
     "url": "https://github.com/JohT/convolution-benchmarks.git"
   },
   "config": {
-    "BenchmarkReportEnvironmentFile": "./../build/HostSystemInfo.env"
+    "BenchmarkChartLocalDataFile": "benchmark-report.json",
+    "BenchmarkChartEnvironmentFile": "./../build/BenchmarkChart.env"
   },
   "scripts": {
     "build": "npm run create-benchmark-charts",
     "create-benchmark-charts": "npm-run-all prepare-chart-directory convert-xml-to-json generate-svg-chart",
-    "convert-xml-to-json": "cross-var nodenv -E $npm_package_config_BenchmarkReportEnvironmentFile --exec run-script-os",
-    "convert-xml-to-json:windows": "convert-xml-to-json %BENCHMARK_CHART_DIRECTORY%\\%BENCHMARK_RESULTS_XML_FILE% %BENCHMARK_CHART_GROUP%\\benchmark-report.json",
-    "convert-xml-to-json:default": "convert-xml-to-json $BENCHMARK_CHART_DIRECTORY/$BENCHMARK_RESULTS_XML_FILE $BENCHMARK_CHART_GROUP/benchmark-report.json",
-    "generate-svg-chart": "cross-var nodenv -E $npm_package_config_BenchmarkReportEnvironmentFile --exec run-script-os",
-    "generate-svg-chart:windows": "cd %BENCHMARK_CHART_GROUP% && vl2svg BenchmarkChartHorizontal.json BenchmarkChart.svg",
-    "generate-svg-chart:default": "cd $BENCHMARK_CHART_GROUP && vl2svg BenchmarkChartHorizontal.json BenchmarkChart.svg",
-    "prepare-chart-directory": "cross-var nodenv -E $npm_package_config_BenchmarkReportEnvironmentFile --exec npm -- run copy-chart-config",
+    "convert-xml-to-json": "cross-var nodenv -E $npm_package_config_BenchmarkChartEnvironmentFile --exec run-script-os",
+    "convert-xml-to-json:windows": "convert-xml-to-json %BENCHMARK_CHART_DATA_FILE% %BENCHMARK_CHART_GROUP%\\%npm_package_config_BenchmarkChartLocalDataFile%",
+    "convert-xml-to-json:default": "convert-xml-to-json $BENCHMARK_CHART_DATA_FILE $BENCHMARK_CHART_GROUP/$npm_package_config_BenchmarkChartLocalDataFile",
+    "generate-svg-chart": "cross-var nodenv -E $npm_package_config_BenchmarkChartEnvironmentFile --exec run-script-os",
+    "generate-svg-chart:windows": "cd %BENCHMARK_CHART_GROUP% && vl2svg -- BenchmarkChartHorizontal.json BenchmarkChart.svg",
+    "generate-svg-chart:default": "cd $BENCHMARK_CHART_GROUP && vl2svg -- BenchmarkChartHorizontal.json BenchmarkChart.svg",
+    "prepare-chart-directory": "cross-var nodenv -E $npm_package_config_BenchmarkChartEnvironmentFile --exec npm -- run copy-chart-config",
     "copy-chart-config": "cross-var copyfiles --verbose --flat BenchmarkChartHorizontal.json $BENCHMARK_CHART_GROUP"
   },
   "author": "JohT",
@@ -26,11 +27,11 @@
   "devDependencies": {
     "convert-xml-to-json": "1.0.0",
     "copyfiles": "2.4.1",
-    "cross-var": "^1.1.0",
+    "cross-var": "1.1.0",
     "node-env-run": "4.0.2",
     "npm-run-all": "4.1.5",
     "run-script-os": "1.1.6",
-    "vega": "^5.22.1",
+    "vega": "5.22.1",
     "vega-lite": "5.3.0"
   }
 }
