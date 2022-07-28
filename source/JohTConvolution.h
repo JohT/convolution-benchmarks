@@ -1,3 +1,8 @@
+//BSD 3-Clause License
+
+//Copyright (c) 2022 by Johannes Troppacher
+//All rights reserved.
+
 #pragma once
 
 #include <cassert>
@@ -21,6 +26,7 @@
  *
  * The function "inputPerKernelValueTransposed" 
  * @see https://github.com/JohT/convolution-benchmarks
+ * @see https://github.com/JohT/convolution-benchmarks/blob/main/LICENSE
  * @author JohT
  */
 namespace joht_convolution

@@ -51,8 +51,8 @@ message(VERBOSE "C++ Language Standard set to C++20 for Target ${PROJECT_NAME}")
 #    message(VERBOSE "pure_simd headers directory included for all targets: ${pure_simd_SOURCE_DIR}/include")
 #endif()
 
-# Includes the host system info environment file writer from "./cmake/HostSystemInfo.cmake".
-include(HostSystemInfo)
+# Includes the benchmark chart environment file setup from "./cmake/BenchmarkChartEnvironmentFileSetup.cmake".
+include(BenchmarkChartEnvironmentFileSetup)
 
 # Get all source files in the src directory and store them in the project_sources variable.
 # GLOB_RECURSE is not recommended but used here for simplicity: https://cmake.org/cmake/help/latest/command/file.html?highlight=CONFIGURE_DEPENDS#filesystem

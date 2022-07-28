@@ -13,7 +13,7 @@ This repository takes different C++ implementations of the [convolution](https:/
 - Uses [cpm](https://github.com/cpm-cmake/CPM.cmake) as a "Setup-free CMake dependency management" for C++.
 - Uses [Catch2](https://github.com/catchorg/Catch2) as Unit-Test and Benchmark-Framework for C++.
 - Uses [vega-lite](https://vega.github.io/vega-lite) to visualize the benchmark results as a bar chart.
-- Needs [node-canvas](https://github.com/Automattic/node-canvas) to create PNG and SVG files.
+- Needs [node-canvas](https://github.com/Automattic/node-canvas) to create SVG vector graphics files.
 - Needs [nodejs](https://nodejs.org) to build the JavaScript based charts.
 
 ## Commands
@@ -24,11 +24,19 @@ Commands to build and test the project can be found in [COMMANDS.md](./COMMANDS.
 Nonetheless, here are the essential commands to build the project, run the benchmark tests and create the charts:
 
 ```shell
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Release -S . -B ./build -G Ninja
+cmake -DCMAKE_BUILD_TYPE:STRING=Release -S . -B ./
+
+build -G Ninja
+
 cmake --build ./build --config Release
+
+./build/test/ConvolutionBenchmarksTests [performance] --reporter XML::out=./build/benchmark/benchmark-report.xml --reporter console::out=-::colour-mode=ansi
+
 cd charts
-npm install
-npm run create-benchmark-charts
+
+npm ci
+
+npm run build
 ```
 
 ## Compiler Options for vectorization reports
@@ -169,3 +177,4 @@ A [complex](https://en.wikipedia.org/wiki/Cynefin_framework#Complex) topic like 
 - [Microsoft® Visual Studio Compiler - Vectorizer and parallelizer messages](https://docs.microsoft.com/en-us/cpp/error-messages/tool-errors/vectorizer-and-parallelizer-messages?view=msvc-170)
 - [Intel® Programming Guidelines for Vectorization](https://www.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/optimization-and-programming/vectorization/automatic-vectorization/programming-guidelines-for-vectorization.html)
 - [FIR Structures](https://www.ni.com/docs/de-DE/bundle/labview-2014-digital-filter-design-toolkit-api-ref/page/lvdfdtconcepts/fir_filter_specs.html)
+- [Permission denied for build.sh file (StackTrace)](https://stackoverflow.com/questions/42154912/permission-denied-for-build-sh-file)
