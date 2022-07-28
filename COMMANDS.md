@@ -39,6 +39,8 @@ ctest --test-dir build/test
 
 ### Run benchmark tests with XML report output
 
+Use [run-benchmarks.sh](./run-benchmarks.sh) or [run-benchmarks.bat](./run-benchmarks.bat) to execute the benchmark tests. These are shortcuts for the following command:
+
 ```shell
 ./build/test/ConvolutionBenchmarksTests [performance] --reporter XML::out=./build/benchmark/benchmark-report.xml --reporter console::out=-::colour-mode=ansi
 ```

@@ -177,3 +177,4 @@ A [complex](https://en.wikipedia.org/wiki/Cynefin_framework#Complex) topic like 
 - [Microsoft® Visual Studio Compiler - Vectorizer and parallelizer messages](https://docs.microsoft.com/en-us/cpp/error-messages/tool-errors/vectorizer-and-parallelizer-messages?view=msvc-170)
 - [Intel® Programming Guidelines for Vectorization](https://www.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/optimization-and-programming/vectorization/automatic-vectorization/programming-guidelines-for-vectorization.html)
 - [FIR Structures](https://www.ni.com/docs/de-DE/bundle/labview-2014-digital-filter-design-toolkit-api-ref/page/lvdfdtconcepts/fir_filter_specs.html)
+- [Permission denied for build.sh file (StackTrace)](https://stackoverflow.com/questions/42154912/permission-denied-for-build-sh-file)
