@@ -20,6 +20,34 @@ The contained [Node.js](https://nodejs.dev) scripts generate [Vega-Lite](https:/
 - [BenchmarkChartHorizontal.json](./BenchmarkChartHorizontal.json) contains the chart description and configuration.
 - The command line tool [vl2svg](https://vega.github.io/vega-lite/usage/compile.html#cli) is used to create a SVG vector graphics file with the chart.
 
+## Parameter
+
+### BenchmarkChartEnvironmentFile (pre set)
+- Located in [package.json](./package.json) config section
+- Specifies the path to the environment file that contains parameter for the chart creation
+- Currently set to `./../build/BenchmarkChart.env`
+- It is expected to be created with [Catch2 XML Reporter](https://github.com/catchorg/Catch2/blob/devel/docs/reporters.md) for example with the following command:   
+`MyCatch2TestExecutable [performance] --reporter XML::out=benchmark-report.xml`
+
+### BenchmarkChartLocalDataFile (pre set)
+- Located in [package.json](./package.json) config section
+- Specifies the name of the local data file name without path that is referenced in the [Vega-Lite](https://vega.github.io/vega-lite) JSON chart description [BenchmarkChartHorizontal.json](./BenchmarkChartHorizontal.json) under `"data": { "url": "..."`
+- Currently set to `benchmark-report.json`
+
+### BENCHMARK_CHART_DATA_FILE (mandatory)
+- Located inside the environment file specified with `BenchmarkChartEnvironmentFile`
+- Specifies the absolute path to the XML file that contains the results of the benchmark tests.
+- Example:   
+`BENCHMARK_CHART_DATA_FILE=C:\Git\convolution-benchmarks\build\benchmark\benchmark-report.xml`
+- In this project it is created with [cmake/BenchmarkChartEnvironmentFileSetup.cmake](./../cmake/BenchmarkChartEnvironmentFileSetup.cmake)
+
+### BENCHMARK_CHART_GROUP (mandatory)
+- Located inside the environment file specified with `BenchmarkChartEnvironmentFile`
+- Name of the group folder that will contain the chart and its data (e.g. "AppleClang-macOS-arm64")
+- Example:   
+`BENCHMARK_CHART_GROUP=MSVC-Windows-AMD64AVX2`
+- In this project it is created with [cmake/BenchmarkChartEnvironmentFileSetup.cmake](./../cmake/BenchmarkChartEnvironmentFileSetup.cmake)
+
 ## Commands
 
 Run these two commands to setup the project and generate the charts:

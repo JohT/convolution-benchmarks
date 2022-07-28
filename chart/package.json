@@ -1,15 +1,21 @@
 {
-  "name": "benchmark-chart",
+  "name": "catch2-benchmark-chart",
   "version": "1.0.0",
-  "description": "Create charts from benchmark data",
+  "description": "Create charts from Catch2 benchmark data",
+  "homepage": "https://github.com/JohT/convolution-benchmarks#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/JohT/convolution-benchmarks.git"
   },
-  "config": {
-    "BenchmarkChartLocalDataFile": "benchmark-report.json",
-    "BenchmarkChartEnvironmentFile": "./../build/BenchmarkChart.env"
+  "bugs": {
+    "url": "https://github.com/JohT/convolution-benchmarks/issues"
   },
+  "config": {
+    "BenchmarkChartEnvironmentFile": "./../build/BenchmarkChart.env",
+    "BenchmarkChartLocalDataFile": "benchmark-report.json"
+  },
+  "author": "Johannes Troppacher",
+  "license": "BSD-3-Clause",
   "scripts": {
     "build": "npm run create-benchmark-charts",
     "create-benchmark-charts": "npm-run-all prepare-chart-directory convert-xml-to-json generate-svg-chart",
@@ -22,8 +28,6 @@
     "prepare-chart-directory": "cross-var nodenv -E $npm_package_config_BenchmarkChartEnvironmentFile --exec npm -- run copy-chart-config",
     "copy-chart-config": "cross-var copyfiles --verbose --flat BenchmarkChartHorizontal.json $BENCHMARK_CHART_GROUP"
   },
-  "author": "JohT",
-  "license": "BSD-3-Clause",
   "devDependencies": {
     "convert-xml-to-json": "1.0.0",
     "copyfiles": "2.4.1",
