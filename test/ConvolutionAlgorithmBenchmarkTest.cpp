@@ -34,7 +34,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
     const auto dividableBy4PaddingLength = 4 - ((input.size() + kernel.size() - 1) % 4);
     auto dividableBy4Padding = std::vector<float>(dividableBy4PaddingLength, 0.0F);
 
-    BENCHMARK_ADVANCED("kernelPerInputValue Transposed (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) kernelPerInputValue Transposed (kernel " + std::to_string(kernelLength) + ")")
 
     (Catch::Benchmark::Chronometer meter)
     {
@@ -44,7 +44,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("inputPerKernelValue Transposed (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -53,7 +53,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("inputPerKernelValue Transposed InnerLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed InnerLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -62,7 +62,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("inputPerKernelValue Transposed OuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed OuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -71,7 +71,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("inputPerKernelValue Transposed InnerAndOuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed InnerAndOuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -80,7 +80,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("inputPerKernelValue Transposed LoopFission (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed LoopFission (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -89,7 +89,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("inputPerKernelValue Transposed LoopFissionIndexArithmetic (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed LoopFissionIndexArithmetic (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -98,7 +98,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("kernelPerInputValue Transposed LoopFission (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) kernelPerInputValue Transposed LoopFission (kernel " + std::to_string(kernelLength) + ")")
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
