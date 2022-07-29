@@ -1,0 +1,119 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+    # Ignore changes in documentation and benchmark charts.
+    # Need to contain git add parameters below.
+    paths-ignore: 
+      - '**/LICENSE'
+      - '**/*.md'
+      - '**/*.txt'
+      - '**/*.svg'
+      - '**/*.png'
+      - '**/benchmark-report.*'
+  pull_request:
+    branches:
+      - main
+    # Ignore changes in documentation and benchmark charts.
+    paths-ignore: 
+      - '**/LICENSE'
+      - '**/*.md'
+      - '**/*.txt'
+      - '**/*.svg'
+      - '**/*.png'
+      - '**/benchmark-report.*'
+
+env:
+  PROJECT_NAME: ${{ github.event.repository.name }}
+  BUILD_TYPE: Release
+  BUILD_DIR: build
+  CHART_DIR: chart
+  CHART_ENVIRONMENT_FILE: BenchmarkChart.env
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# jobs are run in parallel on different machines
+# steps run in series
+jobs:
+  build_and_test:
+    name: ${{ matrix.artifact }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+        - os: ubuntu-latest
+          artifact: Linux
+        - os: windows-latest
+          artifact: Windows
+        - os: macos-latest
+          artifact: MacOS
+
+    steps:
+    - name: Install Linux Dependencies and select g++ 10
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update && sudo apt-get install build-essential libcairo2-dev libpango1.0-dev librsvg2-dev
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+
+    - name: Get latest CMake including Ninja 
+      uses: lukka/get-cmake@latest      
+
+    - name: Setup Developer Command Prompt for Microsoft Visual C++ (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: ccache
+      if: matrix.os != 'windows-latest'
+      uses: hendrikmuhs/ccache-action@v1
+      with:
+        key: ${{ matrix.os }}-${{ matrix.type }}
+  
+    - name: (CMake) Configure
+      run: cmake -B ${{ env.BUILD_DIR }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -G Ninja .
+    - name: (CMake) Build
+      run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }}
+    - name: (CMake) Test
+      working-directory: ${{ env.BUILD_DIR }}
+      run: ctest --test-dir test
+      
+    - name: (Catch2) Run Benchmarks (POSIX)
+      if: matrix.os != 'windows-latest'
+      run: ./run-benchmarks.sh
+    - name: (Catch2) Run Benchmarks (Windows)
+      if: matrix.os == 'windows-latest'
+      run: .\run-benchmarks.bat
+
+    - name: (Node.js) Setup
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+        cache-dependency-path: ${{ env.CHART_DIR }}/package-lock.json
+    - name: (Node.js) Install Packages
+      working-directory: ${{ env.CHART_DIR }}
+      run: npm ci
+    - name: (Node.js) Build Charts
+      working-directory: ${{ env.CHART_DIR }}
+      run: npm run build
+
+    - name: Import environment file ${{ env.CHART_ENVIRONMENT_FILE }}
+      uses: cardinalby/export-env-action@v1
+      with:
+        envFile: '${{ env.BUILD_DIR }}/${{ env.CHART_ENVIRONMENT_FILE }}'      
+
+    - name: Zip
+      working-directory: ${{ env.CHART_DIR }}
+      run: cmake -E tar cfv ${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}.zip --format=zip ${{ env.BENCHMARK_CHART_GROUP }}
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        path: ${{ env.CHART_DIR }}/${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}.zip
+        name: ${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}
+        retention-days: 7
