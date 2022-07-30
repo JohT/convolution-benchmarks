@@ -23,10 +23,10 @@
     "convert-xml-to-json:windows": "convert-xml-to-json %BENCHMARK_CHART_DATA_FILE% %BENCHMARK_CHART_GROUP%\\%npm_package_config_BenchmarkChartLocalDataFile%",
     "convert-xml-to-json:default": "convert-xml-to-json $BENCHMARK_CHART_DATA_FILE $BENCHMARK_CHART_GROUP/$npm_package_config_BenchmarkChartLocalDataFile",
     "generate-svg-chart": "cross-var nodenv -E $npm_package_config_BenchmarkChartEnvironmentFile --exec run-script-os",
-    "generate-svg-chart:windows": "cd %BENCHMARK_CHART_GROUP% && vl2svg -- BenchmarkChartHorizontal.json BenchmarkChart.svg",
-    "generate-svg-chart:default": "cd $BENCHMARK_CHART_GROUP && vl2svg -- BenchmarkChartHorizontal.json BenchmarkChart.svg",
+    "generate-svg-chart:windows": "vl2svg --base %BENCHMARK_CHART_GROUP% BenchmarkChartHorizontal.json %BENCHMARK_CHART_GROUP%\\BenchmarkChart.svg",
+    "generate-svg-chart:default": "vl2svg --base $BENCHMARK_CHART_GROUP BenchmarkChartHorizontal.json $BENCHMARK_CHART_GROUP/BenchmarkChart.svg",
     "prepare-chart-directory": "cross-var nodenv -E $npm_package_config_BenchmarkChartEnvironmentFile --exec npm -- run copy-chart-config",
-    "copy-chart-config": "cross-var copyfiles --verbose --flat BenchmarkChartHorizontal.json $BENCHMARK_CHART_GROUP"
+    "copy-chart-config": "cross-var copyfiles --verbose --flat $BENCHMARK_CHART_DATA_FILE $BENCHMARK_CHART_GROUP"
   },
   "devDependencies": {
     "convert-xml-to-json": "1.0.0",

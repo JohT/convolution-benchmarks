@@ -1,0 +1,142 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+    # Ignore changes in documentation and benchmark charts.
+    # Need to contain git add parameters below.
+    paths-ignore: 
+      - '**/LICENSE'
+      - '**.md'
+      - '**.txt'
+      - '**.svg'
+      - '**.png'
+      - '**.code-workspace'
+      - '**/benchmark-report.json'
+      - '**/benchmark-report.xml'
+  pull_request:
+    branches:
+      - main
+    # Ignore changes in documentation and benchmark charts.
+    paths-ignore: 
+      - '**/LICENSE'
+      - '**.md'
+      - '**.txt'
+      - '**.svg'
+      - '**.png'
+      - '**.code-workspace'
+      - '**/benchmark-report.json'
+      - '**/benchmark-report.xml'
+
+env:
+  PROJECT_NAME: ${{ github.event.repository.name }}
+  BUILD_TYPE: Release
+  BUILD_DIR: build
+  CHART_DIR: chart
+  CHART_ENVIRONMENT_FILE: BenchmarkChart.env
+  CI_COMMIT_MESSAGE: (CI) Update chart
+  CI_COMMIT_AUTHOR: ${{ github.event.repository.name }} Continuous Integration
+
+jobs:
+  build_and_test:
+    name: ${{ matrix.artifact }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+        - os: ubuntu-latest
+          artifact: Linux
+        - os: windows-latest
+          artifact: Windows
+        - os: macos-latest
+          artifact: MacOS
+
+    steps:
+    
+    # Install additional packages and tools for the build
+    - name: (Install) Linux Dependencies and select g++ 10
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update && sudo apt-get install build-essential libcairo2-dev libpango1.0-dev librsvg2-dev
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
+    - name: (Install) CMake and Ninja 
+      uses: lukka/get-cmake@latest      
+    - name: (Install) Developer Command Prompt for Microsoft Visual C++ (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: ilammy/msvc-dev-cmd@v1
+
+    # Checkout the code from GIT using a dedicated personal access token
+    - name: (GIT) Checkout code
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}
+
+    # Build and test the C++ Project using CMake
+    - name: (CMake) Ccache
+      if: matrix.os != 'windows-latest'
+      uses: hendrikmuhs/ccache-action@v1
+      with:
+        key: ${{ matrix.os }}-${{ matrix.type }}
+    - name: (CMake) Configure
+      run: cmake -B ${{ env.BUILD_DIR }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -G Ninja .
+    - name: (CMake) Build
+      run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }}
+    - name: (CMake) Test
+      working-directory: ${{ env.BUILD_DIR }}
+      run: ctest --test-dir test
+      
+    # Run the benchmark tests using Catch2
+    - name: (Catch2) Run Benchmarks (POSIX)
+      if: matrix.os != 'windows-latest'
+      run: ./run-benchmarks.sh
+    - name: (Catch2) Run Benchmarks (Windows)
+      if: matrix.os == 'windows-latest'
+      run: .\run-benchmarks.bat
+
+    # Generate the charts using Node.js
+    - name: (Node.js) Setup
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+        cache-dependency-path: ${{ env.CHART_DIR }}/package-lock.json
+    - name: (Node.js) Install Packages
+      working-directory: ${{ env.CHART_DIR }}
+      run: npm ci
+    - name: (Node.js) Build Charts
+      working-directory: ${{ env.CHART_DIR }}
+      run: npm run build
+
+    # Package the results into a ZIP and upload it as build artifact
+    - name: (Package) Import environment file ${{ env.CHART_ENVIRONMENT_FILE }}
+      uses: cardinalby/export-env-action@v1
+      with:
+        envFile: '${{ env.BUILD_DIR }}/${{ env.CHART_ENVIRONMENT_FILE }}'      
+    - name: (Package) Zip
+      working-directory: ${{ env.CHART_DIR }}
+      run: cmake -E tar cfv ${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}.zip --format=zip ${{ env.BENCHMARK_CHART_GROUP }}
+    - name: (Package) Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        path: ${{ env.CHART_DIR }}/${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}.zip
+        name: ${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}
+        retention-days: 7
+
+    # Commit and push benchmark reports on merge into "main" branch
+    - name: Display environment variable "github.event_name"
+      run: echo "github.event_name=${{ github.event_name }}"
+    - name: (GIT) Commit benchmark reports
+      working-directory: ${{ env.CHART_DIR }}
+      # Only run when a pull request gets merged or a commit is pushed to the main branch
+      # git add parameters need to directly or indirectly match paths-ignore parameters above
+      if: github.event_name == 'push'
+      run: |
+        git config --global user.name '${{ env.CI_COMMIT_AUTHOR }}'
+        git config --global user.email 'joht@users.noreply.github.com'
+        git add ${{ env.BENCHMARK_CHART_GROUP }}
+        git commit -m "${{ env.CI_COMMIT_MESSAGE }} ${{ env.BENCHMARK_CHART_GROUP }}"
+        git push

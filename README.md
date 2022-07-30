@@ -52,6 +52,13 @@ These compile options are used as described in [Auto-Vectorization in LLVM](http
 - `-Rpass-analysis=loop-vectorize` identifies the statements that caused vectorization to fail. If in addition -fsave-optimization-record is provided, multiple causes of vectorization failure may be listed (this behavior might change in the future).
 - `-fsave-optimization-record` generate a YAML optimization record file.
 
+### GCC
+
+These compile options are used with GCC as described in [GCC Developer Options](https://gcc.gnu.org/onlinedocs/gcc-10.1.0/gcc/Developer-Options.html):
+
+- `-fopt-info-vec-optimized` prints information when an optimization from vectorization passes is successfully.
+- `-fopt-info-vec-missed` prints information about missed optimization opportunities from vectorization passes.
+
 ### MSVC
 
 These compile options are used with MSVC as described in [Auto-Vectorizer Reporting Level](https://docs.microsoft.com/en-us/cpp/build/reference/qvec-report-auto-vectorizer-reporting-level?view=msvc-170) and [Auto-Parallelization and Auto-Vectorization](https://docs.microsoft.com/en-us/cpp/parallel/auto-parallelization-and-auto-vectorization?view=msvc-170):
