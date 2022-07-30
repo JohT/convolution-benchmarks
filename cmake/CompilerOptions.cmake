@@ -73,6 +73,14 @@ endif()
 #     target_compile_definitions(compiler_options INTERFACE _DISABLE_VECTOR_ANNOTATION)
 # endif()
 
+# Options to overwrite the used CPU vectorization extension of the build host system.
+option(ENFORCE_VECTOR_EXTENSION_SSE2 "Enforces SSE2 vector extension if available (Default=OFF)")
+option(ENFORCE_VECTOR_EXTENSION_AVX "Enforces AVX vector extension if available (Default=OFF)")
+option(ENFORCE_VECTOR_EXTENSION_AVX2 "Enforces AVX2 vector extension if available (Default=OFF)")
+
+# Detect SSE2
+cmake_host_system_information(RESULT HOST_HAS_SSE2 QUERY HAS_SSE2)
+
 # Detect CPU instruction set extensions for vectorization (AVX, AVX2, AVX512)
 # Specifies the architecture for code generation on x64 [AVX|AVX2|AVX512]
 # Introduced around 2013, AVX2 should probably be supported by most PCs nowadays
@@ -81,23 +89,27 @@ include(findAVX)
 
 # Enable CLang Vectorization
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU")
-    if (CXX_AVX512_FOUND)
+    if (CXX_AVX512_FOUND AND NOT ENFORCE_VECTOR_EXTENSION_SSE2 AND NOT ENFORCE_VECTOR_EXTENSION_AVX AND NOT ENFORCE_VECTOR_EXTENSION_AVX2)
         target_compile_options(compiler_options INTERFACE "-mavx512f;-mavx512dq;-mavx512vl;-mavx512bw;-mfma")
-    elseif (CXX_AVX2_FOUND)
+    elseif (CXX_AVX2_FOUND AND NOT ENFORCE_VECTOR_EXTENSION_SSE2 AND NOT ENFORCE_VECTOR_EXTENSION_AVX)
         target_compile_options(compiler_options INTERFACE "-mavx2;-mfma")
-    elseif (CXX_AVX_FOUND) 
+    elseif (CXX_AVX_FOUND AND NOT ENFORCE_VECTOR_EXTENSION_SSE2)
         target_compile_options(compiler_options INTERFACE "-mavx")
+    elseif (HOST_HAS_SSE2 AND ENFORCE_VECTOR_EXTENSION_SSE2)
+        target_compile_options(compiler_options INTERFACE "-msse2")
     endif()
 endif()
 
 # Enable MSVC Vectorization
 if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    if (CXX_AVX512_FOUND)
+    if (CXX_AVX512_FOUND AND NOT ENFORCE_VECTOR_EXTENSION_SSE2 AND NOT ENFORCE_VECTOR_EXTENSION_AVX AND NOT ENFORCE_VECTOR_EXTENSION_AVX2)
         target_compile_options(compiler_options INTERFACE "/arch:AVX512")    
-    elseif (CXX_AVX2_FOUND)
+    elseif (CXX_AVX2_FOUND AND NOT ENFORCE_VECTOR_EXTENSION_SSE2 AND NOT ENFORCE_VECTOR_EXTENSION_AVX)
         target_compile_options(compiler_options INTERFACE "/arch:AVX2")
-    elseif (CXX_AVX_FOUND) 
+    elseif (CXX_AVX_FOUND  AND NOT ENFORCE_VECTOR_EXTENSION_SSE2)
         target_compile_options(compiler_options INTERFACE "/arch:AVX")
+    elseif (HOST_HAS_SSE2  AND NOT ENFORCE_VECTOR_EXTENSION_SSE2)
+        target_compile_options(compiler_options INTERFACE "/arch:SSE2")
     endif()
 endif()
 
