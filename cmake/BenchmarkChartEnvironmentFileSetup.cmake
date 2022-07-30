@@ -5,6 +5,22 @@
 # - BENCHMARK_CHART_GROUP: Name of the final folder that will contain the chart and its data grouped together (e.g. "AppleClang-macOS-arm64")
 # - BENCHMARK_CHART_DATA_FILE: Benchmark results XML filename with path (e.g. "./build/benchmark/benchmark-results.xml")
 
+# Options to overwrite the used CPU vectorization extension of the build host system.
+option(ENFORCE_VECTOR_EXTENSION_SSE2 "Enforces SSE2 vector extension if available (Default=OFF)")
+if (ENFORCE_VECTOR_EXTENSION_SSE2)
+  message(VERBOSE "Enforcing SSE2 vector extension if available")
+endif()
+
+option(ENFORCE_VECTOR_EXTENSION_AVX "Enforces AVX vector extension if available (Default=OFF)")
+if (ENFORCE_VECTOR_EXTENSION_AVX)
+  message(VERBOSE "Enforcing AVX vector extension if available")
+endif()
+
+option(ENFORCE_VECTOR_EXTENSION_AVX2 "Enforces AVX2 vector extension if available (Default=OFF)")
+if (ENFORCE_VECTOR_EXTENSION_AVX2)
+  message(VERBOSE "Enforcing AVX2 vector extension if available")
+endif()
+
 set(BUILD_HOST_OUTPUT_FILE_NAME "${CMAKE_BINARY_DIR}/BenchmarkChart.env")
 set(BENCHMARK_CHART_VARIABLENAME_PREFIX "BENCHMARK_CHART")
 
@@ -41,14 +57,14 @@ set(HOST_VECTOR_EXTENSION " ")
 
 # Detect SSE vector extension of the host system
 cmake_host_system_information(RESULT HOST_HAS_SSE QUERY HAS_SSE)
-if(HOST_HAS_SSE)
+if (HOST_HAS_SSE)
   set(HOST_VECTOR_EXTENSION "SSE")
   message(VERBOSE "HOST_HAS_SSE=${HOST_HAS_SSE}")
 endif()
 
 # Detect SSE2 vector extension of the host system
 cmake_host_system_information(RESULT HOST_HAS_SSE2 QUERY HAS_SSE2)
-if(HOST_HAS_SSE2)
+if (HOST_HAS_SSE2)
   set(HOST_VECTOR_EXTENSION "SSE2")
   message(VERBOSE "SSE2 supported")
 endif()
@@ -58,21 +74,21 @@ endif()
 include(findAVX)
 
 # Detect AVX vector extension of the host system
-if (CXX_AVX_FOUND)
+if (CXX_AVX_FOUND AND NOT ENFORCE_VECTOR_EXTENSION_SSE2)
   set(HOST_VECTOR_EXTENSION "AVX")
   message(VERBOSE "AXV supported with flags: ${CXX_AVX_FLAGS}")
 endif()
 
 # Detect AVX2 vector extension of the host system
-if (CXX_AVX2_FOUND)
+if (CXX_AVX2_FOUND AND NOT ENFORCE_VECTOR_EXTENSION_SSE2 AND NOT ENFORCE_VECTOR_EXTENSION_AVX)
   set(HOST_VECTOR_EXTENSION "AVX2")
   message(VERBOSE "AXV2 supported with flags: ${CXX_AVX2_FLAGS}")
 endif()
 
 # Detect AVX512 vector extension of the host system
-if(CXX_AVX512_FOUND)
- set(HOST_VECTOR_EXTENSION "AVX512")
- message(VERBOSE "AXV512 supported with flags: ${CXX_AVX512_FLAGS}")
+if (CXX_AVX512_FOUND AND NOT ENFORCE_VECTOR_EXTENSION_SSE2 AND NOT ENFORCE_VECTOR_EXTENSION_AVX AND NOT ENFORCE_VECTOR_EXTENSION_AVX2)
+  set(HOST_VECTOR_EXTENSION "AVX512")
+  message(VERBOSE "AXV512 supported with flags: ${CXX_AVX512_FLAGS}")
 endif()
 # ------------------------------------------------------------------------------------------------
 
