@@ -45,14 +45,42 @@ jobs:
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
         - os: ubuntu-latest
           artifact: Linux
+          enforce-sse2: FALSE
+          enforce-avx: FALSE
+          enforce-avx2: FALSE
+        - os: ubuntu-latest
+          artifact: Linux SSE2
+          enforce-sse2: TRUE
+          enforce-avx: FALSE
+          enforce-avx2: FALSE
+        - os: ubuntu-latest
+          artifact: Linux AVX
+          enforce-sse2: FALSE
+          enforce-avx: TRUE
+          enforce-avx2: FALSE
+        - os: ubuntu-latest
+          artifact: Linux AVX2
+          enforce-sse2: FALSE
+          enforce-avx: FALSE
+          enforce-avx2: TRUE
         - os: windows-latest
           artifact: Windows
+          enforce-sse2: FALSE
+          enforce-avx: FALSE
+          enforce-avx2: FALSE
+        - os: windows-latest
+          artifact: Windows AVX2
+          enforce-sse2: FALSE
+          enforce-avx: FALSE
+          enforce-avx2: TRUE
         - os: macos-latest
           artifact: MacOS
+          enforce-sse2: FALSE
+          enforce-avx: FALSE
+          enforce-avx2: FALSE
 
     steps:
     
@@ -81,8 +109,17 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1
       with:
         key: ${{ matrix.os }}-${{ matrix.type }}
-    - name: (CMake) Configure
-      run: cmake -B ${{ env.BUILD_DIR }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -G Ninja .
+    - name: (CMake) Configure, Enforce SSE=${{ matrix.enforce-sse2 }}, AVX=${{ matrix.enforce-avx }}, AVX2=${{ matrix.enforce-avx2 }}
+      run: >
+        cmake -B ${{ env.BUILD_DIR }}
+        -G Ninja
+        -S .
+        -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE}}
+        -DCMAKE_C_COMPILER_LAUNCHER=ccache
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        -DENFORCE_VECTOR_EXTENSION_SSE2:BOOL=${{ matrix.enforce-sse2 }}
+        -DENFORCE_VECTOR_EXTENSION_AVX:BOOL=${{ matrix.enforce-avx }}
+        -DENFORCE_VECTOR_EXTENSION_AVX2:BOOL=${{ matrix.enforce-avx2 }}
     - name: (CMake) Build
       run: cmake --build ${{ env.BUILD_DIR }} --config ${{ env.BUILD_TYPE }}
     - name: (CMake) Test
