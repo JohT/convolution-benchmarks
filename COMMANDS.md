@@ -2,6 +2,14 @@
 This document lists the steps and commands that were executed to set up the project.
 It also contains the commands that are used to build it.
 
+## Scripts
+
+- Run [script/run-all.sh](./script/run-all.sh) or [script\run-all.bat](./script/run-all.bat) to run all the following commands in order.
+- Run [script/benchmark-with-charts.sh](./script/benchmark-with-charts.sh) or [script\benchmark-with-charts.bat](./script/benchmark-with-charts.bat) to run the benchmark tests and generate charts without (re)building the project.
+- Run [script/build.sh](./script/build.sh) or [script\build.bat](./script/build.bat) to compile and test the project.
+- Run [script/run-benchmarks.sh](./script/run-benchmarks.sh) or [script\run-benchmarks.bat](./script/run-benchmarks.bat) to run the benchmark tests.
+- Run [script/create-charts.sh](./script/create-charts.sh) or [script\create-charts.bat](./script/create-charts.bat) to create the benchmark charts.
+
 ## Build
 
 ### Prepare a "Debug" build with Ninja as generator
@@ -39,7 +47,7 @@ ctest --test-dir build/test
 
 ### Run benchmark tests with XML report output
 
-Use [run-benchmarks.sh](./run-benchmarks.sh) or [run-benchmarks.bat](./run-benchmarks.bat) to execute the benchmark tests. These are shortcuts for the following command:
+Use [run-benchmarks.sh](./script/run-benchmarks.sh) or [run-benchmarks.bat](./script/run-benchmarks.bat) to execute the benchmark tests. These are shortcuts for the following command:
 
 ```shell
 ./build/test/ConvolutionBenchmarksTests [performance] --reporter XML::out=./build/benchmark/benchmark-report.xml --reporter console::out=-::colour-mode=ansi

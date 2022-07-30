@@ -4,7 +4,7 @@ This repository takes different C++ implementations of the [convolution](https:/
 
 ## Results
 
-[BenchmarkChart.md](./chart/BenchmarkChart.md) contains the results of the benchmark tests visualized as bar charts.
+[BenchmarkChart.md](./chart/BenchmarkChart.md) contains the benchmark results visualized as bar charts.
 
 ## Prerequisites
 
@@ -18,26 +18,11 @@ This repository takes different C++ implementations of the [convolution](https:/
 
 ## Commands
 
-Commands to build and test the project can be found in [COMMANDS.md](./COMMANDS.md).
-[chart/COMMANDS.md](./chart/COMMANDS.md) describes the commands to run the benchmark tests and create the charts.
+- Run [script/run-all.sh](./script/run-all.sh) or [script\run-all.bat](./script/run-all.bat) to run all the following commands in order.
+- Run [script/benchmark-with-charts.sh](./script/benchmark-with-charts.sh) or [script\benchmark-with-charts.bat](./script/benchmark-with-charts.bat) to run the benchmark tests and generate charts without (re)building the project.
 
-Nonetheless, here are the essential commands to build the project, run the benchmark tests and create the charts:
-
-```shell
-cmake -DCMAKE_BUILD_TYPE:STRING=Release -S . -B ./
-
-build -G Ninja
-
-cmake --build ./build --config Release
-
-./build/test/ConvolutionBenchmarksTests [performance] --reporter XML::out=./build/benchmark/benchmark-report.xml --reporter console::out=-::colour-mode=ansi
-
-cd charts
-
-npm ci
-
-npm run build
-```
+Further commands and a detailed description can be found in [COMMANDS.md](./COMMANDS.md).
+[chart/COMMANDS.md](./chart/COMMANDS.md) describes the commands to create the charts.
 
 ## Compiler Options for vectorization reports
 
@@ -83,6 +68,10 @@ These compile options are used with MSVC as described in [Auto-Vectorizer Report
 
 Copy & Paste the following code snipped into [Quick C++ Benchmark](https://quick-bench.com/). It shows the difference between the kernel and the input values as outer loop with a "direct form transposed" convolution implementation.
 
+
+<details>
+  <summary>Code Snipped to compare the iteration over the kernel values in the inner vs. the outer loop</summary>
+  
 ```c++
 #include <vector>
 #include <span>
@@ -170,6 +159,8 @@ static void kernelOuter(benchmark::State& state) {
 // Register the function as a benchmark
 BENCHMARK(kernelOuter);
 ```
+</details>
+
 
 ## History
 
