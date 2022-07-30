@@ -133,10 +133,10 @@ jobs:
     # Run the benchmark tests using Catch2
     - name: (Catch2) Run Benchmarks (POSIX)
       if: matrix.os != 'windows-latest'
-      run: ./run-benchmarks.sh
+      run: ./script/run-benchmarks.sh
     - name: (Catch2) Run Benchmarks (Windows)
       if: matrix.os == 'windows-latest'
-      run: .\run-benchmarks.bat
+      run: .\script\run-benchmarks.bat
 
     # Generate the charts using Node.js
     - name: (Node.js) Setup
