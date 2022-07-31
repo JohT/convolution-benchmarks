@@ -27,11 +27,8 @@ Nevertheless, there are some significant differences that can be derived from th
 ### Windows on Intel with AVX2 compiled with [MSVC](https://visualstudio.microsoft.com/de/vs/features/cplusplus)
 ![bar chart showing the results of the benchmarks for Windows on Intel with AVX2](./MSVC-Windows-AMD64AVX2/BenchmarkChart.svg)
 
-### (manual) Windows on Intel with AVX compiled with [MSVC](https://visualstudio.microsoft.com/de/vs/features/cplusplus)
+### Windows on Intel with AVX compiled with [MSVC](https://visualstudio.microsoft.com/de/vs/features/cplusplus)
 ![bar chart showing the results of the benchmarks for Windows on Intel with AVX](./MSVC-Windows-AMD64AVX/BenchmarkChart.svg)
-
-### (manual) Windows on Intel with SSE2 (no AVX) compiled with [MSVC](https://visualstudio.microsoft.com/de/vs/features/cplusplus)
-![bar chart showing the results of the benchmarks for Windows on Intel with SSE](./MSVC-Windows-AMD64SSE2/BenchmarkChart.svg)
 
 ## Linux
 
