@@ -9,12 +9,13 @@ This repository takes different C++ implementations of the [convolution](https:/
 ## Prerequisites
 
 - Needs [CMake](https://cmake.org/download) (e.g. with the [Visual Studio Installer](https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-170)) to build the project.
-- [Ninja](https://ninja-build.org/) is recommended as "a small build system with a focus on speed".
+- Needs [node-canvas](https://github.com/Automattic/node-canvas#compiling) to create SVG vector graphics files.
+- Needs [nodejs](https://nodejs.org) to build the JavaScript based charts.
+- Recommends [Ninja](https://ninja-build.org/) as "a small build system with a focus on speed".
 - Uses [cpm](https://github.com/cpm-cmake/CPM.cmake) as a "Setup-free CMake dependency management" for C++.
 - Uses [Catch2](https://github.com/catchorg/Catch2) as Unit-Test and Benchmark-Framework for C++.
 - Uses [vega-lite](https://vega.github.io/vega-lite) to visualize the benchmark results as a bar chart.
-- Needs [node-canvas](https://github.com/Automattic/node-canvas) to create SVG vector graphics files.
-- Needs [nodejs](https://nodejs.org) to build the JavaScript based charts.
+- Uses [Renovate](https://github.com/renovatebot/renovate) to update the dependencies automatically.
 
 ## Commands
 

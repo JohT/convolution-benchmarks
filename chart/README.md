@@ -48,6 +48,11 @@ The contained [Node.js](https://nodejs.dev) scripts generate [Vega-Lite](https:/
 `BENCHMARK_CHART_GROUP=MSVC-Windows-AMD64AVX2`
 - In this project it is created with [cmake/BenchmarkChartEnvironmentFileSetup.cmake](./../cmake/BenchmarkChartEnvironmentFileSetup.cmake)
 
+### Parametrized benchmark charts
+
+If the benchmark test case name contains a description surrounded by double round brackets, 
+a separate chart is created with the parametrized description as title. This convention makes it easy to create charts for parametrized benchmark tests. For example: All test cases that contain "((kernel size 16))" in their name will be grouped into the same chart, all test tests containing "((kernel size 512))" will be grouped into a second chart and so on.
+
 ## Commands
 
 Run these two commands to setup the project and generate the charts:
