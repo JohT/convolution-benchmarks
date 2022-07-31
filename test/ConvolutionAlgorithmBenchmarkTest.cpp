@@ -13,9 +13,15 @@
 #include <memory>
 #include <string>
 
-TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
+TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]") //[.] means that the test won't be run automatically
 {
     const auto kernelLength = GENERATE(16, 512);
+    
+    // The following string contains the description of the current benchmark run marked by surrounding round brackets.
+    // It will be shown above the regarding chart and enables parametrized charts.
+    // Catch2's "GENERATE" leads to an parametrized test where all tests are run with the first value, then the second value...
+    const auto parametrizedBenchmarkDescription = "((kernel size " + std::to_string(kernelLength) + "))";
+    
     const auto &input = random_vector_generator::randomNumbers(16384, -1.0F, 1.0F);
     const auto &kernel = random_vector_generator::randomNumbers(kernelLength, 0.0F, 1.0F);
 
@@ -34,7 +40,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
     const auto dividableBy4PaddingLength = 4 - ((input.size() + kernel.size() - 1) % 4);
     auto dividableBy4Padding = std::vector<float>(dividableBy4PaddingLength, 0.0F);
 
-    BENCHMARK_ADVANCED("(JohT) kernelPerInputValue Transposed (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) kernelPerInputValue Transposed" + parametrizedBenchmarkDescription)
 
     (Catch::Benchmark::Chronometer meter)
     {
@@ -44,7 +50,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -53,7 +59,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed InnerLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed InnerLoopUnrolled" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -62,7 +68,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed OuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed OuterLoopUnrolled" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -71,7 +77,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed InnerAndOuterLoopUnrolled (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed Inner&OuterLoopUnrolled" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -80,7 +86,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed LoopFission (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed LoopFission" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -89,7 +95,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed LoopFissionIndexArithmetic (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed LoopFissionIndexArithmetic" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -98,7 +104,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("(JohT) kernelPerInputValue Transposed LoopFission (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(JohT) kernelPerInputValue Transposed LoopFission" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
@@ -107,7 +113,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return outputData; });
     };
 
-    BENCHMARK_ADVANCED("(matlab-like) conv 'full' shape (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(matlab-like) conv 'full' shape" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         meter.measure([&input, &kernel, &output]
@@ -116,7 +122,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(matlab-like) conv 'valid' shape pre padded (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(matlab-like) conv 'valid' shape pre padded" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         // "valid" means that the input needs to be padded with (kernel size - 1) zeroes
@@ -132,7 +138,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                           return output; });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) Single (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(wilczek) Single" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
@@ -141,7 +147,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                       { return wilczek_convolution::applyFirFilterSingle(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(wilczek) Inner-Loop Vectorization" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
@@ -150,7 +156,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                       { return wilczek_convolution::applyFirFilterInnerLoopVectorization(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) Outer-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(wilczek) Outer-Loop Vectorization" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         auto dividableBy4PaddedInput = std::vector<float>(input);
@@ -162,7 +168,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                       { return wilczek_convolution::applyFirFilterOuterLoopVectorization(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) Outer- and Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(wilczek) Outer- and Inner-Loop Vectorization" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         auto dividableBy4PaddedInput = std::vector<float>(input);
@@ -175,7 +181,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
     };
 
 #ifdef __AVX__
-    BENCHMARK_ADVANCED("(wilczek) AVX NoAlign Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(wilczek) AVX NoAlign Inner-Loop Vectorization" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         wilczek_convolution::FilterInput<float> inputAligned(input, kernel);
@@ -184,7 +190,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                       { return wilczek_convolution::applyFirFilterAVX_innerLoopVectorization(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) AVX NoAlign Outer-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(wilczek) AVX NoAlign Outer-Loop Vectorization" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         auto dividableBy4PaddedInput = std::vector<float>(input);
@@ -196,7 +202,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
                       { return wilczek_convolution::applyFirFilterAVX_outerLoopVectorization(inputAligned); });
     };
 
-    BENCHMARK_ADVANCED("(wilczek) AVX NoAlign Outer- and Inner-Loop Vectorization (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(wilczek) AVX NoAlign Outer- and Inner-Loop Vectorization" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         auto dividableBy4PaddedInput = std::vector<float>(input);
@@ -209,7 +215,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]")
     };
 #endif
 
-    BENCHMARK_ADVANCED("(chaowang15) convolve1D (kernel " + std::to_string(kernelLength) + ")")
+    BENCHMARK_ADVANCED("(chaowang15) convolve1D" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
         const auto kernelSize = kernel.size();

@@ -10,11 +10,11 @@
     },
     "transform": [
         {
-            "calculate": "toNumber(split(split(datum.$.name, ' (kernel ')[1],')')[0])",
-            "as": "ConvolutionKernelSize"
+            "calculate": "split(split(datum.$.name, '((')[1],'))')[0]",
+            "as": "ParametrizedBenchmarkDescription"
         },
         {
-            "calculate": "replace(datum.$.name, ' (kernel ' + datum.ConvolutionKernelSize + ')', '')",
+            "calculate": "replace(datum.$.name, '((' + datum.ParametrizedBenchmarkDescription + '))', '')",
             "as": "Algorithm"
         },
         {
@@ -24,12 +24,11 @@
     ],
     "facet": {
         "column": {
-            "field": "ConvolutionKernelSize",
+            "field": "ParametrizedBenchmarkDescription",
             "title": "Convolution Benchmarks",
             "header": {
                 "titleFontSize": 16,
-                "labelFontSize": 14,
-                "labelExpr": "'kernel size ' + datum.value"
+                "labelFontSize": 14
             }
         }
     },
