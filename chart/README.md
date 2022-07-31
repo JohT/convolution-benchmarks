@@ -2,7 +2,7 @@
 
 The contained [Node.js](https://nodejs.dev) scripts generate [Vega-Lite](https://vega.github.io/vega-lite) charts from C++ [Catch2](https://github.com/catchorg/Catch2) benchmark results.
 
-## Tools
+## ⚒️ Tools
 
 [Node.js](https://nodejs.dev) is
 > Node.js is a free, open-sourced, cross-platform JavaScript run-time environment
@@ -13,14 +13,14 @@ The contained [Node.js](https://nodejs.dev) scripts generate [Vega-Lite](https:/
 [Catch2](https://github.com/catchorg/Catch2) is 
 > A modern, C++-native, test framework for unit-tests...
 
-## Steps
+## 🦶 Steps
 - The [Catch2 XML Reporter](https://github.com/catchorg/Catch2/blob/devel/docs/reporters.md) is used to generate a XML file with the benchmark data.
 - The XML file is converted to a JSON file using [convert-xml-to-json](https://www.npmjs.com/package/convert-xml-to-json).
 - The JSON data file is then used to generate the charts using [Vega-Lite](https://vega.github.io/vega-lite).
 - [BenchmarkChartHorizontal.json](./BenchmarkChartHorizontal.json) contains the chart description and configuration.
 - The command line tool [vl2svg](https://vega.github.io/vega-lite/usage/compile.html#cli) is used to create a SVG vector graphics file with the chart.
 
-## Parameter
+## ⚙️ Parameter
 
 ### BenchmarkChartEnvironmentFile (pre set)
 - Located in [package.json](./package.json) config section
@@ -53,7 +53,7 @@ The contained [Node.js](https://nodejs.dev) scripts generate [Vega-Lite](https:/
 If the benchmark test case name contains a description surrounded by double round brackets, 
 a separate chart is created with the parametrized description as title. This convention makes it easy to create charts for parametrized benchmark tests. For example: All test cases that contain "((kernel size 16))" in their name will be grouped into the same chart, all test tests containing "((kernel size 512))" will be grouped into a second chart and so on.
 
-## Commands
+## ⚡️ Commands
 
 Run these two commands to setup the project and generate the charts:
 
@@ -64,7 +64,7 @@ npm run build
 
 Further commands and details can be found in [COMMANDS.md](./COMMANDS.md).
 
-## References
+## 🔎 References
 - [Catch2 XML Reporter](https://github.com/catchorg/Catch2/blob/devel/docs/reporters.md)
 - [convert-xml-to-json (NPM)](https://www.npmjs.com/package/convert-xml-to-json)
 - [Vega-Lite](https://vega.github.io/vega-lite)

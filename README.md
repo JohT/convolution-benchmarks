@@ -1,31 +1,39 @@
 # Benchmark Convolution Implementations
 
-This repository takes different C++ implementations of the [convolution](https://en.wikipedia.org/wiki/Convolution) algorithm and provides fully automated benchmarks for them visualized as charts.
+This repository takes different C++ implementations of the [convolution](https://en.wikipedia.org/wiki/Convolution) algorithm and provides fully automated benchmarks visualized as charts. It might also be used as a starting point or template for other C++ benchmark projects.
 
-## Results
+## 🚀 Features
 
-[BenchmarkChart.md](./chart/BenchmarkChart.md) contains the benchmark results visualized as bar charts.
+- Insights on how a classical convolution algorithm can be implemented and optimized: [BenchmarkCharts.md](./chart/BenchmarkCharts.md)
+- A simple (6 lines of code), easy to read (no intrinsics), yet fast convolution implementation: [inputPerKernelValueTransposed](./source/JohTConvolution.h)
+- Fully automated (CLI) visualization of [Catch2](https://github.com/catchorg/Catch2) benchmark results using  [vega-lite](https://vega.github.io/vega-lite) charts: [chart/README.md](./chart/README.md)
+- [GitHub Actions](https://docs.github.com/en/actions) workflow for fully automated benchmarks on Linux, MacOS and Windows: [continuous-integration.yml](.github/workflows/continuous-integration.yml)
+- [Renovate](https://github.com/renovatebot/renovate) configuration to update [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) managed C++ dependencies: [renovate.json](./renovate.json)
 
-## Prerequisites
+## 📈 Results
+
+[BenchmarkCharts.md](./chart/BenchmarkCharts.md) contains the benchmark results visualized as bar charts.
+
+## ⚒️ Tools
 
 - Needs [CMake](https://cmake.org/download) (e.g. with the [Visual Studio Installer](https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-170)) to build the project.
-- Needs [node-canvas](https://github.com/Automattic/node-canvas#compiling) to create SVG vector graphics files.
+- Needs [node-canvas](https://github.com/Automattic/node-canvas#compiling) dependencies to create SVG vector graphics files.
 - Needs [nodejs](https://nodejs.org) to build the JavaScript based charts.
 - Recommends [Ninja](https://ninja-build.org/) as "a small build system with a focus on speed".
 - Uses [cpm](https://github.com/cpm-cmake/CPM.cmake) as a "Setup-free CMake dependency management" for C++.
 - Uses [Catch2](https://github.com/catchorg/Catch2) as Unit-Test and Benchmark-Framework for C++.
 - Uses [vega-lite](https://vega.github.io/vega-lite) to visualize the benchmark results as a bar chart.
+- Uses [GitHub Actions](https://docs.github.com/en/actions) to fully automate build, benchmarks and visualization.
 - Uses [Renovate](https://github.com/renovatebot/renovate) to update the dependencies automatically.
 
-## Commands
+## ⚡️ Commands
 
-- Run [script/run-all.sh](./script/run-all.sh) or [script\run-all.bat](./script/run-all.bat) to run all the following commands in order.
-- Run [script/benchmark-with-charts.sh](./script/benchmark-with-charts.sh) or [script\benchmark-with-charts.bat](./script/benchmark-with-charts.bat) to run the benchmark tests and generate charts without (re)building the project.
+- Run [script/run-all.sh](./script/run-all.sh) or [script\run-all.bat](./script/run-all.bat) to build and test the project, run the benchmarks and create the charts.
+- Run [script/benchmark-with-charts.sh](./script/benchmark-with-charts.sh) or [script\benchmark-with-charts.bat](./script/benchmark-with-charts.bat) to run the benchmarks and generate the charts without rebuilding the project.
+- Further commands and a detailed description can be found in [COMMANDS.md](./COMMANDS.md).
+- [chart/COMMANDS.md](./chart/COMMANDS.md) describes the commands to create the charts.
 
-Further commands and a detailed description can be found in [COMMANDS.md](./COMMANDS.md).
-[chart/COMMANDS.md](./chart/COMMANDS.md) describes the commands to create the charts.
-
-## Compiler Options for vectorization reports
+## ⚙️ Compiler Options for vectorization reports
 
 The following compiler options are used to get detailed vectorization reports. They are defined in [CompilerOptions.cmake](./cmake/CompilerOptions.cmake).
 
@@ -53,7 +61,7 @@ These compile options are used with MSVC as described in [Auto-Vectorizer Report
 
 - `/arch:AVX` specifies the architecture for code generation (here AVX).
 
-## Online Tools
+## 🔭 Online Tools
 
 ### Godbolt Compiler Explorer
 
@@ -162,14 +170,13 @@ BENCHMARK(kernelOuter);
 ```
 </details>
 
-
-## History
+## 📜 History
 
 This repository was initially intended to explore Single Instruction Multiple Data ([SIMD](https://en.wikipedia.org/wiki/Single_instruction,_multiple_data)) in C++. Since convolution is such an essential part of filtering in digital signal processing and a central part of convolutional neuronal networks ([CNN](https://en.wikipedia.org/wiki/Convolutional_neural_network)), it seemed obvious to try that first. 
 
 A [complex](https://en.wikipedia.org/wiki/Cynefin_framework#Complex) topic like this benefits from a "experiment - evaluate" approach to get started. [Catch2](https://github.com/catchorg/Catch2) is used to assure, that the implementations are correct. It is also used to benchmark their performance. [Compiler Options for vectorization reports](#Compiler-Options-for-vectorization-reports) get insights into what the compiler does. [Online-Tools](#Online-Tools) are used to exploratory experiment with implementations. Finally, to get a visual response, [vega-lite](https://vega.github.io/vega-lite) is used to create bar charts of the benchmark results.
 
-## References
+## 🔎 References
 
 - [Efficient FIR Filter Implementation with SIMD (Jan Wilczek)](https://thewolfsound.com/fir-filter-with-simd)
 - [Vectorization part1. Intro. (Denis Bakhvalov)](https://easyperf.net/blog/2017/10/24/Vectorization_part1)
