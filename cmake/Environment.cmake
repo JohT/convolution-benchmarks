@@ -1,6 +1,8 @@
 message(STATUS "Environment setup started")
 
 # Fix behavior of CMAKE_CXX_STANDARD when targeting macOS.
+# Policy CMP0025 determines for Apple Clang which compiler id to report in the CMAKE_<LANG>_COMPILER_ID variable.
+# CMake now prefers to present this to projects by setting the CMAKE_<LANG>_COMPILER_ID variable to AppleClang (NEW) instead of Clang (OLD).
 if (POLICY CMP0025)
     cmake_policy(SET CMP0025 NEW)
 endif ()
