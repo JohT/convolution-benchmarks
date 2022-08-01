@@ -8,10 +8,19 @@
   ],
   "regexManagers": [
     {
-      "fileMatch": ["^package-lock.cmake$"],
+      "fileMatch": ["(^|/)package-lock\\.cmake$"],
       "matchStrings": [
         "CPMDeclarePackage\\(\\w+\\s+VERSION\\s+(?<currentValue>.*?)\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+"
       ],
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v?(?<version>.*?)$"
+    },
+    {
+      "fileMatch": ["(^|/)\\.cmake$"],
+      "matchStrings": [
+        "set\\s*\\(\\s*CPM_DOWNLOAD_VERSION\\s+(?<currentValue>.*?)\\s*\\)"
+      ],
+      "depNameTemplate": "cpm-cmake/CPM.cmake",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v?(?<version>.*?)$"
     }
