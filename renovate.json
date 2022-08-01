@@ -16,9 +16,9 @@
       "extractVersionTemplate": "^v?(?<version>.*?)$"
     },
     {
-      "fileMatch": ["(^|/)\\.cmake$"],
+      "fileMatch": ["(^|/)\\w+\\.cmake$"],
       "matchStrings": [
-        "set\\s*\\(\\s*CPM_DOWNLOAD_VERSION\\s+(?<currentValue>.*?)\\s*\\)"
+        "set\\s*?\\(\\s*?CPM_DOWNLOAD_VERSION\\s+?(?<currentValue>.*?)\\s*?\\)"
       ],
       "depNameTemplate": "cpm-cmake/CPM.cmake",
       "datasourceTemplate": "github-releases",
