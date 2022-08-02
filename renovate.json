@@ -10,19 +10,31 @@
     {
       "fileMatch": ["(^|/)package-lock\\.cmake$"],
       "matchStrings": [
+        "CPMDeclarePackage\\(\\w+\\s+GIT_TAG\\s+(?<currentValue>.*?)\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+"
+      ],
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["(^|/)package-lock\\.cmake$"],
+      "matchStrings": [
         "CPMDeclarePackage\\(\\w+\\s+VERSION\\s+(?<currentValue>.*?)\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+"
       ],
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v?(?<version>.*?)$"
     },
     {
-      "fileMatch": ["(^|/)\\w+\\.cmake$"],
+      "fileMatch": ["(^|/)\\w+\\.cmake$", "(^|/)CMakeLists\\.cmake$"],
       "matchStrings": [
-        "set\\s*?\\(\\s*?CPM_DOWNLOAD_VERSION\\s+?(?<currentValue>.*?)\\s*?\\)"
+        "https:\\/\\/github\\.com\\/(?<depName>[^{}]*?)\\/releases\\/download\\/(?<currentValue>[^{}]*?)\\/"
       ],
-      "depNameTemplate": "cpm-cmake/CPM.cmake",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["(^|/)\\w+\\.cmake$", "(^|/)CMakeLists\\.cmake$"],
+      "matchStrings": [
+        "#.*?https:\\/\\/github\\.com\\/(?<depName>[.*?)\\s+.*VERSION\\w*\\s+(?<currentValue>[^{}]*?)\\s*\\)"
+      ],
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v?(?<version>.*?)$"
     }
-  ]
-}
+  ]}
