@@ -10,17 +10,29 @@
     {
       "fileMatch": ["(^|/)package-lock\\.cmake$"],
       "matchStrings": [
-        "CPMDeclarePackage\\(\\w+\\s+GIT_TAG\\s+(?<currentValue>.*?)\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+"
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*VERSION\\s+\"?(?<currentValue>.*?)\"?\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?[\\s\\)]",
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+VERSION\\s+\"?(?<currentValue>.*?)\"?[\\s\\)]"
+      ],
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v?(?<version>.*?)$"
+    },
+    {
+      "fileMatch": ["(^|/)package-lock\\.cmake$"],
+      "matchStrings": [
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*GIT_TAG\\s+\"?(?<currentValue>.*?[^0-9a-f\\s]+.*|.{1,4}?)\"?\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+",
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>.*?[^0-9a-f\\s]+.*|.{1,4}?)\"?\\s+GIT_TAG\\s+\"?(?<currentValue>.*?)\"?\\s+"
       ],
       "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": ["(^|/)package-lock\\.cmake$"],
       "matchStrings": [
-        "CPMDeclarePackage\\(\\w+\\s+VERSION\\s+(?<currentValue>.*?)\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+"
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*GIT_TAG\\s+\"?(?<currentDigest>[0-9a-f]{5,40}?)\"?\\s+GITHUB_REPOSITORY\\s+?\"?(?<depName>.*?)\"?\\s+",
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>[0-9a-f]{5,40}?)\"?\\s+GIT_TAG\\s+?\"?(?<currentDigest>.*?)\"?\\s+"
       ],
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v?(?<version>.*?)$"
+      "datasourceTemplate": "git-refs",
+      "depNameTemplate": "https://github.com/{{{depName}}}.git",
+      "currentValueTemplate": "master"
     },
     {
       "fileMatch": ["(^|/)\\w+\\.cmake$", "(^|/)CMakeLists\\.cmake$"],
@@ -32,9 +44,10 @@
     {
       "fileMatch": ["(^|/)\\w+\\.cmake$", "(^|/)CMakeLists\\.cmake$"],
       "matchStrings": [
-        "#.*?https:\\/\\/github\\.com\\/(?<depName>.*?)\\s+.*VERSION\\w*\\s+(?<currentValue>[^{}]*?)\\s*\\)"
+        "set\\s*\\(\\s*\\w+VERSION\\s+\"?(?<currentValue>[^v$][^${}]*?)\"?\\s*\\)[\\S\\s]*https:\\/\\/github.com\\/(?<depName>.*?)\\/releases\\/download\\/v\\$\\{\\w+VERSION\\}"
       ],
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v?(?<version>.*?)$"
     }
-  ]}
+  ]
+}
