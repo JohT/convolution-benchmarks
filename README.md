@@ -8,7 +8,8 @@ This repository takes different C++ implementations of the [convolution](https:/
 - A simple (6 lines of code), easy to read (no intrinsics), yet fast convolution implementation: [inputPerKernelValueTransposed](./source/JohTConvolution.h)
 - Fully automated (CLI) visualization of [Catch2](https://github.com/catchorg/Catch2) benchmark results using  [vega-lite](https://vega.github.io/vega-lite) charts: [chart/README.md](./chart/README.md)
 - [GitHub Actions](https://docs.github.com/en/actions) workflow for fully automated benchmarks on Linux, MacOS and Windows: [continuous-integration.yml](.github/workflows/continuous-integration.yml)
-- [Renovate](https://github.com/renovatebot/renovate) configuration to update [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) managed C++ dependencies: [renovate.json](./renovate.json)
+- [Renovate](https://github.com/renovatebot/renovate) configuration to update [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) managed C++ dependencies: [renovate.json](./renovate.json)   
+Blog: [Keep your C++ dependencies up-to-date with Renovate & CPM](https://joht.github.io/johtizen/automation/2022/08/03/keep-your-cpp-dependencies-up-to-date.html)
 
 ## 📈 Results
 
