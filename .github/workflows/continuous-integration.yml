@@ -185,9 +185,7 @@ jobs:
       run: |
         git config --global user.name '${{ env.CI_COMMIT_AUTHOR }}'
         git config --global user.email 'joht@users.noreply.github.com'
+        git pull --verbose --strategy=ort --strategy-option=ours
         git add ${{ env.BENCHMARK_CHART_GROUP }}
-        git stash --include-untracked
-        git pull
-        git stash pop
         git commit -m "${{ env.CI_COMMIT_MESSAGE }} ${{ env.BENCHMARK_CHART_GROUP }}"
         git push
