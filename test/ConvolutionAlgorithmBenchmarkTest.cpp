@@ -44,7 +44,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]") //[.] mea
 
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData]
                       {
                           joht_convolution::kernelPerInputValueTransposed(inputData, inputLength, kernelData, kernelLength, outputData);
                           return outputData; });
@@ -53,7 +53,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]") //[.] mea
     BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData]
                       {
                           joht_convolution::inputPerKernelValueTransposed(inputData, inputLength, kernelData, kernelLength, outputData);
                           return outputData; });
@@ -62,7 +62,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]") //[.] mea
     BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed InnerLoopUnrolled" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData]
                       {
                           joht_convolution::inputPerKernelValueTransposedInnerLoopUnrolled(inputData, inputLength, kernelData, kernelLength, outputData);
                           return outputData; });
@@ -71,7 +71,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]") //[.] mea
     BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed OuterLoopUnrolled" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData]
                       {
                           joht_convolution::inputPerKernelValueTransposedOuterLoopUnrolled(inputData, inputLength, kernelData, kernelLength, outputData);
                           return outputData; });
@@ -80,7 +80,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]") //[.] mea
     BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed Inner&OuterLoopUnrolled" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData]
                       {
                           joht_convolution::inputPerKernelValueTransposedInnerAndOuterLoopUnrolled(inputData, inputLength, kernelData, kernelLength, outputData);
                           return outputData; });
@@ -89,7 +89,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]") //[.] mea
     BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed LoopFission" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData]
                       {
                           joht_convolution::inputPerKernelValueTransposedLoopFission(inputData, inputLength, kernelData, kernelLength, outputData);
                           return outputData; });
@@ -98,7 +98,7 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]") //[.] mea
     BENCHMARK_ADVANCED("(JohT) inputPerKernelValue Transposed LoopFissionIndexArithmetic" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData]
                       {
                           joht_convolution::inputPerKernelValueTransposedLoopFissionIndexArithmetic(inputData, inputLength, kernelData, kernelLength, outputData);
                           return outputData; });
@@ -107,11 +107,25 @@ TEST_CASE("Convolution Implementation Benchmarks", "[.][performance]") //[.] mea
     BENCHMARK_ADVANCED("(JohT) kernelPerInputValue Transposed LoopFission" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)
     {
-        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData, &output]
+        meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData]
                       {
                           joht_convolution::kernelPerInputValueTransposedLoopFission(inputData, inputLength, kernelData, kernelLength, outputData);
                           return outputData; });
     };
+
+    // The naive implementation, that is directly derived from the equation without any optimization attempts
+    // is about 1000 times slower than "matlab_like::convolution_full" below and more than 5000 times slower than 
+    // the fastest implementations here. 
+    // It is commented out so it doesn't slow down benchmark runs and doesn't break the bar chart scale.
+    //
+    // BENCHMARK_ADVANCED("(JohT) directly derived from equation" + parametrizedBenchmarkDescription)
+    // (Catch::Benchmark::Chronometer meter)
+    // {
+    //     meter.measure([&inputData, &inputLength, &kernelData, &kernelLength, &outputData]
+    //                   {
+    //                       joht_convolution::directlyDerivedFromEquation(inputData, inputLength, kernelData, kernelLength, outputData);
+    //                       return outputData; });
+    // };
 
     BENCHMARK_ADVANCED("(matlab-like) conv 'full' shape" + parametrizedBenchmarkDescription)
     (Catch::Benchmark::Chronometer meter)

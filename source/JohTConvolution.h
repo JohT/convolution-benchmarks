@@ -290,4 +290,29 @@ namespace joht_convolution
         }
     }
 
+    /**
+     * @brief Convolution implementation that is directly derived from the equation without any optimization.
+     * 
+     * @tparam ValueType 
+     * @param input pointer to input values
+     * @param kernel pointer to kernel values (e.g. filter coefficients)
+     * @param output pointer to output values
+     * @author JohT
+     */
+    template<typename ValueType>
+    void directlyDerivedFromEquation(const ValueType *const input, const int inputLength, const ValueType *const kernel, const int kernelLength, ValueType *const output)
+    {
+        auto const outSize = inputLength + kernelLength - 1;
+        for (auto outIndex = 0; outIndex < outSize; ++outIndex)
+        {
+            for (auto inputIndex = 0; inputIndex < inputLength; ++inputIndex)
+            {
+                auto const kernelIndex = outIndex - inputIndex;
+                if ((kernelIndex >= 0) && (kernelIndex < kernelLength)) {
+                    output[outIndex] += (input[inputIndex] * kernel[kernelIndex]);
+                }
+            }
+        }
+    }
+
 }// namespace joht_convolution
