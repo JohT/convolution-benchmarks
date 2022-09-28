@@ -10,8 +10,8 @@
     {
       "fileMatch": ["(^|/)package-lock\\.cmake$"],
       "matchStrings": [
-        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*VERSION\\s+\"?(?<currentValue>.*?)\"?\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?[\\s\\)]",
-        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+VERSION\\s+\"?(?<currentValue>.*?)\"?[\\s\\)]"
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*VERSION\\s+\"?(?<currentValue>.*?)\"?\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?[\\s\\)]",
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+VERSION\\s+\"?(?<currentValue>.*?)\"?[\\s\\)]"
       ],
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v?(?<version>.*?)$"
@@ -19,16 +19,16 @@
     {
       "fileMatch": ["(^|/)package-lock\\.cmake$"],
       "matchStrings": [
-        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*GIT_TAG\\s+\"?(?<currentValue>.*?[^0-9a-f\\s]+.*|.{1,4}?)\"?\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+",
-        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>.*?[^0-9a-f\\s]+.*|.{1,4}?)\"?\\s+GIT_TAG\\s+\"?(?<currentValue>.*?)\"?\\s+"
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*GIT_TAG\\s+\"?(?<currentValue>.*?[^0-9a-f\\s]+.*|.{1,4}?)\"?\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+",
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>.*?[^0-9a-f\\s]+.*|.{1,4}?)\"?\\s+GIT_TAG\\s+\"?(?<currentValue>.*?)\"?\\s+"
       ],
       "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": ["(^|/)package-lock\\.cmake$"],
       "matchStrings": [
-        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*GIT_TAG\\s+\"?(?<currentDigest>[0-9a-f]{5,40}?)\"?\\s+GITHUB_REPOSITORY\\s+?\"?(?<depName>.*?)\"?\\s+",
-        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>[0-9a-f]{5,40}?)\"?\\s+GIT_TAG\\s+?\"?(?<currentDigest>.*?)\"?\\s+"
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*GIT_TAG\\s+\"?(?<currentDigest>[0-9a-f]{5,40}?)\"?\\s+GITHUB_REPOSITORY\\s+?\"?(?<depName>.*?)\"?\\s+",
+        "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>[0-9a-f]{5,40}?)\"?\\s+GIT_TAG\\s+?\"?(?<currentDigest>.*?)\"?\\s+"
       ],
       "datasourceTemplate": "git-refs",
       "depNameTemplate": "https://github.com/{{{depName}}}.git",
