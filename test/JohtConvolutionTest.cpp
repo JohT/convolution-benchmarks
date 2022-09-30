@@ -60,6 +60,11 @@ SCENARIO("JohT Convolution Implementations")
                 joht_convolution::inputPerKernelValueTransposedLoopFissionIndexArithmetic(input.data(), inputLength, kernel.data(),kernelLength, output.data());
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
+            THEN("Algorithm 'directlyDerivedFromEquation' outputs the same result as the reference implementation")
+            {
+                joht_convolution::directlyDerivedFromEquation(input.data(), inputLength, kernel.data(),kernelLength, output.data());
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
         }
     }
 }
