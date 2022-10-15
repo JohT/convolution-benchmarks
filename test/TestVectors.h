@@ -7,6 +7,7 @@ static const std::vector<float> waveletFilterCoefficientsHaar = {
         0.5F * static_cast<float>(M_SQRT2), /* 0.707106781186547  */
 };
 
+// Reference: https://github.com/fukuroder/daubechies_wavelet_coefficients/blob/master/coefficients/db08_coefficients.txt
 static const std::vector<float> waveletFilterCoefficientsDaubechies16 = {
         5.44158422430000010E-02F,
         3.12871590914000020E-01F,
