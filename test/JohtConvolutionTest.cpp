@@ -65,6 +65,11 @@ SCENARIO("JohT Convolution Implementations")
                 joht_convolution::directlyDerivedFromEquation(input.data(), inputLength, kernel.data(),kernelLength, output.data());
                 REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
             }
+            THEN("Algorithm 'directlyDerivedFromEquationWithIfInOuterLoop' outputs the same result as the reference implementation")
+            {
+                joht_convolution::directlyDerivedFromEquationWithIfInOuterLoop(input.data(), inputLength, kernel.data(),kernelLength, output.data());
+                REQUIRE_THAT(output, Catch::Matchers::Approx(reference));
+            }
         }
     }
 }
