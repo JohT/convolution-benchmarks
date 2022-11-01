@@ -315,4 +315,30 @@ namespace joht_convolution
         }
     }
 
+    /**
+     * @brief Convolution implementation that is directly derived from the equation 
+     with the branch statement in the outer loop instead of the inner one.
+     * 
+     * @tparam ValueType 
+     * @param input pointer to input values
+     * @param kernel pointer to kernel values (e.g. filter coefficients)
+     * @param output pointer to output values
+     * @author JohT
+     */
+    template<typename ValueType>
+    void directlyDerivedFromEquationWithIfInOuterLoop(const ValueType *const input, const int inputLength, const ValueType *const kernel, const int kernelLength, ValueType *const output)
+    {
+        const auto outSize = inputLength + kernelLength - 1;
+        for (auto outIndex = 0; outIndex < outSize; ++outIndex)
+        {
+            const auto outIndexPlusOne = outIndex + 1;
+            const auto inputMin = (outIndexPlusOne >= kernelLength)? outIndexPlusOne - (kernelLength) : 0;
+            const auto inputMax = (outIndexPlusOne < inputLength)? outIndexPlusOne: inputLength;
+            for (auto inputIndex = inputMin; inputIndex < inputMax; ++inputIndex)
+            {
+                const auto kernelIndex = outIndex - inputIndex;
+                output[outIndex] += (input[inputIndex] * kernel[kernelIndex]);
+            }
+        }
+    }
 }// namespace joht_convolution

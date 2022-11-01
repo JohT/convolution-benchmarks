@@ -6,10 +6,15 @@ This repository takes different C++ implementations of the [convolution](https:/
 
 - Insights on how a classical convolution algorithm can be implemented and optimized: [BenchmarkCharts.md](./chart/BenchmarkCharts.md)
 - A simple (6 lines of code), easy to read (no intrinsics), yet fast convolution implementation: [inputPerKernelValueTransposed](./source/JohTConvolution.h)
-- Fully automated (CLI) visualization of [Catch2](https://github.com/catchorg/Catch2) benchmark results using  [vega-lite](https://vega.github.io/vega-lite) charts: [chart/README.md](./chart/README.md)
+- Fully automated (CLI) visualization of [Catch2](https://github.com/catchorg/Catch2) benchmark results using [vega-lite](https://vega.github.io/vega-lite) charts: [chart/README.md](./chart/README.md)
 - [GitHub Actions](https://docs.github.com/en/actions) workflow for fully automated benchmarks on Linux, MacOS and Windows: [continuous-integration.yml](.github/workflows/continuous-integration.yml)
-- [Renovate](https://github.com/renovatebot/renovate) configuration to update [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) managed C++ dependencies: [renovate.json](./renovate.json)   
-Blog: [Keep your C++ dependencies up-to-date with Renovate & CPM](https://joht.github.io/johtizen/automation/2022/08/03/keep-your-cpp-dependencies-up-to-date.html)
+- [Renovate](https://github.com/renovatebot/renovate) configuration to update [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) managed C++ dependencies: [renovate.json](./renovate.json)
+
+## 📖 Related Blog Articles
+
+- [A different approach to Convolution](https://joht.github.io/johtizen/algorithm/2022/10/22/a-different-approach-to-convolution.html)
+- [Visualize Catch2 benchmarks with Vega-Lite](https://joht.github.io/johtizen/data/2022/09/05/visualize-catch2-benchmarks-with-vega-lite.html)
+- [Keep your C++ dependencies up-to-date with Renovate & CPM](https://joht.github.io/johtizen/automation/2022/08/03/keep-your-cpp-dependencies-up-to-date.html)
 
 ## 📈 Results
 
@@ -77,7 +82,6 @@ These compile options are used with MSVC as described in [Auto-Vectorizer Report
 [Quick C++ Benchmark](https://quick-bench.com/) is another great tool that compares the performance of two code blocks with each other.
 
 Copy & Paste the following code snipped into [Quick C++ Benchmark](https://quick-bench.com/). It shows the difference between the kernel and the input values as outer loop with a "direct form transposed" convolution implementation.
-
 
 <details>
   <summary>Code Snipped to compare the iteration over the kernel values in the inner vs. the outer loop</summary>
@@ -169,13 +173,14 @@ static void kernelOuter(benchmark::State& state) {
 // Register the function as a benchmark
 BENCHMARK(kernelOuter);
 ```
+
 </details>
 
 ## 📜 History
 
-This repository was initially intended to explore Single Instruction Multiple Data ([SIMD](https://en.wikipedia.org/wiki/Single_instruction,_multiple_data)) in C++. Since convolution is such an essential part of filtering in digital signal processing and a central part of convolutional neuronal networks ([CNN](https://en.wikipedia.org/wiki/Convolutional_neural_network)), it seemed obvious to try that first. 
+This repository was initially intended to explore Single Instruction Multiple Data ([SIMD](https://en.wikipedia.org/wiki/Single_instruction,_multiple_data)) in C++. Since convolution is such an essential part of filtering in digital signal processing and a central part of convolutional neuronal networks ([CNN](https://en.wikipedia.org/wiki/Convolutional_neural_network)), it seemed obvious to try that first.
 
-A [complex](https://en.wikipedia.org/wiki/Cynefin_framework#Complex) topic like this benefits from a "experiment - evaluate" approach to get started. [Catch2](https://github.com/catchorg/Catch2) is used to assure, that the implementations are correct. It is also used to benchmark their performance. [Compiler Options for vectorization reports](#Compiler-Options-for-vectorization-reports) get insights into what the compiler does. [Online-Tools](#Online-Tools) are used to exploratory experiment with implementations. Finally, to get a visual response, [vega-lite](https://vega.github.io/vega-lite) is used to create bar charts of the benchmark results.
+A [complex](https://en.wikipedia.org/wiki/Cynefin_framework#Complex) topic like this benefits from a "experiment - evaluate" approach to get started. [Catch2](https://github.com/catchorg/Catch2) is used to assure, that the implementations are correct. It is also used to benchmark their performance. [Compiler Options for vectorization reports](#⚙️-compiler-options-for-vectorization-reports) get insights into what the compiler does. [Online-Tools](#🔭-online-tools) are used to exploratory experiment with implementations. Finally, to get a visual response, [vega-lite](https://vega.github.io/vega-lite) is used to create bar charts of the benchmark results.
 
 ## 🔎 References
 
