@@ -1,4 +1,4 @@
-# Source: https://github.com/pytorch/pytorch/blob/v1.12.0/cmake/Modules/FindAVX.cmake
+# Source: https://github.com/pytorch/pytorch/blob/v2.2.0-rc6/cmake/Modules/FindAVX.cmake
 # Created within pull request https://github.com/pytorch/pytorch/pull/12109
 # License: https://github.com/pytorch/pytorch/blob/v1.12.0/LICENSE
 #
@@ -102,9 +102,9 @@ MACRO(CHECK_SSE lang type flags)
 ENDMACRO()
 
 CHECK_SSE(C "AVX" " ;-mavx;/arch:AVX")
-CHECK_SSE(C "AVX2" " ;-mavx2 -mfma;/arch:AVX2")
+CHECK_SSE(C "AVX2" " ;-mavx2 -mfma -mf16c;/arch:AVX2")
 CHECK_SSE(C "AVX512" " ;-mavx512f -mavx512dq -mavx512vl -mavx512bw -mfma;/arch:AVX512")
 
 CHECK_SSE(CXX "AVX" " ;-mavx;/arch:AVX")
-CHECK_SSE(CXX "AVX2" " ;-mavx2 -mfma;/arch:AVX2")
+CHECK_SSE(CXX "AVX2" " ;-mavx2 -mfma -mf16c;/arch:AVX2")
 CHECK_SSE(CXX "AVX512" " ;-mavx512f -mavx512dq -mavx512vl -mavx512bw -mfma;/arch:AVX512")
