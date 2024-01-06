@@ -167,7 +167,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: ${{ env.CHART_DIR }}/${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}.zip
-        name: ${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}
+        name: ${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}-artifact-${{ matrix.artifact }}
         retention-days: 7
 
     # Commit and push benchmark reports on merge into "main" branch
