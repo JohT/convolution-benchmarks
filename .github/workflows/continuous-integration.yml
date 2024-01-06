@@ -103,10 +103,7 @@ jobs:
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
     - name: (Install) CMake and Ninja 
-      uses: lukka/get-cmake@latest      
-    - name: (Install) Developer Command Prompt for Microsoft Visual C++ (Windows)
-      if: matrix.os == 'windows-latest'
-      uses: ilammy/msvc-dev-cmd@v1
+      uses: lukka/get-cmake@latest
 
     # Checkout the code from GIT using a dedicated personal access token
     - name: (GIT) Checkout code
@@ -116,10 +113,9 @@ jobs:
 
     # Build and test the C++ Project using CMake
     - name: (CMake) Ccache
-      if: matrix.os != 'windows-latest'
-      uses: hendrikmuhs/ccache-action@v1
+      uses: hendrikmuhs/ccache-action@v1.2
       with:
-        key: ${{ matrix.os }}-${{ matrix.type }}
+        key: ${{ matrix.artifact }}-${{ env.BUILD_TYPE }}
     - name: (CMake) Configure, Enforce SSE=${{ matrix.enforce-sse2 }}, AVX=${{ matrix.enforce-avx }}, AVX2=${{ matrix.enforce-avx2 }}
       run: >
         cmake -B ${{ env.BUILD_DIR }}
