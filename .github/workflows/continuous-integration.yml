@@ -115,7 +115,7 @@ jobs:
     - name: (CMake) Ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-        key: ${{ matrix.os }}-${{ matrix.type }}
+        key: ${{ matrix.artifact }}-${{ env.BUILD_TYPE }}
     - name: (CMake) Configure, Enforce SSE=${{ matrix.enforce-sse2 }}, AVX=${{ matrix.enforce-avx }}, AVX2=${{ matrix.enforce-avx2 }}
       run: >
         cmake -B ${{ env.BUILD_DIR }}
