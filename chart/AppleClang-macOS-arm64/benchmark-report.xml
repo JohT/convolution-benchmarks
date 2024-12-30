@@ -1,185 +1,185 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Catch2TestRun name="ConvolutionBenchmarksTests" rng-seed="3327321663" xml-format-version="3" catch2-version="3.7.1" filters="[performance]">
+<Catch2TestRun name="ConvolutionBenchmarksTests" rng-seed="3527785116" xml-format-version="3" catch2-version="3.7.1" filters="[performance]">
   <TestCase name="Convolution Implementation Benchmarks" tags="[.][performance]" filename="/Users/runner/work/convolution-benchmarks/convolution-benchmarks/test/ConvolutionAlgorithmBenchmarkTest.cpp" line="16">
-    <BenchmarkResults name="(JohT) kernelPerInputValue Transposed((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="6.9307e+06">
+    <BenchmarkResults name="(JohT) kernelPerInputValue Transposed((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="7.2983e+06">
       <!-- All values in nano seconds -->
-      <mean value="68631.8" lowerBound="68472.6" upperBound="68905.9" ci="0.95"/>
-      <standardDeviation value="1035.6" lowerBound="679.741" upperBound="1552.85" ci="0.95"/>
-      <outliers variance="0.0756079" lowMild="0" lowSevere="0" highMild="5" highSevere="12"/>
+      <mean value="75110" lowerBound="72563.6" upperBound="81911.7" ci="0.95"/>
+      <standardDeviation value="19362.2" lowerBound="5716.08" upperBound="38672.4" ci="0.95"/>
+      <outliers variance="0.967788" lowMild="0" lowSevere="0" highMild="4" highSevere="7"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed((kernel size 16))" samples="100" resamples="100000" iterations="2" clockResolution="29.3345" estimatedDuration="4.2988e+06">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed((kernel size 16))" samples="100" resamples="100000" iterations="2" clockResolution="28.5876" estimatedDuration="4.537e+06">
       <!-- All values in nano seconds -->
-      <mean value="21289.6" lowerBound="21204.2" upperBound="21444.4" ci="0.95"/>
-      <standardDeviation value="571.404" lowerBound="374.595" upperBound="923.462" ci="0.95"/>
-      <outliers variance="0.209502" lowMild="0" lowSevere="0" highMild="4" highSevere="10"/>
+      <mean value="57080.4" lowerBound="47974.4" upperBound="81146" ci="0.95"/>
+      <standardDeviation value="70470.1" lowerBound="30149" upperBound="147747" ci="0.95"/>
+      <outliers variance="0.9899" lowMild="0" lowSevere="0" highMild="0" highSevere="2"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed InnerLoopUnrolled((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="2.53243e+07">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed InnerLoopUnrolled((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="2.87643e+07">
       <!-- All values in nano seconds -->
-      <mean value="274459" lowerBound="266789" upperBound="292860" ci="0.95"/>
-      <standardDeviation value="57174.8" lowerBound="23913.1" upperBound="101998" ci="0.95"/>
-      <outliers variance="0.946751" lowMild="0" lowSevere="0" highMild="1" highSevere="5"/>
+      <mean value="260072" lowerBound="259074" upperBound="261786" ci="0.95"/>
+      <standardDeviation value="6503.5" lowerBound="4505.62" upperBound="10927.3" ci="0.95"/>
+      <outliers variance="0.190005" lowMild="0" lowSevere="0" highMild="5" highSevere="5"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed OuterLoopUnrolled((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="4.0274e+06">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed OuterLoopUnrolled((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="4.3494e+06">
       <!-- All values in nano seconds -->
-      <mean value="40243.8" lowerBound="40116.7" upperBound="40653.3" ci="0.95"/>
-      <standardDeviation value="1047.47" lowerBound="360.168" upperBound="2327.49" ci="0.95"/>
-      <outliers variance="0.199829" lowMild="0" lowSevere="0" highMild="2" highSevere="3"/>
+      <mean value="38864.5" lowerBound="38753.7" upperBound="39129.5" ci="0.95"/>
+      <standardDeviation value="818.662" lowerBound="230.671" upperBound="1459.63" ci="0.95"/>
+      <outliers variance="0.142077" lowMild="0" lowSevere="0" highMild="2" highSevere="2"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed Inner&amp;OuterLoopUnrolled((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="5.2798e+06">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed Inner&amp;OuterLoopUnrolled((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="5.151e+06">
       <!-- All values in nano seconds -->
-      <mean value="53334.2" lowerBound="53095.1" upperBound="53704.2" ci="0.95"/>
-      <standardDeviation value="1498.18" lowerBound="1082.08" upperBound="2185.74" ci="0.95"/>
-      <outliers variance="0.228594" lowMild="0" lowSevere="0" highMild="3" highSevere="7"/>
+      <mean value="50933.7" lowerBound="50870.3" upperBound="51164.9" ci="0.95"/>
+      <standardDeviation value="546.909" lowerBound="129.056" upperBound="1250.73" ci="0.95"/>
+      <outliers variance="0.0099" lowMild="1" lowSevere="0" highMild="2" highSevere="3"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed LoopFission((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="5.5241e+06">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed LoopFission((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="5.9763e+06">
       <!-- All values in nano seconds -->
-      <mean value="55912.6" lowerBound="55668.8" upperBound="56237.2" ci="0.95"/>
-      <standardDeviation value="1424.13" lowerBound="1141.22" upperBound="1820.97" ci="0.95"/>
-      <outliers variance="0.190366" lowMild="0" lowSevere="0" highMild="5" highSevere="0"/>
+      <mean value="56019.5" lowerBound="55819.1" upperBound="56244.9" ci="0.95"/>
+      <standardDeviation value="1083.31" lowerBound="943.118" upperBound="1336.38" ci="0.95"/>
+      <outliers variance="0.122939" lowMild="0" lowSevere="0" highMild="1" highSevere="0"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed LoopFissionIndexArithmetic((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="5.5755e+06">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed LoopFissionIndexArithmetic((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="5.4576e+06">
       <!-- All values in nano seconds -->
-      <mean value="53983.8" lowerBound="53162.6" upperBound="56029.2" ci="0.95"/>
-      <standardDeviation value="5908.4" lowerBound="885.806" upperBound="10891.7" ci="0.95"/>
-      <outliers variance="0.821014" lowMild="0" lowSevere="0" highMild="1" highSevere="3"/>
+      <mean value="54131.2" lowerBound="53787.5" upperBound="54736.2" ci="0.95"/>
+      <standardDeviation value="2264.06" lowerBound="1472.41" upperBound="3430.06" ci="0.95"/>
+      <outliers variance="0.394986" lowMild="0" lowSevere="0" highMild="0" highSevere="11"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) kernelPerInputValue Transposed LoopFission((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="7.6629e+06">
+    <BenchmarkResults name="(JohT) kernelPerInputValue Transposed LoopFission((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="7.2e+06">
       <!-- All values in nano seconds -->
-      <mean value="72262.2" lowerBound="71891.4" upperBound="72929.7" ci="0.95"/>
-      <standardDeviation value="2463.86" lowerBound="1537.81" upperBound="3693.96" ci="0.95"/>
-      <outliers variance="0.297084" lowMild="0" lowSevere="0" highMild="2" highSevere="5"/>
+      <mean value="66933.6" lowerBound="66734.4" upperBound="67278.6" ci="0.95"/>
+      <standardDeviation value="1304.72" lowerBound="867.696" upperBound="1932.48" ci="0.95"/>
+      <outliers variance="0.12305" lowMild="0" lowSevere="0" highMild="1" highSevere="11"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(matlab-like) conv 'full' shape((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="5.9322e+06">
+    <BenchmarkResults name="(matlab-like) conv 'full' shape((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="5.4726e+06">
       <!-- All values in nano seconds -->
-      <mean value="58778.8" lowerBound="58567.1" upperBound="59447.6" ci="0.95"/>
-      <standardDeviation value="1719.37" lowerBound="600.402" upperBound="3776.2" ci="0.95"/>
-      <outliers variance="0.238587" lowMild="0" lowSevere="0" highMild="3" highSevere="7"/>
+      <mean value="58001.6" lowerBound="57621.6" upperBound="58449.6" ci="0.95"/>
+      <standardDeviation value="2102.57" lowerBound="1821.04" upperBound="2563.94" ci="0.95"/>
+      <outliers variance="0.326255" lowMild="0" lowSevere="0" highMild="1" highSevere="0"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(matlab-like) conv 'valid' shape pre padded((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="1.36054e+07">
+    <BenchmarkResults name="(matlab-like) conv 'valid' shape pre padded((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="1.28236e+07">
       <!-- All values in nano seconds -->
-      <mean value="132282" lowerBound="131539" upperBound="134211" ci="0.95"/>
-      <standardDeviation value="5570.63" lowerBound="1712.42" upperBound="10579.7" ci="0.95"/>
-      <outliers variance="0.395189" lowMild="0" lowSevere="0" highMild="7" highSevere="8"/>
+      <mean value="128318" lowerBound="127997" upperBound="128697" ci="0.95"/>
+      <standardDeviation value="1773.31" lowerBound="1491.76" upperBound="2172.92" ci="0.95"/>
+      <outliers variance="0.0659912" lowMild="0" lowSevere="0" highMild="2" highSevere="0"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(wilczek) Single((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="1.00983e+07">
+    <BenchmarkResults name="(wilczek) Single((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="1.01836e+07">
       <!-- All values in nano seconds -->
-      <mean value="97582.5" lowerBound="97205.5" upperBound="98205.9" ci="0.95"/>
-      <standardDeviation value="2430.18" lowerBound="1700.93" upperBound="3950.38" ci="0.95"/>
-      <outliers variance="0.189923" lowMild="0" lowSevere="0" highMild="4" highSevere="9"/>
+      <mean value="96986.9" lowerBound="96690.3" upperBound="97378.5" ci="0.95"/>
+      <standardDeviation value="1728.16" lowerBound="1356.52" upperBound="2428.98" ci="0.95"/>
+      <outliers variance="0.104045" lowMild="0" lowSevere="0" highMild="2" highSevere="1"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(wilczek) Inner-Loop Vectorization((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="6.9895e+06">
+    <BenchmarkResults name="(wilczek) Inner-Loop Vectorization((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="6.9229e+06">
       <!-- All values in nano seconds -->
-      <mean value="77194.2" lowerBound="76249.6" upperBound="78325.4" ci="0.95"/>
-      <standardDeviation value="5275.01" lowerBound="4438.88" upperBound="6471.22" ci="0.95"/>
-      <outliers variance="0.635863" lowMild="0" lowSevere="0" highMild="5" highSevere="0"/>
+      <mean value="70954.1" lowerBound="70644.9" upperBound="71380.7" ci="0.95"/>
+      <standardDeviation value="1839.34" lowerBound="1424.56" upperBound="2756.47" ci="0.95"/>
+      <outliers variance="0.199746" lowMild="0" lowSevere="0" highMild="2" highSevere="1"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(wilczek) Outer-Loop Vectorization((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="2.45605e+07">
+    <BenchmarkResults name="(wilczek) Outer-Loop Vectorization((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="2.39665e+07">
       <!-- All values in nano seconds -->
-      <mean value="240150" lowerBound="239481" upperBound="241199" ci="0.95"/>
-      <standardDeviation value="4222.19" lowerBound="3106.79" upperBound="7026.44" ci="0.95"/>
-      <outliers variance="0.103884" lowMild="0" lowSevere="0" highMild="4" highSevere="1"/>
+      <mean value="231574" lowerBound="230644" upperBound="233602" ci="0.95"/>
+      <standardDeviation value="6644.95" lowerBound="3820.24" upperBound="12848.6" ci="0.95"/>
+      <outliers variance="0.22907" lowMild="0" lowSevere="0" highMild="1" highSevere="21"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(wilczek) Outer- and Inner-Loop Vectorization((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="6.7574e+06">
+    <BenchmarkResults name="(wilczek) Outer- and Inner-Loop Vectorization((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="6.5743e+06">
       <!-- All values in nano seconds -->
-      <mean value="71954.2" lowerBound="71602.5" upperBound="72340.4" ci="0.95"/>
-      <standardDeviation value="1875.46" lowerBound="1636.75" upperBound="2228.65" ci="0.95"/>
-      <outliers variance="0.199857" lowMild="0" lowSevere="0" highMild="2" highSevere="0"/>
+      <mean value="67617.8" lowerBound="67440.8" upperBound="67973.6" ci="0.95"/>
+      <standardDeviation value="1234.1" lowerBound="722.032" upperBound="1951.52" ci="0.95"/>
+      <outliers variance="0.113245" lowMild="0" lowSevere="1" highMild="0" highSevere="7"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(chaowang15) convolve1D((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="4.9432e+06">
+    <BenchmarkResults name="(chaowang15) convolve1D((kernel size 16))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="4.4631e+06">
       <!-- All values in nano seconds -->
-      <mean value="67369.6" lowerBound="60350.9" upperBound="77578.4" ci="0.95"/>
-      <standardDeviation value="42615" lowerBound="32397.9" upperBound="53939.8" ci="0.95"/>
-      <outliers variance="0.989617" lowMild="0" lowSevere="0" highMild="0" highSevere="14"/>
+      <mean value="46527.4" lowerBound="46239" upperBound="46889.4" ci="0.95"/>
+      <standardDeviation value="1640.29" lowerBound="1340.62" upperBound="2177.97" ci="0.95"/>
+      <outliers variance="0.316309" lowMild="0" lowSevere="0" highMild="3" highSevere="0"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) kernelPerInputValue Transposed((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="6.86442e+07">
+    <BenchmarkResults name="(JohT) kernelPerInputValue Transposed((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="6.57332e+07">
       <!-- All values in nano seconds -->
-      <mean value="681538" lowerBound="679760" upperBound="683604" ci="0.95"/>
-      <standardDeviation value="9806.62" lowerBound="8486.8" upperBound="11476.8" ci="0.95"/>
-      <outliers variance="0.0751701" lowMild="0" lowSevere="0" highMild="1" highSevere="0"/>
+      <mean value="688442" lowerBound="685355" upperBound="693900" ci="0.95"/>
+      <standardDeviation value="20365.3" lowerBound="13727.9" upperBound="36530.1" ci="0.95"/>
+      <outliers variance="0.24793" lowMild="0" lowSevere="0" highMild="1" highSevere="1"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="7.26897e+07">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="6.62381e+07">
       <!-- All values in nano seconds -->
-      <mean value="679193" lowerBound="677470" upperBound="681775" ci="0.95"/>
-      <standardDeviation value="10583.8" lowerBound="7888.66" upperBound="14666.1" ci="0.95"/>
-      <outliers variance="0.084788" lowMild="0" lowSevere="0" highMild="3" highSevere="3"/>
+      <mean value="719592" lowerBound="711878" upperBound="728146" ci="0.95"/>
+      <standardDeviation value="41296.2" lowerBound="36758.6" upperBound="50855.2" ci="0.95"/>
+      <outliers variance="0.554586" lowMild="0" lowSevere="0" highMild="1" highSevere="0"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed InnerLoopUnrolled((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="8.03371e+08">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed InnerLoopUnrolled((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="8.46802e+08">
       <!-- All values in nano seconds -->
-      <mean value="8.10533e+06" lowerBound="8.06003e+06" upperBound="8.21526e+06" ci="0.95"/>
-      <standardDeviation value="337864" lowerBound="174912" upperBound="691201" ci="0.95"/>
-      <outliers variance="0.394884" lowMild="0" lowSevere="0" highMild="5" highSevere="3"/>
+      <mean value="7.74651e+06" lowerBound="7.72194e+06" upperBound="7.7803e+06" ci="0.95"/>
+      <standardDeviation value="145735" lowerBound="115086" upperBound="189165" ci="0.95"/>
+      <outliers variance="0.113643" lowMild="0" lowSevere="0" highMild="12" highSevere="9"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed OuterLoopUnrolled((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="1.27927e+08">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed OuterLoopUnrolled((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="1.2362e+08">
       <!-- All values in nano seconds -->
-      <mean value="1.28774e+06" lowerBound="1.28346e+06" upperBound="1.2937e+06" ci="0.95"/>
-      <standardDeviation value="25449.1" lowerBound="19702.8" upperBound="32058.6" ci="0.95"/>
-      <outliers variance="0.123239" lowMild="0" lowSevere="0" highMild="5" highSevere="9"/>
+      <mean value="1.24203e+06" lowerBound="1.23729e+06" upperBound="1.24988e+06" ci="0.95"/>
+      <standardDeviation value="30566" lowerBound="20866.8" upperBound="45462" ci="0.95"/>
+      <outliers variance="0.180687" lowMild="0" lowSevere="0" highMild="4" highSevere="9"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed Inner&amp;OuterLoopUnrolled((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="1.86291e+08">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed Inner&amp;OuterLoopUnrolled((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="1.62126e+08">
       <!-- All values in nano seconds -->
-      <mean value="1.87534e+06" lowerBound="1.83708e+06" upperBound="1.93841e+06" ci="0.95"/>
-      <standardDeviation value="245751" lowerBound="168339" upperBound="368777" ci="0.95"/>
-      <outliers variance="0.872954" lowMild="0" lowSevere="0" highMild="6" highSevere="4"/>
+      <mean value="1.62975e+06" lowerBound="1.62483e+06" upperBound="1.63885e+06" ci="0.95"/>
+      <standardDeviation value="33156" lowerBound="20498.8" upperBound="51651.8" ci="0.95"/>
+      <outliers variance="0.132601" lowMild="0" lowSevere="0" highMild="4" highSevere="8"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed LoopFission((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="2.03079e+08">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed LoopFission((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="1.66727e+08">
       <!-- All values in nano seconds -->
-      <mean value="1.76795e+06" lowerBound="1.76154e+06" upperBound="1.7755e+06" ci="0.95"/>
-      <standardDeviation value="35526.6" lowerBound="30370.8" upperBound="41801.8" ci="0.95"/>
-      <outliers variance="0.132416" lowMild="0" lowSevere="0" highMild="6" highSevere="0"/>
+      <mean value="1.66537e+06" lowerBound="1.66431e+06" upperBound="1.66691e+06" ci="0.95"/>
+      <standardDeviation value="6452.05" lowerBound="4791.98" upperBound="9346.96" ci="0.95"/>
+      <outliers variance="0.0099" lowMild="0" lowSevere="0" highMild="2" highSevere="2"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed LoopFissionIndexArithmetic((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="1.76744e+08">
+    <BenchmarkResults name="(JohT) inputPerKernelValue Transposed LoopFissionIndexArithmetic((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="1.67697e+08">
       <!-- All values in nano seconds -->
-      <mean value="1.8282e+06" lowerBound="1.81086e+06" upperBound="1.84945e+06" ci="0.95"/>
-      <standardDeviation value="97761.1" lowerBound="80687.1" upperBound="119216" ci="0.95"/>
-      <outliers variance="0.514651" lowMild="0" lowSevere="0" highMild="7" highSevere="0"/>
+      <mean value="1.70651e+06" lowerBound="1.69916e+06" upperBound="1.71461e+06" ci="0.95"/>
+      <standardDeviation value="39268" lowerBound="34630.7" upperBound="47410.1" ci="0.95"/>
+      <outliers variance="0.161472" lowMild="0" lowSevere="0" highMild="2" highSevere="0"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(JohT) kernelPerInputValue Transposed LoopFission((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="1.12274e+08">
+    <BenchmarkResults name="(JohT) kernelPerInputValue Transposed LoopFission((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="1.16324e+08">
       <!-- All values in nano seconds -->
-      <mean value="1.17703e+06" lowerBound="1.17326e+06" upperBound="1.18112e+06" ci="0.95"/>
-      <standardDeviation value="19862.6" lowerBound="17732.6" upperBound="23436.9" ci="0.95"/>
-      <outliers variance="0.0945131" lowMild="0" lowSevere="0" highMild="0" highSevere="0"/>
+      <mean value="1.17617e+06" lowerBound="1.17296e+06" upperBound="1.17974e+06" ci="0.95"/>
+      <standardDeviation value="17217.2" lowerBound="14298.8" upperBound="21349.9" ci="0.95"/>
+      <outliers variance="0.0753333" lowMild="2" lowSevere="0" highMild="3" highSevere="1"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(matlab-like) conv 'full' shape((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="6.20388e+07">
+    <BenchmarkResults name="(matlab-like) conv 'full' shape((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="5.95473e+07">
       <!-- All values in nano seconds -->
-      <mean value="632287" lowerBound="627383" upperBound="645663" ci="0.95"/>
-      <standardDeviation value="38368.5" lowerBound="17891.6" upperBound="81839.3" ci="0.95"/>
-      <outliers variance="0.575229" lowMild="0" lowSevere="0" highMild="10" highSevere="1"/>
+      <mean value="595004" lowerBound="594019" upperBound="596754" ci="0.95"/>
+      <standardDeviation value="6500.99" lowerBound="4246.11" upperBound="10244.2" ci="0.95"/>
+      <outliers variance="0.0099" lowMild="0" lowSevere="0" highMild="4" highSevere="4"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(matlab-like) conv 'valid' shape pre padded((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="1.01727e+09">
+    <BenchmarkResults name="(matlab-like) conv 'valid' shape pre padded((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="1.01192e+09">
       <!-- All values in nano seconds -->
-      <mean value="1.01363e+07" lowerBound="1.01117e+07" upperBound="1.01756e+07" ci="0.95"/>
-      <standardDeviation value="154925" lowerBound="110425" upperBound="224224" ci="0.95"/>
-      <outliers variance="0.0845823" lowMild="0" lowSevere="0" highMild="3" highSevere="12"/>
+      <mean value="1.01094e+07" lowerBound="1.00964e+07" upperBound="1.01438e+07" ci="0.95"/>
+      <standardDeviation value="100368" lowerBound="47190.1" upperBound="209821" ci="0.95"/>
+      <outliers variance="0.0099" lowMild="0" lowSevere="0" highMild="2" highSevere="7"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(wilczek) Single((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="1.00811e+09">
+    <BenchmarkResults name="(wilczek) Single((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="1.00357e+09">
       <!-- All values in nano seconds -->
-      <mean value="1.01598e+07" lowerBound="1.01188e+07" upperBound="1.02082e+07" ci="0.95"/>
-      <standardDeviation value="226135" lowerBound="194146" upperBound="264390" ci="0.95"/>
-      <outliers variance="0.151926" lowMild="0" lowSevere="0" highMild="2" highSevere="0"/>
+      <mean value="1.00363e+07" lowerBound="1.0013e+07" upperBound="1.00825e+07" ci="0.95"/>
+      <standardDeviation value="161231" lowerBound="92957" upperBound="258313" ci="0.95"/>
+      <outliers variance="0.0850959" lowMild="0" lowSevere="0" highMild="2" highSevere="7"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(wilczek) Inner-Loop Vectorization((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="2.26417e+08">
+    <BenchmarkResults name="(wilczek) Inner-Loop Vectorization((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="2.19537e+08">
       <!-- All values in nano seconds -->
-      <mean value="2.19707e+06" lowerBound="2.19461e+06" upperBound="2.20191e+06" ci="0.95"/>
-      <standardDeviation value="17064.5" lowerBound="8793.32" upperBound="28290.4" ci="0.95"/>
-      <outliers variance="0.0099" lowMild="0" lowSevere="0" highMild="5" highSevere="8"/>
+      <mean value="2.19638e+06" lowerBound="2.19424e+06" upperBound="2.20153e+06" ci="0.95"/>
+      <standardDeviation value="15910.3" lowerBound="8148.35" upperBound="31875.8" ci="0.95"/>
+      <outliers variance="0.0099" lowMild="0" lowSevere="0" highMild="5" highSevere="5"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(wilczek) Outer-Loop Vectorization((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="7.53744e+08">
+    <BenchmarkResults name="(wilczek) Outer-Loop Vectorization((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="7.45043e+08">
       <!-- All values in nano seconds -->
-      <mean value="7.49141e+06" lowerBound="7.47534e+06" upperBound="7.51686e+06" ci="0.95"/>
-      <standardDeviation value="101452" lowerBound="71742.2" upperBound="142640" ci="0.95"/>
-      <outliers variance="0.0658253" lowMild="0" lowSevere="0" highMild="3" highSevere="10"/>
+      <mean value="7.48619e+06" lowerBound="7.469e+06" upperBound="7.52287e+06" ci="0.95"/>
+      <standardDeviation value="122150" lowerBound="65528" upperBound="211769" ci="0.95"/>
+      <outliers variance="0.0941312" lowMild="0" lowSevere="0" highMild="2" highSevere="8"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(wilczek) Outer- and Inner-Loop Vectorization((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="2.09211e+08">
+    <BenchmarkResults name="(wilczek) Outer- and Inner-Loop Vectorization((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="2.09906e+08">
       <!-- All values in nano seconds -->
-      <mean value="2.11968e+06" lowerBound="2.11624e+06" upperBound="2.123e+06" ci="0.95"/>
-      <standardDeviation value="17224.1" lowerBound="14262.1" upperBound="22699.2" ci="0.95"/>
-      <outliers variance="0.0099" lowMild="2" lowSevere="15" highMild="7" highSevere="2"/>
+      <mean value="2.12571e+06" lowerBound="2.11227e+06" upperBound="2.14372e+06" ci="0.95"/>
+      <standardDeviation value="79068.5" lowerBound="63589.6" upperBound="98344.9" ci="0.95"/>
+      <outliers variance="0.336166" lowMild="0" lowSevere="0" highMild="2" highSevere="16"/>
     </BenchmarkResults>
-    <BenchmarkResults name="(chaowang15) convolve1D((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="29.3345" estimatedDuration="6.00403e+07">
+    <BenchmarkResults name="(chaowang15) convolve1D((kernel size 512))" samples="100" resamples="100000" iterations="1" clockResolution="28.5876" estimatedDuration="5.83144e+07">
       <!-- All values in nano seconds -->
-      <mean value="582611" lowerBound="581911" upperBound="584207" ci="0.95"/>
-      <standardDeviation value="5111.21" lowerBound="2805.01" upperBound="10285.6" ci="0.95"/>
-      <outliers variance="0.0099" lowMild="0" lowSevere="0" highMild="1" highSevere="1"/>
+      <mean value="586120" lowerBound="585326" upperBound="587913" ci="0.95"/>
+      <standardDeviation value="5772.84" lowerBound="2910.49" upperBound="11414.1" ci="0.95"/>
+      <outliers variance="0.0099" lowMild="10" lowSevere="0" highMild="11" highSevere="8"/>
     </BenchmarkResults>
     <OverallResult success="true" skips="0"/>
   </TestCase>
