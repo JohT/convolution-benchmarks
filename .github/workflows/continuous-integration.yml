@@ -186,7 +186,7 @@ jobs:
       # git add parameters need to directly or indirectly match paths-ignore parameters above
       if: github.event_name == 'push'
       run: |
-        set -x # Print commands and their arguments as they are executed
+        set -x || true # Print commands and their arguments as they are executed
         git config --global user.name '${{ env.CI_COMMIT_AUTHOR }}'
         git config --global user.email "7671054+JohT@users.noreply.github.com"
         git fetch origin
