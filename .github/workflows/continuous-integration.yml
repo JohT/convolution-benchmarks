@@ -186,13 +186,18 @@ jobs:
       # git add parameters need to directly or indirectly match paths-ignore parameters above
       if: github.event_name == 'push'
       run: |
+        set -x # Print commands and their arguments as they are executed
         git config --global user.name '${{ env.CI_COMMIT_AUTHOR }}'
         git config --global user.email "7671054+JohT@users.noreply.github.com"
         git fetch origin
         git status
         git add ${{ env.BENCHMARK_CHART_GROUP }}
-        git commit -m "${{ env.CI_COMMIT_MESSAGE }} ${{ env.BENCHMARK_CHART_GROUP }}"
+        git commit --message "${{ env.CI_COMMIT_MESSAGE }} ${{ env.BENCHMARK_CHART_GROUP }}"
         git status
-        git rebase --strategy-option=theirs origin/main --verbose
+        git rebase --strategy-option=theirs origin/main --verbose # Resolve conflicts by taking the current branch's changes
+        GIT_EDITOR=true git rebase --continue || true # Continue the rebase or ignore if it fails
+        git add ${{ env.BENCHMARK_CHART_GROUP }} # Add the files again after the rebase
+        git status
+        git commit --amend --no-edit # Amend the commit to include the changes from the rebase
         git status
         git push --verbose
