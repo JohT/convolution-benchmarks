@@ -8,15 +8,18 @@
   ],
   "packageRules": [
     {
-      "matchPackagePrefixes": [
-        "vega"
-      ],
-      "groupName": "Vega Data Visualization"
+      "groupName": "Vega Data Visualization",
+      "matchPackageNames": [
+        "vega{/,}**"
+      ]
     }
   ],
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["(^|/)package-lock\\.cmake$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)package-lock\\.cmake$/"
+      ],
       "matchStrings": [
         "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*VERSION\\s+\"?(?<currentValue>.*?)\"?\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?[\\s\\)]",
         "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+VERSION\\s+\"?(?<currentValue>.*?)\"?[\\s\\)]"
@@ -25,7 +28,10 @@
       "extractVersionTemplate": "^v?(?<version>.*?)$"
     },
     {
-      "fileMatch": ["(^|/)package-lock\\.cmake$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)package-lock\\.cmake$/"
+      ],
       "matchStrings": [
         "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*GIT_TAG\\s+\"?(?<currentValue>.*?[^0-9a-f\\s]+.*|.{1,4}?)\"?\\s+GITHUB_REPOSITORY\\s+\"?(?<depName>.*?)\"?\\s+",
         "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>.*?[^0-9a-f\\s]+.*|.{1,4}?)\"?\\s+GIT_TAG\\s+\"?(?<currentValue>.*?)\"?\\s+"
@@ -33,7 +39,10 @@
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["(^|/)package-lock\\.cmake$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)package-lock\\.cmake$/"
+      ],
       "matchStrings": [
         "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*GIT_TAG\\s+\"?(?<currentDigest>[0-9a-f]{5,40}?)\"?\\s+GITHUB_REPOSITORY\\s+?\"?(?<depName>.*?)\"?\\s+",
         "CPMDeclarePackage\\s*\\(\\s*\\w+\\s*.*\\s*.*GITHUB_REPOSITORY\\s+\"?(?<depName>[0-9a-f]{5,40}?)\"?\\s+GIT_TAG\\s+?\"?(?<currentDigest>.*?)\"?\\s+"
@@ -43,14 +52,22 @@
       "currentValueTemplate": "master"
     },
     {
-      "fileMatch": ["(^|/)\\w+\\.cmake$", "(^|/)CMakeLists\\.cmake$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\w+\\.cmake$/",
+        "/(^|/)CMakeLists\\.cmake$/"
+      ],
       "matchStrings": [
         "https:\\/\\/github\\.com\\/(?<depName>[^{}]*?)\\/releases\\/download\\/(?<currentValue>[^{}]*?)\\/"
       ],
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["(^|/)\\w+\\.cmake$", "(^|/)CMakeLists\\.cmake$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)\\w+\\.cmake$/",
+        "/(^|/)CMakeLists\\.cmake$/"
+      ],
       "matchStrings": [
         "set\\s*\\(\\s*\\w+VERSION\\s+\"?(?<currentValue>[^v$][^${}]*?)\"?\\s*\\)[\\S\\s]*https:\\/\\/github.com\\/(?<depName>.*?)\\/releases\\/download\\/v\\$\\{\\w+VERSION\\}"
       ],
