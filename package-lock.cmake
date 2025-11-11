@@ -4,7 +4,7 @@
 # Catch2
 CPMDeclarePackage(Catch2
   NAME Catch2
-  VERSION 3.10.0
+  VERSION 3.11.0
   GITHUB_REPOSITORY catchorg/Catch2
   EXCLUDE_FROM_ALL YES
 )
