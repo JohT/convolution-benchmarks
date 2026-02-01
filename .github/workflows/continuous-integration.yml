@@ -171,7 +171,7 @@ jobs:
       working-directory: ${{ env.CHART_DIR }}
       run: cmake -E tar cfv ${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}.zip --format=zip ${{ env.BENCHMARK_CHART_GROUP }}
     - name: (Package) Upload Artifact
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         path: ${{ env.CHART_DIR }}/${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}.zip
         name: ${{ env.PROJECT_NAME }}-charts-${{ env.BENCHMARK_CHART_GROUP }}-artifact-${{ matrix.artifact }}
