@@ -13,10 +13,10 @@ Nevertheless, there are some significant differences that can be derived from th
 - Iterating over the significant smaller part of the convolution (in most cases the kernel) in the outer loop is likely to be faster than iterating over the input values. This leads to more multiplications with the same value in a row which is more cache friendly. So "inputPerKernelValueTransposed" in [JohTConvolution.h](./../source/JohTConvolution.h) is usually faster than "kernelPerInputValueTransposed". For bigger kernels, the difference is smaller.
 
 ## MacOS
-### (manual) MacOS on M1 with Neon compiled with [CLang](https://clang.llvm.org)
+### MacOS on arm64 with Neon compiled with Apple[CLang](https://clang.llvm.org)
 ![bar chart showing the results of the benchmarks for MacOs on M1](./AppleClang-macOS-arm64/BenchmarkChart.svg)
 
-### MacOS on Intel with AVX compiled with [CLang](https://clang.llvm.org) 
+### MacOS on Intel with AVX compiled with Apple[CLang](https://clang.llvm.org) 
 ![bar chart showing the results of the benchmarks for MacOs on Intel](./AppleClang-macOS-x86_64AVX/BenchmarkChart.svg)
 
 ## Windows
