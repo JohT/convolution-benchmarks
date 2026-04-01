@@ -11,7 +11,6 @@
     "url": "https://github.com/JohT/convolution-benchmarks/issues"
   },
   "config": {
-    "BenchmarkChartEnvironmentFile": "./../build/BenchmarkChart.env",
     "BenchmarkChartLocalDataFile": "benchmark-report.json"
   },
   "author": "Johannes Troppacher",
@@ -19,19 +18,20 @@
   "scripts": {
     "build": "npm run create-benchmark-charts",
     "create-benchmark-charts": "npm-run-all prepare-chart-directory convert-xml-to-json generate-svg-chart",
-    "convert-xml-to-json": "cross-var nodenv -E $npm_package_config_BenchmarkChartEnvironmentFile --exec run-script-os",
+    "convert-xml-to-json": "nodenv -E ./../build/BenchmarkChart.env --exec run-script-os",
     "convert-xml-to-json:windows": "convert-xml-to-json %BENCHMARK_CHART_DATA_FILE% %BENCHMARK_CHART_GROUP%\\%npm_package_config_BenchmarkChartLocalDataFile%",
     "convert-xml-to-json:default": "convert-xml-to-json $BENCHMARK_CHART_DATA_FILE $BENCHMARK_CHART_GROUP/$npm_package_config_BenchmarkChartLocalDataFile",
-    "generate-svg-chart": "cross-var nodenv -E $npm_package_config_BenchmarkChartEnvironmentFile --exec run-script-os",
+    "generate-svg-chart": "nodenv -E ./../build/BenchmarkChart.env --exec run-script-os",
     "generate-svg-chart:windows": "vl2svg --base %BENCHMARK_CHART_GROUP% BenchmarkChartHorizontal.json %BENCHMARK_CHART_GROUP%\\BenchmarkChart.svg",
     "generate-svg-chart:default": "vl2svg --base $BENCHMARK_CHART_GROUP BenchmarkChartHorizontal.json $BENCHMARK_CHART_GROUP/BenchmarkChart.svg",
-    "prepare-chart-directory": "cross-var nodenv -E $npm_package_config_BenchmarkChartEnvironmentFile --exec npm -- run copy-chart-config",
-    "copy-chart-config": "cross-var copyfiles --verbose --flat $BENCHMARK_CHART_DATA_FILE $BENCHMARK_CHART_GROUP"
+    "prepare-chart-directory": "nodenv -E ./../build/BenchmarkChart.env --exec npm -- run copy-chart-config",
+    "copy-chart-config": "run-script-os",
+    "copy-chart-config:windows": "copyfiles --verbose --flat %BENCHMARK_CHART_DATA_FILE% %BENCHMARK_CHART_GROUP%",
+    "copy-chart-config:default": "copyfiles --verbose --flat $BENCHMARK_CHART_DATA_FILE $BENCHMARK_CHART_GROUP"
   },
   "devDependencies": {
     "convert-xml-to-json": "1.0.3",
     "copyfiles": "2.4.1",
-    "cross-var": "1.1.0",
     "node-env-run": "4.0.2",
     "npm-run-all2": "8.0.4",
     "run-script-os": "1.1.6",
