@@ -22,10 +22,9 @@ The contained [Node.js](https://nodejs.dev) scripts generate [Vega-Lite](https:/
 
 ## ⚙️ Parameter
 
-### BenchmarkChartEnvironmentFile (pre set)
-- Located in [package.json](./package.json) config section
-- Specifies the path to the environment file that contains parameter for the chart creation
-- Currently set to `./../build/BenchmarkChart.env`
+### BenchmarkChartEnvironmentFile (fixed)
+- Path: `./../build/BenchmarkChart.env` (relative to this directory)
+- Contains parameters for chart creation
 - It is expected to be created with [Catch2 XML Reporter](https://github.com/catchorg/Catch2/blob/devel/docs/reporters.md) for example with the following command:   
 `MyCatch2TestExecutable [performance] --reporter XML::out=benchmark-report.xml`
 
