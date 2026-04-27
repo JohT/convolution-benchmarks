@@ -164,7 +164,7 @@ jobs:
 
     # Package the results into a ZIP and upload it as build artifact
     - name: (Package) Import environment file ${{ env.CHART_ENVIRONMENT_FILE }}
-      uses: cardinalby/export-env-action@v1
+      uses: cardinalby/export-env-action@2.2.2
       with:
         envFile: '${{ env.BUILD_DIR }}/${{ env.CHART_ENVIRONMENT_FILE }}'      
     - name: (Package) Zip
